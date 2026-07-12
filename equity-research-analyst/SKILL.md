@@ -5,7 +5,7 @@ description: Use when the user asks for institutional-style equity research on a
 
 # Equity Research Analyst
 
-Produce institutional-grade equity research deliverables covering nine distinct workflows. Each workflow has its own dedicated reference file in `references/workflows/`; this SKILL.md is the dispatcher and the hub for cross-workflow conventions.
+Produce institutional-grade equity research deliverables through the selected workflow. Each workflow has a dedicated reference file in `references/workflows/`; this SKILL.md is the dispatcher and the hub for cross-workflow conventions.
 
 ## Loading Strategy
 
@@ -100,41 +100,3 @@ SEC filings keep separate EDGAR hyperlinks. When consensus data comes from the A
 1. `tradingviewapi` unavailable → fall back to Web Search + SEC EDGAR per the workflow reference.
 2. Ticker unresolved → ask the user for `EXCHANGE:TICKER`.
 3. Ambiguous workflow → ask the user which deliverable they want.
-
-## Directory layout
-
-```
-equity-research-analyst/
-├── SKILL.md                              # This file
-├── references/
-│   ├── tradingviewapi.md                   # Endpoint map + report-field mapping
-│   ├── tradingviewapi-docs/                # Bundled API spec + examples (snapshot)
-│   │   ├── README.md
-│   │   ├── openapi.json
-│   │   └── examples/ (12 .md files)
-│   ├── workflows/                        # One dispatch target per workflow
-│   │   ├── initiating-coverage.md
-│   │   ├── earnings-analysis.md
-│   │   ├── earnings-preview.md
-│   │   ├── catalyst-calendar.md
-│   │   ├── morning-note.md
-│   │   ├── sector-overview.md
-│   │   ├── thesis-tracker.md
-│   │   ├── model-update.md
-│   │   └── idea-generation.md
-│   ├── earnings-analysis/                # Deep-dive references for earnings workflow
-│   │   ├── workflow.md
-│   │   ├── report-structure.md
-│   │   └── best-practices.md
-│   └── initiating-coverage/              # Deep-dive references for initiation tasks 1-5
-│       ├── task1-company-research.md
-│       ├── task2-financial-modeling.md
-│       ├── task3-valuation.md
-│       ├── task4-chart-generation.md
-│       ├── task5-report-assembly.md
-│       ├── quality-checklist.md
-│       └── valuation-methodologies.md
-├── assets/
-│   └── initiating-coverage/              # Templates used in output
-│       └── report-template.md
-```

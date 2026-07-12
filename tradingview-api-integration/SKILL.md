@@ -1,6 +1,6 @@
 ---
 name: tradingview-api-integration
-description: Integrate with and query the TradingView Data API (RapidAPI tradingview-data1). Use when the user wants market data of any kind — stock/crypto/forex/futures prices and candlesticks, real-time quotes, company fundamentals and financials, technical analysis, market/symbol search, news, community ideas, leaderboards (gainers/losers/market movers), stock or crypto screeners, economic calendars (earnings/IPO/dividends/macro events), world economy indicators, symbol logos, or realtime streaming via SSE/WebSocket. Also use when a developer asks how to call, integrate, or choose between TradingView API endpoints, which parameters to use, or where parameter values (markets, tabs, columnsets, languages, screener fields) come from.
+description: Use when integrating with, troubleshooting, or querying the TradingView Data API on RapidAPI, including live market data, screeners, calendar data, metadata, streaming, endpoint selection, and API parameter validation.
 ---
 
 # TradingView API Integration
@@ -70,10 +70,10 @@ python3 -c "import json; print('\n'.join(json.load(open('references/openapi.json
 python3 -c "import json; print(json.dumps(json.load(open('references/openapi.json'))['paths']['/api/quote/{symbol}'], indent=2))"
 ```
 
-The live, always-current version is at `https://www.tradingviewapi.com/openapi.json` (public, no key). Re-fetch it if the snapshot seems stale or an endpoint is missing:
+The live, always-current version is at `https://www.tradingviewapi.com/openapi.json` (public, no key). Fetch it to a temporary path when the snapshot seems stale or an endpoint is missing; update the bundled snapshot only when intentionally maintaining this skill:
 
 ```bash
-curl -fsSL https://www.tradingviewapi.com/openapi.json -o references/openapi.json
+curl -fsSL https://www.tradingviewapi.com/openapi.json -o /tmp/tradingview-openapi.json
 ```
 
 Captured request/response examples live in `references/examples/` (file names listed in the table above; also `10-mcp.md`). Consult the example file before parsing a response shape you haven't seen. In the examples, repeated result rows and long string values are truncated with explicit `(truncated)` markers; all response fields are preserved. The real responses contain the full data.

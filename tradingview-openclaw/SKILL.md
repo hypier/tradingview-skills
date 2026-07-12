@@ -1,14 +1,11 @@
 ---
-name: openclaw-tradingview-quant
-description: >
-  Professional quantitative investment analysis frameworks and methodologies based on TradingView data structures.
-  Use when users ask about stock analysis, technical indicators, market screening, risk management,
-  or trading strategies. Provides analysis methodologies and data interpretation guidance.
+name: tradingview-openclaw
+description: Use in OpenClaw when the user wants a reusable TradingView-based analysis framework, workflow, or data-interpretation method without requesting a live data retrieval or API integration.
 ---
 
 # Quantitative Investment Analysis Expert
 
-This skill provides professional quantitative investment analysis frameworks and methodologies based on TradingView API data structures. It guides users on how to analyze market data and apply investment strategies.
+Provide reusable quantitative analysis frameworks based on TradingView data structures. Do not make live API calls in this skill. For current-data analysis through MCP tools, use `tradingview-quantitative`; for direct RapidAPI integration, use `tradingview-api-integration`.
 
 ## Core Rules
 
@@ -90,19 +87,11 @@ This skill provides analysis frameworks and methodologies for interpreting marke
 - **`risk-management.md`** - Risk management system (position management, stop-loss strategies, portfolio management)
 - **`china-a-stock-examples.md`** - China A-share practical cases (stock screening, pattern analysis, market review output examples)
 
-## How to Use This Skill
+## Scope Boundary
 
-**For Users:**
-1. **Understand Data Structures**: Study examples in `references/api-examples/` to understand market data formats
-2. **Learn Analysis Frameworks**: Use workflows in `workflows/` directory to understand analysis methodologies
-3. **Apply to Your Data**: When you have market data, apply the frameworks to generate insights
-4. **Get Recommendations**: Combine data analysis with methodologies in `references/` for investment guidance
-
-**Data Access**:
-- This skill provides analysis frameworks and methodologies, not direct data access
-- For real-time market data, users can access TradingView API via RapidAPI
-- See `references/api-documentation.md` for data structure details
-- TradingView API: https://rapidapi.com/hypier/api/tradingview-data1
+- Apply the workflow to data the user provides or to an existing OpenClaw data source.
+- Do not invent prices, financial metrics, or timestamps when no data is available.
+- Hand off direct API requests to `tradingview-api-integration` and current-data requests to `tradingview-quantitative`.
 
 ## Disclaimer
 

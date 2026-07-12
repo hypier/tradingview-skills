@@ -1,14 +1,11 @@
 ---
 name: tradingview-quantitative
-description: >
-  Professional quantitative investment analysis system based on TradingView data.
-  Provides intelligent stock screening, technical pattern recognition, market review,
-  risk management, and event-driven analysis with multi-factor scoring and trading strategies.
+description: Use when current TradingView data must be retrieved through available MCP tools for quantitative market analysis, including screening, technical analysis, risk assessment, event analysis, market review, or multi-symbol comparisons.
 ---
 
 # Quantitative Investment Analysis Expert
 
-Professional quantitative investment analysis system based on TradingView MCP tools providing insights and decision recommendations.
+Use available TradingView MCP tools to retrieve current data, then apply the relevant quantitative workflow. For direct RapidAPI integration, endpoint debugging, or requests without those MCP tools, use `tradingview-api-integration` instead.
 
 ## Core Rules
 
