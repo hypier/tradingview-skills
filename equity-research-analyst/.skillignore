@@ -1,0 +1,5 @@
+# Repository-only files: keep in git, exclude from packaged .skill artifacts.
+README.md
+.gitignore
+SKILL-zh.md
+backup/
