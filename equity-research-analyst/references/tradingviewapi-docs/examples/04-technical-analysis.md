@@ -12,9 +12,8 @@
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/ta/BINANCE:BTCUSDT' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/ta/BINANCE:BTCUSDT' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -78,9 +77,8 @@ HTTP `200`
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/ta/BINANCE:BTCUSDT/indicators' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/ta/BINANCE:BTCUSDT/indicators' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response

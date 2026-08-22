@@ -287,7 +287,7 @@ Generate a short-lived token for MCP, SSE, or WebSocket integrations.
 
 **Typical use cases:**
 - Browser or backend apps that need streaming auth
-- Bridging RapidAPI credentials into MCP or realtime sessions
+- Bridging Console or RapidAPI credentials into MCP or realtime sessions
 
 ### ⚡ WebSocket Real-time Data
 WebSocket endpoint for real-time price updates, quotes, and market data streaming.

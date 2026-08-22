@@ -45,42 +45,40 @@ The most frequently useful example files for this skill are:
 
 ## Published API
 
-- API listing: `https://rapidapi.com/hypier/api/tradingview-data1`
-- Hosted base URL: `https://tradingview-data1.p.rapidapi.com`
+- Recommended Console API: `https://api.tradingviewapi.com`
+- Console signup: `https://console.tvapis.com/start`
+- Alternate RapidAPI listing: `https://rapidapi.com/hypier/api/tradingview-data1`
 
 ## Authentication
 
-This skill does not include credentials. Provide your own RapidAPI key:
+This skill does not include credentials. Prefer a Console key:
 
 ```bash
-export RAPIDAPI_KEY="your_key_here"
+export TRADINGVIEW_API_KEY="your_key_here"
 ```
 
-Use that key in request headers when calling the hosted API.
+Send it as `Authorization: Bearer $TRADINGVIEW_API_KEY` to `https://api.tradingviewapi.com`. RapidAPI keys (`RAPIDAPI_KEY`) still work on `https://tradingview-data1.p.rapidapi.com`.
 
-### How to obtain a RapidAPI key
+### How to obtain a Console API key
 
-To get your `RAPIDAPI_KEY`, follow these steps:
-
-1. Visit `https://rapidapi.com/hypier/api/tradingview-data1`
-2. Register an account on the RapidAPI platform
-3. Subscribe to the API
-4. Obtain your API key from the RapidAPI console
-5. Set the key as an environment variable following the documentation above
+1. Visit `https://console.tvapis.com/start`
+2. Create a free account
+3. Copy the API key from the dashboard
+4. Set `TRADINGVIEW_API_KEY` as shown above
 
 ## Persistent Configuration Guidance
 
-When guiding a user to set up `RAPIDAPI_KEY`, recommend a user-level shell environment variable as the default long-term solution:
+When guiding a user to set up `TRADINGVIEW_API_KEY`, recommend a user-level shell environment variable as the default long-term solution:
 
 ```bash
-echo 'export RAPIDAPI_KEY="your_key_here"' >> ~/.zshrc
+echo 'export TRADINGVIEW_API_KEY="your_key_here"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
 Why this is the default recommendation:
 
 - Keeps secrets outside the skill folder and outside the packaged `.skill` artifact
-- Makes `RAPIDAPI_KEY` available across terminal sessions
+- Makes `TRADINGVIEW_API_KEY` available across terminal sessions
 - Matches the plain environment-variable usage shown in this skill's examples
 
 If the user wants project-scoped credentials instead of a global shell setting, suggest a local `.env` or `direnv` workflow only as a secondary option. In that case:

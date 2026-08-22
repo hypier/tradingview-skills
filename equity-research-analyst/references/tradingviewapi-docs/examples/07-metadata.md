@@ -12,9 +12,8 @@
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/metadata/markets' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/metadata/markets' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -106,9 +105,8 @@ HTTP `200`
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/metadata/world-economy/indicators?category=gdp' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/metadata/world-economy/indicators?category=gdp' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -367,9 +365,8 @@ HTTP `200`
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/metadata/tabs?type=stocks' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/metadata/tabs?type=stocks' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -568,9 +565,8 @@ HTTP `200`
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/metadata/columnsets' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/metadata/columnsets' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -658,9 +654,8 @@ HTTP `200`
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/metadata/languages' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/metadata/languages' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -760,9 +755,8 @@ HTTP `200`
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/metadata/exchanges' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/metadata/exchanges' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response

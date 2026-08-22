@@ -1,6 +1,6 @@
 # TradingView API Examples
 
-This directory contains real API request/response examples from TradingView Data API via RapidAPI. These examples serve as reference data for quantitative analysis.
+This directory contains real API request/response examples from the TradingView Data API. These examples serve as reference data for quantitative analysis.
 
 ## Files Overview
 
@@ -29,9 +29,8 @@ These examples demonstrate:
 Each file contains:
 ```
 curl --request GET \
-  --url 'https://tradingview-data1.p.rapidapi.com/api/...' \
-  --header 'x-rapidapi-host: ...' \
-  --header 'x-rapidapi-key: ...'
+  --url 'https://api.tradingviewapi.com/api/...' \
+  --header 'Authorization: Bearer YOUR_API_KEY'
 
 {
   "success": true,
@@ -41,5 +40,6 @@ curl --request GET \
 
 ## Note
 
-These are example responses for reference. For real-time data access, visit:
-- RapidAPI: https://rapidapi.com/hypier/api/tradingview-data1
+These are example responses for reference. For real-time data access:
+- Console (recommended): https://console.tvapis.com/start
+- RapidAPI (alternate): https://rapidapi.com/hypier/api/tradingview-data1

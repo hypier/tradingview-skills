@@ -69,8 +69,9 @@ If sources disagree:
   - `examples/06-news.md` for narrative news sourcing
 
 - OpenAPI source (bundled): `./tradingviewapi-docs/openapi.json`
-- RapidAPI call examples (bundled, grouped by endpoint): `./tradingviewapi-docs/examples/`
-- Base URL (RapidAPI hosted): `https://tradingview-data1.p.rapidapi.com`
+- Call examples (bundled, grouped by endpoint): `./tradingviewapi-docs/examples/`
+- Recommended base URL: `https://api.tradingviewapi.com`
+- Alternate RapidAPI host: `https://api.tradingviewapi.com`
 
 > 📦 **Self-contained note**: `tradingviewapi-docs/` is the bundled local copy of the downloaded `tradingviewapi` documentation set for this skill, including real request examples and sample payloads captured from execution. If the contents look stale, refresh the affected files manually from the published API materials and re-align this file to those downloaded docs.
 
@@ -78,7 +79,14 @@ If sources disagree:
 
 ## Authentication
 
-**RapidAPI (recommended for external users):**
+**Console (recommended):**
+
+```bash
+curl -H "Authorization: Bearer $TRADINGVIEW_API_KEY" \
+     "https://api.tradingviewapi.com/api/market-data/NASDAQ:AAPL"
+```
+
+**RapidAPI (alternate):**
 
 ```bash
 curl -H "x-rapidapi-host: tradingview-data1.p.rapidapi.com" \
@@ -86,13 +94,7 @@ curl -H "x-rapidapi-host: tradingview-data1.p.rapidapi.com" \
      "https://tradingview-data1.p.rapidapi.com/api/market-data/NASDAQ:AAPL"
 ```
 
-**Self-hosted:**
-
-```bash
-curl "https://tradingview-data1.p.rapidapi.com/api/market-data/NASDAQ:AAPL"
-```
-
-Environment variables: `RAPIDAPI_KEY`, optional `TRADINGS_API_BASE`.
+Environment variables: `TRADINGVIEW_API_KEY` (preferred), `RAPIDAPI_KEY` (legacy), optional `TRADINGVIEW_API_BASE`.
 
 For persistent user setup guidance, prefer the user-level shell configuration described in `./tradingviewapi-docs/README.md` and avoid storing real secrets inside the skill folder or packaged `.skill` artifact.
 
@@ -122,9 +124,8 @@ Pick the `filter` that matches the asset class you are researching:
 **Observed response shape (verified 2026-04-26):**
 
 ```bash
-curl -H "x-rapidapi-host: tradingview-data1.p.rapidapi.com" \
-     -H "x-rapidapi-key: $RAPIDAPI_KEY" \
-     "https://tradingview-data1.p.rapidapi.com/api/search/market/NVIDIA?filter=stock"
+curl -H "Authorization: Bearer $TRADINGVIEW_API_KEY" \
+     "https://api.tradingviewapi.com/api/search/market/NVIDIA?filter=stock"
 ```
 
 Use `data.markets[]`, not `data[]`.
@@ -143,8 +144,8 @@ Use `data.markets[]`, not `data[]`.
 ### One-shot fetch (highest information density)
 
 ```bash
-curl -H "x-rapidapi-key: $RAPIDAPI_KEY" \
-  "https://tradingview-data1.p.rapidapi.com/api/market-data/NASDAQ:AAPL"
+curl -H "Authorization: Bearer $TRADINGVIEW_API_KEY" \
+  "https://api.tradingviewapi.com/api/market-data/NASDAQ:AAPL"
 ```
 
 **Observed symbol / fiscal-label caveats (verified 2026-04-26):**
@@ -200,12 +201,12 @@ Returns 5 blocks that populate the following report fields:
 
 ```bash
 # Analyst ratings, price targets, buy/hold/sell distribution
-curl -H "x-rapidapi-key: $RAPIDAPI_KEY" \
-  "https://tradingview-data1.p.rapidapi.com/api/market-data/NASDAQ:AAPL/analyst-recommendations"
+curl -H "Authorization: Bearer $TRADINGVIEW_API_KEY" \
+  "https://api.tradingviewapi.com/api/market-data/NASDAQ:AAPL/analyst-recommendations"
 
 # Quarterly three-statement data (balance sheet / income / cash flow)
-curl -H "x-rapidapi-key: $RAPIDAPI_KEY" \
-  "https://tradingview-data1.p.rapidapi.com/api/market-data/NASDAQ:AAPL/financials-quarterly"
+curl -H "Authorization: Bearer $TRADINGVIEW_API_KEY" \
+  "https://api.tradingviewapi.com/api/market-data/NASDAQ:AAPL/financials-quarterly"
 ```
 
 **Observed analyst payload shape (verified 2026-04-26):**
@@ -224,20 +225,20 @@ The endpoint returns a single object under `data.analyst_recommendations`, not a
 
 ```bash
 # Daily 252 bars (~1 year) for stock price chart
-curl -H "x-rapidapi-key: $RAPIDAPI_KEY" \
-  "https://tradingview-data1.p.rapidapi.com/api/price/NASDAQ:AAPL?timeframe=D&range=252"
+curl -H "Authorization: Bearer $TRADINGVIEW_API_KEY" \
+  "https://api.tradingviewapi.com/api/price/NASDAQ:AAPL?timeframe=D&range=252"
 
 # Real-time quote (pre/post-market, daily change, volume)
-curl -H "x-rapidapi-key: $RAPIDAPI_KEY" \
-  "https://tradingview-data1.p.rapidapi.com/api/quote/NASDAQ:AAPL?session=regular&fields=all"
+curl -H "Authorization: Bearer $TRADINGVIEW_API_KEY" \
+  "https://api.tradingviewapi.com/api/quote/NASDAQ:AAPL?session=regular&fields=all"
 
 # Multi-timeframe technical signals (for the technical section)
-curl -H "x-rapidapi-key: $RAPIDAPI_KEY" \
-  "https://tradingview-data1.p.rapidapi.com/api/ta/NASDAQ:AAPL"
+curl -H "Authorization: Bearer $TRADINGVIEW_API_KEY" \
+  "https://api.tradingviewapi.com/api/ta/NASDAQ:AAPL"
 
 # 50+ individual indicators (RSI / MACD / moving averages / pivots)
-curl -H "x-rapidapi-key: $RAPIDAPI_KEY" \
-  "https://tradingview-data1.p.rapidapi.com/api/ta/NASDAQ:AAPL/indicators"
+curl -H "Authorization: Bearer $TRADINGVIEW_API_KEY" \
+  "https://api.tradingviewapi.com/api/ta/NASDAQ:AAPL/indicators"
 ```
 
 **Observed quote payload shape (verified 2026-04-26):**
@@ -305,8 +306,8 @@ FROM=$(date -v+0d +%s)
 TO=$(date -v+30d +%s)
 
 # Next 30 days of US earnings releases
-curl -H "x-rapidapi-key: $RAPIDAPI_KEY" \
-  "https://tradingview-data1.p.rapidapi.com/api/calendar/earnings?from=$FROM&to=$TO&market=america"
+curl -H "Authorization: Bearer $TRADINGVIEW_API_KEY" \
+  "https://api.tradingviewapi.com/api/calendar/earnings?from=$FROM&to=$TO&market=america"
 
 # Dividend calendar
 curl ".../api/calendar/revenue?from=$FROM&to=$TO&market=america"

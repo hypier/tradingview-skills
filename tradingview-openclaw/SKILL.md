@@ -5,7 +5,7 @@ description: Use in OpenClaw when the user wants a reusable TradingView-based an
 
 # Quantitative Investment Analysis Expert
 
-Provide reusable quantitative analysis frameworks based on TradingView data structures. Do not make live API calls in this skill. For current-data analysis through MCP tools, use `tradingview-quantitative`; for direct RapidAPI integration, use `tradingview-api-integration`.
+Provide reusable quantitative analysis frameworks based on TradingView data structures. Do not make live API calls in this skill. For current-data analysis through MCP tools, use `tradingview-quantitative`; for direct Console/RapidAPI integration, use `tradingview-api-integration`.
 
 ## Core Rules
 

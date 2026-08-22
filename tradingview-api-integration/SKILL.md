@@ -1,24 +1,39 @@
 ---
 name: tradingview-api-integration
-description: Use when integrating with, troubleshooting, or querying the TradingView Data API on RapidAPI, including live market data, screeners, calendar data, metadata, streaming, endpoint selection, and API parameter validation.
+description: Use when integrating with, troubleshooting, or querying the TradingView Data API on api.tradingviewapi.com (Console, recommended) or RapidAPI, including live market data, screeners, calendar data, metadata, streaming, endpoint selection, and API parameter validation.
 ---
 
 # TradingView API Integration
 
 Help developers integrate the TradingView Data API and answer data questions by calling it live.
 
+**Recommended (Console)**
+
+- Base URL: `https://api.tradingviewapi.com`
+- Auth: `Authorization: Bearer <KEY>` (equivalent: `X-API-Key: <KEY>`)
+- Get a key at https://console.tvapis.com/start
+
+**Alternate (RapidAPI)**
+
 - Base URL: `https://tradingview-data1.p.rapidapi.com`
-- Auth: every request needs headers `x-rapidapi-host: tradingview-data1.p.rapidapi.com` and `x-rapidapi-key: <KEY>`
+- Auth: `x-rapidapi-host: tradingview-data1.p.rapidapi.com` and `x-rapidapi-key: <KEY>`
+- Console and RapidAPI keys are billed separately. Paths after the host are the same.
+
+Prefer Console for new integrations and generated examples. Use RapidAPI only when the user already has a RapidAPI subscription or asks for it.
 
 ## API key workflow (required for live calls)
 
-`scripts/tv_api.py` resolves the key in this order:
+`scripts/tv_api.py` defaults to Console. It resolves the key in this order:
 
 1. `--key` CLI argument
-2. `RAPIDAPI_KEY` environment variable
-3. `.rapidapi-key` file in this skill's root directory
+2. `TRADINGVIEW_API_KEY` environment variable
+3. `RAPIDAPI_KEY` environment variable (legacy RapidAPI)
+4. `.api-key` file in this skill's root directory
+5. `.rapidapi-key` file in this skill's root directory (legacy)
 
-If none is available, ask the user for their `x-rapidapi-key`.
+If the only available key came from `RAPIDAPI_KEY` or `.rapidapi-key`, the script uses the RapidAPI host automatically. `--backend console|rapid` or `--rapid` overrides that.
+
+If none is available, ask the user for a Console API key.
 
 When the user provides a key, ask whether to save it for future sessions. **Only after explicit consent**, save it:
 
@@ -26,7 +41,7 @@ When the user provides a key, ask whether to save it for future sessions. **Only
 python3 scripts/tv_api.py --save-key 'THE_KEY'
 ```
 
-This writes `.rapidapi-key` (chmod 600) to the skill root so future calls need no key prompt.
+This writes `.api-key` (chmod 600) to the skill root so future calls need no key prompt.
 
 ## Making live requests
 
@@ -36,6 +51,14 @@ Use `scripts/tv_api.py` (stdlib only, handles key resolution and JSON pretty-pri
 python3 scripts/tv_api.py GET '/api/quote/NASDAQ:AAPL'
 python3 scripts/tv_api.py GET '/api/price/BINANCE:BTCUSDT?timeframe=60&range=20'
 python3 scripts/tv_api.py POST '/api/screener/scan' --body '{"market":"america","range":[0,20],"filters":{"market_cap_basic":{"operation":"greater_or_equal","value":1e10}}}'
+python3 scripts/tv_api.py --rapid GET '/api/quote/NASDAQ:AAPL'
+```
+
+Equivalent Console curl:
+
+```bash
+curl --location 'https://api.tradingviewapi.com/api/quote/NASDAQ:AAPL' \
+  --header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ## Choosing the right endpoint

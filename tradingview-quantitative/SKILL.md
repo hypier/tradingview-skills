@@ -5,7 +5,7 @@ description: Use when current TradingView data must be retrieved through availab
 
 # Quantitative Investment Analysis Expert
 
-Use available TradingView MCP tools to retrieve current data, then apply the relevant quantitative workflow. For direct RapidAPI integration, endpoint debugging, or requests without those MCP tools, use `tradingview-api-integration` instead.
+Use available TradingView MCP tools to retrieve current data, then apply the relevant quantitative workflow. For direct Console/RapidAPI integration, endpoint debugging, or requests without those MCP tools, use `tradingview-api-integration` instead.
 
 ## Core Rules
 

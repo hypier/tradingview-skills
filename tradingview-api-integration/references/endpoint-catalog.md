@@ -2,8 +2,9 @@
 
 Complete reference of every endpoint: parameters, defaults, enums, and where parameter values come from.
 
-- Base URL: `https://tradingview-data1.p.rapidapi.com`
-- Auth headers (all requests): `x-rapidapi-host: tradingview-data1.p.rapidapi.com` and `x-rapidapi-key: <KEY>`
+- Recommended base URL: `https://api.tradingviewapi.com`
+- Recommended auth: `Authorization: Bearer <KEY>` (equivalent: `X-API-Key: <KEY>`)
+- Alternate RapidAPI host: `https://tradingview-data1.p.rapidapi.com` with `x-rapidapi-host` + `x-rapidapi-key`
 - Response envelope (most endpoints): `{ "success": true|false, "data": ..., "msg": "Success" }`
 
 ## Table of Contents

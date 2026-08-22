@@ -11,10 +11,9 @@
 
 ```bash
 curl --request POST \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/token/generate' \
+	--url 'https://api.tradingviewapi.com/api/token/generate' \
 	--header 'Content-Type: application/json' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY' \
+	--header 'Authorization: Bearer YOUR_API_KEY' \
 	--data '{}'
 ```
 

@@ -24,9 +24,8 @@
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/news?symbol=NASDAQ%3AAAPL&lang=en&market=stock&market_country=US' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/news?symbol=NASDAQ%3AAAPL&lang=en&market=stock&market_country=US' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -123,9 +122,8 @@ OpenAPI example / fallback
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/news/bond?symbol=NASDAQ%3AAAPL&lang=en' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/news/bond?symbol=NASDAQ%3AAAPL&lang=en' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -238,9 +236,8 @@ OpenAPI example / fallback
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/news/crypto?symbol=NASDAQ%3AAAPL&lang=en' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/news/crypto?symbol=NASDAQ%3AAAPL&lang=en' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -345,9 +342,8 @@ OpenAPI example / fallback
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/news/economic?symbol=NASDAQ%3AAAPL&lang=en' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/news/economic?symbol=NASDAQ%3AAAPL&lang=en' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -444,9 +440,8 @@ OpenAPI example / fallback
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/news/etf?symbol=NASDAQ%3AAAPL&lang=en' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/news/etf?symbol=NASDAQ%3AAAPL&lang=en' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -549,9 +544,8 @@ OpenAPI example / fallback
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/news/forex?symbol=NASDAQ%3AAAPL&lang=en' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/news/forex?symbol=NASDAQ%3AAAPL&lang=en' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -625,9 +619,8 @@ OpenAPI example / fallback
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/news/futures?symbol=NASDAQ%3AAAPL&lang=en' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/news/futures?symbol=NASDAQ%3AAAPL&lang=en' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -733,9 +726,8 @@ OpenAPI example / fallback
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/news/index?symbol=NASDAQ%3AAAPL&lang=en' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/news/index?symbol=NASDAQ%3AAAPL&lang=en' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -837,9 +829,8 @@ OpenAPI example / fallback
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/news/stock?symbol=NASDAQ%3AAAPL&lang=en&market_country=US' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/news/stock?symbol=NASDAQ%3AAAPL&lang=en&market_country=US' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -936,9 +927,8 @@ OpenAPI example / fallback
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/news/tag%3Areuters.com%2C2025%3Anewsml_L1N3XK042%3A0?lang=en' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/news/tag%3Areuters.com%2C2025%3Anewsml_L1N3XK042%3A0?lang=en' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response

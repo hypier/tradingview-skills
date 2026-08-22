@@ -11,9 +11,8 @@
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/logo?url=apple.svg&big=true' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY' \
+	--url 'https://api.tradingviewapi.com/logo?url=apple.svg&big=true' \
+	--header 'Authorization: Bearer YOUR_API_KEY' \
 	--output apple.svg
 ```
 
@@ -33,9 +32,8 @@ OpenAPI example / fallback
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/logo/apple.svg' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY' \
+	--url 'https://api.tradingviewapi.com/logo/apple.svg' \
+	--header 'Authorization: Bearer YOUR_API_KEY' \
 	--output apple.svg
 ```
 

@@ -12,9 +12,8 @@
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/ideas/hot?page=1&lang=en' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/ideas/hot?page=1&lang=en' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -1957,9 +1956,8 @@ HTTP `200`
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/ideas/editors-picks?page=1&lang=en' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/ideas/editors-picks?page=1&lang=en' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -3929,9 +3927,8 @@ HTTP `200`
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/ideas/NASDAQ:AAPL/minds?lang=en' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/ideas/NASDAQ:AAPL/minds?lang=en' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -4480,9 +4477,8 @@ HTTP `200`
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/ideas/list/NASDAQ:AAPL?page=1&per_page=5&lang=en' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/ideas/list/NASDAQ:AAPL?page=1&per_page=5&lang=en' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -4896,9 +4892,8 @@ HTTP `200`
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/ideas/LfKFTY2N' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/ideas/LfKFTY2N' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response

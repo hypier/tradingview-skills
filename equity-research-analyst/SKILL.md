@@ -58,7 +58,7 @@ Before Web Search, pull structured numeric data (financials, TTM ratios, analyst
 - Full endpoint map, curl examples, and JSON-path-to-report-field mapping: `references/tradingviewapi.md`
 - OpenAPI spec and example responses: `references/tradingviewapi-docs/`
 
-**Authentication**: users must provide their own `RAPIDAPI_KEY` env var (RapidAPI hosted).
+**Authentication**: prefer `TRADINGVIEW_API_KEY` against `https://api.tradingviewapi.com` (`Authorization: Bearer`). RapidAPI keys (`RAPIDAPI_KEY`) remain supported as an alternate.
 
 **Use Web Search ONLY for narrative content**: MD&A text, forward guidance wording, earnings call transcripts, segment breakdowns, risk factors, management bios, industry research, FDA/regulatory decisions. Pull raw SEC 10-K/10-Q only when direct quotation or audit is required.
 

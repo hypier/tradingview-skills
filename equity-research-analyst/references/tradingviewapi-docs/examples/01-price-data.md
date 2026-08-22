@@ -12,9 +12,8 @@
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/price/BINANCE:BTCUSDT?timeframe=1&range=10' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/price/BINANCE:BTCUSDT?timeframe=1&range=10' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -202,10 +201,9 @@ HTTP `200`
 
 ```bash
 curl --request POST \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/price/batch' \
+	--url 'https://api.tradingviewapi.com/api/price/batch' \
 	--header 'Content-Type: application/json' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY' \
+	--header 'Authorization: Bearer YOUR_API_KEY' \
 	--data '{"requests":[{"symbol":"BINANCE:BTCUSDT","timeframe":"60","range":20}]}'
 ```
 

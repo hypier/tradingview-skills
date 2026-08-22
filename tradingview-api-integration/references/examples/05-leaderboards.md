@@ -23,9 +23,8 @@
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/leaderboard/stocks?tab=gainers&market_code=america&columnset=overview&start=0&count=5&lang=en' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/leaderboard/stocks?tab=gainers&market_code=america&columnset=overview&start=0&count=5&lang=en' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -162,9 +161,8 @@ OpenAPI example / fallback
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/leaderboard/indices?tab=major&columnset=overview&start=0&count=5&lang=en' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/leaderboard/indices?tab=major&columnset=overview&start=0&count=5&lang=en' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -283,9 +281,8 @@ OpenAPI example / fallback
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/leaderboard/crypto?tab=gainers&columnset=overview&start=0&count=5&lang=en' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/leaderboard/crypto?tab=gainers&columnset=overview&start=0&count=5&lang=en' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -416,9 +413,8 @@ OpenAPI example / fallback
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/leaderboard/futures?tab=all&columnset=overview&start=0&count=5&lang=en' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/leaderboard/futures?tab=all&columnset=overview&start=0&count=5&lang=en' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -540,9 +536,8 @@ OpenAPI example / fallback
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/leaderboard/forex?tab=major&columnset=overview&start=0&count=5&lang=en' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/leaderboard/forex?tab=major&columnset=overview&start=0&count=5&lang=en' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -671,9 +666,8 @@ OpenAPI example / fallback
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/leaderboard/bonds?tab=major&start=0&count=5&lang=en' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/leaderboard/bonds?tab=major&start=0&count=5&lang=en' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -790,9 +784,8 @@ OpenAPI example / fallback
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/leaderboard/corporate-bonds?tab=highest-yield&start=0&count=5&lang=en' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/leaderboard/corporate-bonds?tab=highest-yield&start=0&count=5&lang=en' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -873,9 +866,8 @@ OpenAPI example / fallback
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/leaderboard/etfs?tab=largest&columnset=overview&start=0&count=5&lang=en' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/leaderboard/etfs?tab=largest&columnset=overview&start=0&count=5&lang=en' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -998,9 +990,8 @@ OpenAPI example / fallback
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/leaderboard/data?id=stocks_market_movers.gainers&market_code=america&columnset=overview&start=0&count=5&lang=en' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/leaderboard/data?id=stocks_market_movers.gainers&market_code=america&columnset=overview&start=0&count=5&lang=en' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response

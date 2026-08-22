@@ -11,9 +11,8 @@
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/sse/stream?symbols=NASDAQ%3AAAPL%2CBINANCE%3ABTCUSDT&type=quote' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY' \
+	--url 'https://api.tradingviewapi.com/sse/stream?symbols=NASDAQ%3AAAPL%2CBINANCE%3ABTCUSDT&type=quote' \
+	--header 'Authorization: Bearer YOUR_API_KEY' \
 	--no-buffer
 ```
 

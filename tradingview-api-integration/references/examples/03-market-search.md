@@ -11,9 +11,8 @@
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/search/market/AAPL?filter=stock' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/search/market/AAPL?filter=stock' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response

@@ -7,7 +7,7 @@ A collection of Agent Skills for TradingView data retrieval, quantitative market
 | Skill | Use it for | Data access |
 | --- | --- | --- |
 | `equity-research-analyst` | Initiation reports, earnings notes and previews, catalyst calendars, morning notes, sector reports, model updates, and investment idea generation | TradingView Data API first; public primary sources for narrative and filings |
-| `tradingview-api-integration` | Integrating with, troubleshooting, or directly querying the TradingView Data API, including quotes, financials, screeners, calendars, metadata, and streaming | RapidAPI; requires `RAPIDAPI_KEY` for authenticated endpoints |
+| `tradingview-api-integration` | Integrating with, troubleshooting, or directly querying the TradingView Data API, including quotes, financials, screeners, calendars, metadata, and streaming | Console (`api.tradingviewapi.com`) with `TRADINGVIEW_API_KEY`; RapidAPI remains an alternate |
 | `tradingview-quantitative` | Retrieving current data through configured TradingView MCP tools, then performing screening, technical, risk, event, or multi-symbol analysis | TradingView MCP tools |
 | `tradingview-openclaw` | Applying reusable TradingView-based analysis workflows and data-interpretation methods in OpenClaw | Uses user-provided or existing data; does not make live API calls |
 
@@ -53,7 +53,7 @@ Replace `tradingview-api-integration` with the desired directory name in either 
 
 ## Prerequisites
 
-- **API integration and equity research:** Set `RAPIDAPI_KEY` before making authenticated RapidAPI calls. `tradingview-api-integration` can save a key to `.rapidapi-key` only after explicit consent.
+- **API integration and equity research:** Set `TRADINGVIEW_API_KEY` and call `https://api.tradingviewapi.com` with `Authorization: Bearer`. RapidAPI (`RAPIDAPI_KEY`) remains supported as an alternate. `tradingview-api-integration` can save a key to `.api-key` only after explicit consent.
 - **Quantitative analysis:** Configure TradingView MCP tools in the agent runtime. Without them, use `tradingview-api-integration` for direct API access.
 - **OpenClaw frameworks:** Supply market, financial, or news data when current information is required. The skill does not treat templates or historical examples as live market data.
 - **Equity research:** Prefer exchange-qualified tickers such as `NASDAQ:AAPL` or `HKEX:9988`. Cite the retrieval date and endpoint for live data used in a report.

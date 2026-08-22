@@ -22,10 +22,9 @@
 
 ```bash
 curl --request POST \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/screener/scan' \
+	--url 'https://api.tradingviewapi.com/api/screener/scan' \
 	--header 'Content-Type: application/json' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY' \
+	--header 'Authorization: Bearer YOUR_API_KEY' \
 	--data '{"market":"america","lang":"en","range":[0,50],"preset_fields":["overview","technicals"],"fields":["change_abs","Perf.1W"],"extra_fields":["RSI","SMA50"],"filters":{"market_cap_basic":{"operation":"greater_or_equal","value":10000000000},"volume":{"operation":"greater_or_equal","value":1000000}},"sort":{"sortBy":"market_cap_basic","sortOrder":"desc"}}'
 ```
 
@@ -219,9 +218,8 @@ HTTP `200`
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/screener/presets?asset_type=stock' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/screener/presets?asset_type=stock' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -273,9 +271,8 @@ HTTP `200`
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/screener/filter-options?asset_type=stock&lang=en&id=stocks_market_movers.gainers' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/screener/filter-options?asset_type=stock&lang=en&id=stocks_market_movers.gainers' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
@@ -301,10 +298,9 @@ HTTP `200`
 
 ```bash
 curl --request POST \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/screener/etf/scan' \
+	--url 'https://api.tradingviewapi.com/api/screener/etf/scan' \
 	--header 'Content-Type: application/json' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY' \
+	--header 'Authorization: Bearer YOUR_API_KEY' \
 	--data '{"lang":"en","range":[0,30],"preset_fields":["overview","classification"],"fields":["fund_flows.1M","etf_holdings_count"],"extra_fields":["nav","leverage.tr"],"filters":{"aum":{"operation":"greater_or_equal","value":500000000},"expense_ratio":{"operation":"less_or_equal","value":0.5},"technical_rating":["Buy","StrongBuy"]},"sort":{"sortBy":"aum","sortOrder":"desc"}}'
 ```
 
@@ -444,10 +440,9 @@ HTTP `200`
 
 ```bash
 curl --request POST \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/screener/bond/scan' \
+	--url 'https://api.tradingviewapi.com/api/screener/bond/scan' \
 	--header 'Content-Type: application/json' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY' \
+	--header 'Authorization: Bearer YOUR_API_KEY' \
 	--data '{"lang":"en","range":[0,25],"preset_fields":["overview","ratings"],"fields":["yield_to_call","yield_to_worst"],"extra_fields":["snp_rating_long_term.tr","fitch_outlook.tr"],"filters":{"yield_to_maturity":{"operation":"greater_or_equal","value":4},"days_to_maturity":{"operation":"less_or_equal","value":3650}},"sort":{"sortBy":"yield_to_maturity","sortOrder":"desc"}}'
 ```
 
@@ -584,10 +579,9 @@ HTTP `200`
 
 ```bash
 curl --request POST \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/screener/cex/scan' \
+	--url 'https://api.tradingviewapi.com/api/screener/cex/scan' \
 	--header 'Content-Type: application/json' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY' \
+	--header 'Authorization: Bearer YOUR_API_KEY' \
 	--data '{"lang":"en","range":[0,25],"preset_fields":["overview","market_data"],"fields":["Perf.1W"],"extra_fields":["RSI","MACD.macd"],"filters":{"exchange":["HTX"],"technical_rating":["Buy"]},"sort":{"sortBy":"24h_vol_cmc","sortOrder":"desc"}}'
 ```
 
@@ -713,10 +707,9 @@ HTTP `200`
 
 ```bash
 curl --request POST \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/screener/dex/scan' \
+	--url 'https://api.tradingviewapi.com/api/screener/dex/scan' \
 	--header 'Content-Type: application/json' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY' \
+	--header 'Authorization: Bearer YOUR_API_KEY' \
 	--data '{"lang":"en","range":[0,25],"preset_fields":["overview","trading_activity"],"fields":["Perf.1W"],"extra_fields":["TechRating_1D","TechRating_1D.tr"],"filters":{"exchange":["UNISWAP","PANCAKESWAP"],"dex_trading_volume_24h":{"operation":"greater_or_equal","value":1000000},"dex_buyers_24h":{"operation":"greater_or_equal","value":200}},"sort":{"sortBy":"dex_trading_volume_24h","sortOrder":"desc"}}'
 ```
 
@@ -829,10 +822,9 @@ HTTP `200`
 
 ```bash
 curl --request POST \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/screener/crypto/scan' \
+	--url 'https://api.tradingviewapi.com/api/screener/crypto/scan' \
 	--header 'Content-Type: application/json' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY' \
+	--header 'Authorization: Bearer YOUR_API_KEY' \
 	--data '{"lang":"zh","range":[0,25],"preset_fields":["overview","sentiment"],"fields":["Perf.1W"],"extra_fields":["RSI","MACD.macd"],"filters":{"market_cap_calc":{"operation":"greater_or_equal","value":500000000},"technical_rating":["Buy","StrongBuy"]},"sort":{"sortBy":"crypto_total_rank","sortOrder":"asc"}}'
 ```
 

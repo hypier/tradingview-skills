@@ -11,9 +11,8 @@
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/world-economy/indicators/full-year-gdp-growth?region=g20' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/world-economy/indicators/full-year-gdp-growth?region=g20' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response

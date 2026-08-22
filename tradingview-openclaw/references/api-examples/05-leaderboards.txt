@@ -1,7 +1,6 @@
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/leaderboard/corporate-bonds?columnset=overview&tab=highest-yield&start=0&lang=en&count=20' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/leaderboard/corporate-bonds?columnset=overview&tab=highest-yield&start=0&lang=en&count=20' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 
   {
   "success": true,

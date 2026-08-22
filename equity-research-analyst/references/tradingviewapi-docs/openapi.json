@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "TradingView API Server",
-    "description": "Access 160,000+ stocks, forex, cryptocurrencies, and ETF data from around the world. Supports REST API and ultra-low latency WebSocket.\n\n## Basic Information\n\n- **Base URL:** `https://tradingview-data1.p.rapidapi.com`\n- **RapidAPI Host:** `tradingview-data1.p.rapidapi.com`\n- **Supported Format:** JSON\n\n## Authentication\n\nAll API requests require authentication via RapidAPI. Include the following headers in every request:\n\n```\nx-rapidapi-host: tradingview-data1.p.rapidapi.com\nx-rapidapi-key: YOUR_RAPIDAPI_KEY\n```\n\n> **Important:** Keep your API key secure and do not commit it to public repositories. Get your key on [RapidAPI](https://rapidapi.com/hypier/api/tradingview-data1).\n\n## Rate Limits\n\n| Plan  | Monthly Quota        | Rate Limit           | Price      |\n|-------|----------------------|----------------------|------------|\n| Basic | 150 requests/month   | 1000 requests/hour   | Free       |\n| Pro   | 30,000 requests/month| 5 requests/second    | $10/month  |\n| Ultra | 50,000 requests/month| 5 requests/second    | $30/month  |\n| Mega  | 200,000 requests/month| 5 requests/second   | $80/month  |\n\n## Error Handling\n\nThe API uses standard HTTP status codes. Errors follow this JSON shape:\n\n```json\n{\n  \"success\": false,\n  \"error\": {\n    \"code\": \"INVALID_SYMBOL\",\n    \"message\": \"Symbol not found or invalid\",\n    \"details\": \"The symbol 'INVALID:SYMBOL' does not exist\"\n  }\n}\n```\n\n| Status | Name                  | Description                                         |\n|--------|-----------------------|-----------------------------------------------------|\n| 200    | OK                    | Request successful                                  |\n| 400    | Bad Request           | Invalid or missing parameters                       |\n| 401    | Unauthorized          | Authentication failed or invalid API key            |\n| 404    | Not Found             | Requested resource not found                        |\n| 429    | Too Many Requests     | Rate limit exceeded                                 |\n| 500    | Internal Server Error | Internal server error                               |",
+    "description": "Access 160,000+ stocks, forex, cryptocurrencies, and ETF data from around the world. Supports REST API and ultra-low latency WebSocket.\n\n## Basic Information\n\n- **Base URL:** `https://api.tradingviewapi.com`\n- **Authentication:** `Authorization: Bearer YOUR_API_KEY` or `X-API-Key`\n- **Supported Format:** JSON\n- **Also available via RapidAPI:** `https://tradingview-data1.p.rapidapi.com`\n\n## Authentication\n\nGet an API key from [Console](https://console.tvapis.com/start). Include the key on every request:\n\n```\nAuthorization: Bearer YOUR_API_KEY\n```\n\nRapidAPI keys remain supported on the RapidAPI server with `x-rapidapi-key` and `x-rapidapi-host`.\n\n> **Important:** Keep your API key secure and do not commit it to public repositories.\n\n## Rate Limits\n\n| Plan  | Monthly Quota             | Rate Limit           | Price      |\n|-------|---------------------------|----------------------|------------|\n| Basic | 150 requests/month        | 2 requests/second    | Free       |\n| Pro   | 30,000 requests/month     | 5 requests/second    | $10/month  |\n| Ultra | 100,000 requests/month    | 5 requests/second    | $30/month  |\n| Mega  | 2,500,000 requests/month  | 5 requests/second    | $80/month  |\n\n## Error Handling\n\nThe API uses standard HTTP status codes. Errors follow this JSON shape:\n\n```json\n{\n  \"success\": false,\n  \"error\": {\n    \"code\": \"INVALID_SYMBOL\",\n    \"message\": \"Symbol not found or invalid\",\n    \"details\": \"The symbol 'INVALID:SYMBOL' does not exist\"\n  }\n}\n```\n\n| Status | Name                  | Description                                         |\n|--------|-----------------------|-----------------------------------------------------|\n| 200    | OK                    | Request successful                                  |\n| 400    | Bad Request           | Invalid or missing parameters                       |\n| 401    | Unauthorized          | Authentication failed or invalid API key            |\n| 404    | Not Found             | Requested resource not found                        |\n| 429    | Too Many Requests     | Rate limit exceeded                                 |\n| 500    | Internal Server Error | Internal server error                               |",
     "version": "2.4.0",
     "contact": {
       "name": "API Support"
@@ -13,39 +13,43 @@
   },
   "servers": [
     {
+      "url": "https://api.tradingviewapi.com",
+      "description": "Console (recommended)"
+    },
+    {
       "url": "https://tradingview-data1.p.rapidapi.com",
-      "description": "Production server"
+      "description": "RapidAPI"
     }
   ],
   "components": {
     "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Key",
+        "description": "Console API key. Open https://console.tvapis.com/start and paste the key as Authorization: Bearer."
+      },
       "RapidAPIKey": {
         "type": "apiKey",
         "in": "header",
         "name": "x-rapidapi-key",
-        "description": "Your RapidAPI key. Get one at https://rapidapi.com/hypier/api/tradingview-data1"
-      }
-    },
-    "parameters": {
-      "RapidAPIHostHeader": {
-        "name": "x-rapidapi-host",
+        "description": "RapidAPI key header. Get one at https://rapidapi.com/hypier/api/tradingview-data1. Use with the RapidAPI server."
+      },
+      "RapidAPIHost": {
+        "type": "apiKey",
         "in": "header",
-        "required": true,
-        "description": "RapidAPI host. Fixed value: `tradingview-data1.p.rapidapi.com`.",
-        "schema": {
-          "type": "string",
-          "default": "tradingview-data1.p.rapidapi.com",
-          "enum": [
-            "tradingview-data1.p.rapidapi.com"
-          ]
-        },
-        "example": "tradingview-data1.p.rapidapi.com"
+        "name": "x-rapidapi-host",
+        "description": "RapidAPI host header. Use tradingview-data1.p.rapidapi.com with the RapidAPI server."
       }
     }
   },
   "security": [
     {
-      "RapidAPIKey": []
+      "ApiKeyAuth": []
+    },
+    {
+      "RapidAPIKey": [],
+      "RapidAPIHost": []
     }
   ],
   "paths": {
@@ -57,9 +61,6 @@
         "summary": "Get economic calendar events",
         "description": "Get economic calendar events for specified time range and countries",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "from",
             "in": "query",
@@ -84,7 +85,7 @@
             "name": "market",
             "in": "query",
             "required": false,
-            "description": "Market codes (supports multiple, comma-separated, e.g., america,china). Internally converted to country codes",
+            "description": "Market codes (supports multiple, comma-separated, e.g., america,china)",
             "schema": {
               "type": "string",
               "example": "america,china"
@@ -325,9 +326,6 @@
         "summary": "Get earnings calendar",
         "description": "Get earnings calendar data for specified time range and markets",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "from",
             "in": "query",
@@ -660,9 +658,6 @@
         "description": "Get dividends calendar data for specified time range and markets",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "from",
             "in": "query",
             "required": true,
@@ -913,9 +908,6 @@
         "summary": "Get IPO calendar",
         "description": "Get IPO calendar data for specified time range and markets",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "from",
             "in": "query",
@@ -1170,82 +1162,6 @@
         }
       }
     },
-    "/health": {
-      "get": {
-        "tags": [
-          "Health Check"
-        ],
-        "summary": "Health check",
-        "description": "Check API server running status, including authentication status and active session count",
-        "responses": {
-          "200": {
-            "description": "Server running normally",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "enum": [
-                        "ok",
-                        "disconnected"
-                      ]
-                    },
-                    "timestamp": {
-                      "type": "integer"
-                    },
-                    "charts": {
-                      "type": "integer"
-                    },
-                    "quoteSessions": {
-                      "type": "integer"
-                    },
-                    "authenticated": {
-                      "type": "boolean"
-                    }
-                  }
-                },
-                "example": {
-                  "success": true,
-                  "data": {
-                    "status": "ok",
-                    "timestamp": 1776767673990,
-                    "charts": 1,
-                    "quoteSessions": 4,
-                    "authenticated": false
-                  },
-                  "msg": "Success"
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          }
-        ],
-        "x-codeSamples": [
-          {
-            "lang": "curl",
-            "label": "cURL",
-            "source": "curl --request GET \\\n  --url 'https://tradingview-data1.p.rapidapi.com/health' \\\n  --header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \\\n  --header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'"
-          },
-          {
-            "lang": "javascript",
-            "label": "JavaScript",
-            "source": "const response = await fetch('https://tradingview-data1.p.rapidapi.com/health', {\n  method: 'GET',\n  headers: {\n    'x-rapidapi-host': 'tradingview-data1.p.rapidapi.com',\n    'x-rapidapi-key': 'YOUR_RAPIDAPI_KEY'\n  }\n});\nconst data = await response.json();\nconsole.log(data);"
-          },
-          {
-            "lang": "python",
-            "label": "Python",
-            "source": "import requests\n\nurl = \"https://tradingview-data1.p.rapidapi.com/health\"\nheaders = {\n    \"x-rapidapi-host\": \"tradingview-data1.p.rapidapi.com\",\n    \"x-rapidapi-key\": \"YOUR_RAPIDAPI_KEY\"\n}\nresponse = requests.get(url, headers=headers)\nprint(response.json())"
-          }
-        ],
-        "operationId": "healthCheck"
-      }
-    },
     "/api/ideas/hot": {
       "get": {
         "tags": [
@@ -1254,9 +1170,6 @@
         "summary": "Get hot ideas list",
         "description": "Get TradingView hot ideas list, supports pagination",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "page",
             "in": "query",
@@ -1642,12 +1555,9 @@
         "description": "Get TradingView editors picks ideas list, supports pagination",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "page",
             "in": "query",
-            "description": "Page number (default: 1, homepage does not use page-1)",
+            "description": "Page number (default: 1)",
             "schema": {
               "type": "integer",
               "default": 1,
@@ -1916,7 +1826,7 @@
                       "id": 21843137,
                       "image_url": "CQpkz6PH",
                       "name": "IREN | Weekly",
-                      "description": "NASDAQ:IREN   — Quantum Model Projection  \nBullish Outlook | Projected Extension Underway\n IREN  has advanced 62% since late March, firmly supported by the  Q-Structure λₛ  at precise confluence, as projected—reinforcing the Primary degree Extension in Wave ⓹ now underway.\n\n Wave Analysis \nThis impulsive advance in Intermediate Wave (1), characteristically, indicates a broader Extension into Primary Wave ⓹. \nAs illustrated on the chart, a retracement at Intermediate degree is expected to follow as Wave (2) from current levels—aligning with  BTC ’s projected corrective phase in Int (2).\n\n🔖  Outlook is derived from insights within the Quantum Models framework. Within this methodology, Q-targets are high-probability projections generated by the convergence of equivalence lines. These Quantum Structures also function as structural anchors, shaping the model’s internal geometry and guiding the evolution of alternative paths as price action unfolds.   \n#CryptoStocks #CryptoMining #QuantumModels\n",
+                      "description": "NASDAQ:IREN   — Quantum Model Projection  \nBullish Outlook | Projected Extension Underway\n IREN  has advanced 62% since late March, firmly supported by the  Q-Structure λₛ  at precise confluence, as projected—reinforcing the Primary degree Extension in Wave ⓹ now underway.\n\n Wave Analysis \nThis impulsive advance in Intermediate Wave (1), characteristically, indicates a broader Extension into Primary Wave ⓹. \nAs illustrated on the chart, a retracement at Intermediate degree is expected to follow as Wave (2) from current levels—aligning with  BTC ’s projected corrective phase in Int (2).\n\n🔖  Outlook is derived from insights within the Quantum Models framework. Within this methodology, Q-targets are high-probability projections generated by the convergence of equivalence lines. These Quantum Structures also function as structural anchors, shaping the model’s internal geometry and guiding the evolution of alternative paths as price action unfolds.   \n#CryptoStocks #CryptoMining #QuantumModels\n",
                       "created_at": "2026-04-20T03:04:57+00:00",
                       "updated_at": null,
                       "date_timestamp": 1776654297,
@@ -2024,9 +1934,6 @@
         "summary": "Get stock minds",
         "description": "Get TradingView minds list for a specific stock",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "symbol",
             "in": "path",
@@ -2318,9 +2225,6 @@
         "description": "Get TradingView ideas list by stock symbol, supports pagination",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "symbol",
             "in": "path",
             "required": true,
@@ -2446,7 +2350,7 @@
                       "updated_at": null,
                       "date_timestamp": 1776763132,
                       "updated_date_timestamp": null,
-                      "chart_url": "https://cn.tradingview.com/chart/AAPL/WgdZsc11-Apple-Inc-AAPL-Stock-Approaches-Resistance-Anticipate-Sell/",
+                      "chart_url": "https://www.tradingview.com/chart/AAPL/WgdZsc11-Apple-Inc-AAPL-Stock-Approaches-Resistance-Anticipate-Sell/",
                       "is_public": true,
                       "is_visible": true,
                       "is_video": false,
@@ -2520,7 +2424,7 @@
                       "updated_at": null,
                       "date_timestamp": 1776713959,
                       "updated_date_timestamp": null,
-                      "chart_url": "https://cn.tradingview.com/chart/AAPL/8LnGpJNe-APPLE-Last-short-opportunity-of-the-Bear-Cycle/",
+                      "chart_url": "https://www.tradingview.com/chart/AAPL/8LnGpJNe-APPLE-Last-short-opportunity-of-the-Bear-Cycle/",
                       "is_public": true,
                       "is_visible": true,
                       "is_video": false,
@@ -2599,7 +2503,7 @@
                       "updated_at": null,
                       "date_timestamp": 1776697908,
                       "updated_date_timestamp": null,
-                      "chart_url": "https://cn.tradingview.com/chart/AAPL/ePkX43HZ-Apple-Wave-Analysis-20-April-2026/",
+                      "chart_url": "https://www.tradingview.com/chart/AAPL/ePkX43HZ-Apple-Wave-Analysis-20-April-2026/",
                       "is_public": true,
                       "is_visible": true,
                       "is_video": false,
@@ -2707,9 +2611,6 @@
         "summary": "Get idea detail",
         "description": "Get detailed content of community idea by image_url",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "imageUrl",
             "in": "path",
@@ -3037,9 +2938,6 @@
         "description": "Get stock leaderboard data, requires market code",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "tab",
             "in": "query",
             "required": true,
@@ -3059,6 +2957,7 @@
                 "highest_profit_per_employee",
                 "highest_revenue_per_employee",
                 "active",
+                "most-active",
                 "unusual_volume",
                 "most_volatile",
                 "high_beta",
@@ -3473,9 +3372,6 @@
         "description": "Get index leaderboard data",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "tab",
             "in": "query",
             "required": true,
@@ -3743,9 +3639,6 @@
         "summary": "Get cryptocurrency leaderboard data",
         "description": "Get cryptocurrency leaderboard data",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "tab",
             "in": "query",
@@ -4106,9 +3999,6 @@
         "description": "Get futures leaderboard data",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "tab",
             "in": "query",
             "required": true,
@@ -4367,9 +4257,6 @@
         "summary": "Get forex leaderboard data",
         "description": "Get forex leaderboard data",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "tab",
             "in": "query",
@@ -4634,9 +4521,6 @@
         "description": "Get government bond leaderboard data",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "tab",
             "in": "query",
             "required": true,
@@ -4889,9 +4773,6 @@
         "description": "Get corporate bond leaderboard data",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "tab",
             "in": "query",
             "required": true,
@@ -5091,9 +4972,6 @@
         "summary": "Get ETF/fund leaderboard data",
         "description": "Get ETF/fund leaderboard data",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "tab",
             "in": "query",
@@ -5402,9 +5280,6 @@
         "description": "Get leaderboard data using config ID (backward compatibility)",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "id",
             "in": "query",
             "required": true,
@@ -5674,11 +5549,8 @@
           "Logo Proxy"
         ],
         "summary": "Proxy TradingView Logo image (URL parameter method)",
-        "description": "Proxy requests to Cloudflare Worker (tv-logo.tradingviewapi.com) logo service using URL query parameters. Note: If path contains special characters (e.g., /), URL encoding is required, e.g., crypto/XTVCMIDLE--big.svg should be encoded as crypto%2FXTVCMIDLE--big.svg. If path has no .svg extension, it will be automatically added. If big parameter is set, --big suffix will be added to filename.",
+        "description": "Return a TradingView logo using URL query parameters. If the path contains special characters such as /, URL-encode them (for example, crypto/XTVCMIDLE--big.svg as crypto%2FXTVCMIDLE--big.svg). Missing .svg is added automatically. Set big to append a --big suffix to the filename.",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "url",
             "in": "query",
@@ -5813,11 +5685,8 @@
           "Logo Proxy"
         ],
         "summary": "Proxy TradingView Logo image (path parameter method)",
-        "description": "Proxy requests to Cloudflare Worker (tv-logo.tradingviewapi.com) logo service",
+        "description": "Return a TradingView logo by path.",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "path",
             "in": "path",
@@ -5945,9 +5814,6 @@
         "description": "Get all market data for specified symbol, including company info, financial data, technical indicators, and 10 other categories",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "symbol",
             "in": "path",
             "required": true,
@@ -5979,15 +5845,15 @@
                         },
                         "company": {
                           "type": "object",
-                          "description": "Company info (country, exchange, industry, sector, description, ceo, founded, employees, web_site, currency, isin, cusip)"
+                          "description": "Company identity and listing info such as country, exchange, listed_exchange, industry, sector, short_description, source_id, source2, variable_tick_size, fundamental_currency_code, isin, cusip, and figi."
                         },
                         "ipo": {
                           "type": "object",
-                          "description": "IPO info (ipo_date, ipo_shares, ipo_price, ipo_market_cap)"
+                          "description": "IPO info such as ipo_date, ipo_announcement_date, ipo_shares, ipo_offered_shares, ipo_price, ipo_offer_currency, ipo_price_range_usd_min, ipo_price_range_usd_max, ipo_market_cap, and ipo_deal_amount_usd."
                         },
                         "indicators": {
                           "type": "object",
-                          "description": "Technical indicators (price_earnings_ttm, price_book_current, market_cap_basic, eps_diluted_ttm, beta_1_year)"
+                          "description": "Valuation and quality indicators such as price_earnings_ttm, price_earnings_current, price_book_current, market_cap_basic, market_cap_calc, eps_diluted_ttm, beta_1_year, quick_ratio, current_ratio, and earnings_availability."
                         },
                         "ttm": {
                           "type": "object",
@@ -5995,7 +5861,7 @@
                         },
                         "current": {
                           "type": "object",
-                          "description": "Current metrics (fields ending with _current)"
+                          "description": "Real-time and latest metrics including lp, ch, chp, volume, bid, ask, bid_size, ask_size, current_session, update_mode, trade, trade_loaded, regular_close, regular_close_time, plus fields ending with _current."
                         },
                         "financials_quarterly": {
                           "type": "object",
@@ -6015,11 +5881,19 @@
                         },
                         "dividend": {
                           "type": "object",
-                          "description": "Dividend data (dividend_yield_current, dividend_rate_ttm, ex_dividend_date)"
+                          "description": "Dividend and split data such as dividend_yield_current, dividend_rate_ttm, ex_dividend_date, dividends_availability, dividends_paid_ttm, continuous_dividend_payout, and last_splits."
                         },
                         "analyst_recommendations": {
                           "type": "object",
                           "description": "Analyst ratings (recommendation_mean, recommendation_counter, price_target)"
+                        },
+                        "forecast": {
+                          "type": "object",
+                          "description": "Forecast and outlook-related fields such as earnings/revenue forecast, price targets, analyst recommendation metrics, and upcoming earnings timing."
+                        },
+                        "overview": {
+                          "type": "object",
+                          "description": "High-level company and market snapshot fields such as total_revenue, net_income, gross_profit, ebitda, share counts, all-time price extremes, revenue breakdown, and earnings summary fields that do not naturally fit the quarterly/annual statement buckets."
                         },
                         "enterprise_value": {
                           "type": "object",
@@ -6032,6 +5906,10 @@
                         "cash_flow": {
                           "type": "object",
                           "description": "Cash flow statement data"
+                        },
+                        "unclassified": {
+                          "type": "object",
+                          "description": "Raw quote_fast fields that were preserved but did not match an explicit category yet."
                         }
                       }
                     },
@@ -9359,9 +9237,6 @@
         "description": "Get company name, industry, country, exchange, and other basic information",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "symbol",
             "in": "path",
             "required": true,
@@ -9392,7 +9267,7 @@
                         },
                         "company": {
                           "type": "object",
-                          "description": "Company info (country, exchange, industry, sector, description, ceo, founded, employees, web_site, currency, isin, cusip)"
+                          "description": "Company identity and listing info such as country, exchange, listed_exchange, industry, sector, short_description, source_id, source2, typespecs, fundamental_currency_code, isin, cusip, and figi."
                         }
                       }
                     },
@@ -9512,9 +9387,6 @@
         "description": "Get IPO shares, market cap, and other IPO information",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "symbol",
             "in": "path",
             "required": true,
@@ -9608,9 +9480,6 @@
         "description": "Get P/E ratio, P/B ratio, EPS, and other technical analysis indicators",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "symbol",
             "in": "path",
             "required": true,
@@ -9641,7 +9510,7 @@
                         },
                         "indicators": {
                           "type": "object",
-                          "description": "Technical indicators (price_earnings_ttm, price_book_current, market_cap_basic, eps_diluted_ttm, beta_1_year, dividend_payout_ratio_ttm, quick_ratio, current_ratio, debt_to_equity, return_on_equity)"
+                          "description": "Valuation and quality indicators such as price_earnings_ttm, price_earnings_current, price_book_current, market_cap_basic, market_cap_calc, eps_diluted_ttm, beta_1_year, dividend_payout_ratio_ttm, quick_ratio, current_ratio, debt_to_equity, return_on_equity, and earnings_availability."
                         }
                       }
                     },
@@ -9736,9 +9605,6 @@
         "summary": "Get TTM data",
         "description": "Get Trailing Twelve Months rolling financial data",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "symbol",
             "in": "path",
@@ -9986,9 +9852,6 @@
         "description": "Get current latest financial metrics data",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "symbol",
             "in": "path",
             "required": true,
@@ -10019,7 +9882,7 @@
                         },
                         "current": {
                           "type": "object",
-                          "description": "Current metrics (fields ending with _current)"
+                          "description": "Real-time and latest metrics including lp, ch, chp, volume, bid, ask, bid_size, ask_size, current_session, update_mode, subsession_id, subsessions, trade, trade_loaded, regular_close, regular_close_time, plus fields ending with _current."
                         }
                       }
                     },
@@ -10128,6 +9991,64 @@
         }
       }
     },
+    "/api/market-data/{symbol}/overview": {
+      "get": {
+        "tags": [
+          "Market Data"
+        ],
+        "summary": "Get overview snapshot data",
+        "description": "Get high-level company and market snapshot data, including revenue and earnings summary fields, share counts, all-time price extremes, and revenue breakdown fields.",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NASDAQ:AAPL"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "symbol": {
+                          "type": "string",
+                          "example": "NASDAQ:AAPL"
+                        },
+                        "overview": {
+                          "type": "object",
+                          "description": "Overview snapshot fields such as total_revenue, net_income, gross_profit, ebitda, all_time_high, all_time_low, total_shares_outstanding, revenue_seg_by_business_h, and basic_eps_net_income."
+                        }
+                      }
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "Success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Symbol not found"
+          }
+        }
+      }
+    },
     "/api/market-data/{symbol}/financials-quarterly": {
       "get": {
         "tags": [
@@ -10136,9 +10057,6 @@
         "summary": "Get quarterly financial data",
         "description": "Get latest quarter balance sheet, income statement, and cash flow statement data",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "symbol",
             "in": "path",
@@ -10482,9 +10400,6 @@
         "summary": "Get annual financial data",
         "description": "Get latest year balance sheet, income statement, and cash flow statement data",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "symbol",
             "in": "path",
@@ -10865,9 +10780,6 @@
         "summary": "Get quarterly history data",
         "description": "Get financial data array for historical multiple quarters",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "symbol",
             "in": "path",
@@ -11991,9 +11903,6 @@
         "summary": "Get annual history data",
         "description": "Get financial data array for historical multiple years",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "symbol",
             "in": "path",
@@ -13353,9 +13262,6 @@
         "description": "Get dividend, dividend yield, ex-dividend date, and other dividend-related data",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "symbol",
             "in": "path",
             "required": true,
@@ -13386,7 +13292,7 @@
                         },
                         "dividend": {
                           "type": "object",
-                          "description": "Dividend data (dividend_yield_current, dividend_rate_ttm, ex_dividend_date, dividends_paid_ttm, continuous_dividend_payout, continuous_dividend_growth)"
+                          "description": "Dividend and split data such as dividend_yield_current, dividend_rate_ttm, ex_dividend_date, dividends_paid_ttm, continuous_dividend_payout, continuous_dividend_growth, dividends_availability, and last_splits."
                         }
                       }
                     },
@@ -13479,9 +13385,6 @@
         "description": "Get analyst buy/hold/sell recommendations, price targets, and other analyst rating data",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "symbol",
             "in": "path",
             "required": true,
@@ -13513,6 +13416,114 @@
                         "analyst_recommendations": {
                           "type": "object",
                           "description": "Analyst ratings (recommendation_mean, recommendation_counter, price_target, price_target_low, price_target_high, price_target_number)"
+                        },
+                        "summary": {
+                          "type": "object",
+                          "description": "Structured analyst summary derived from the raw TradingView fields for app-style display.",
+                          "properties": {
+                            "rating": {
+                              "type": "object",
+                              "nullable": true,
+                              "properties": {
+                                "key": {
+                                  "type": "string",
+                                  "example": "strong_buy"
+                                },
+                                "label": {
+                                  "type": "string",
+                                  "example": "Strong Buy"
+                                }
+                              }
+                            },
+                            "recommendation_mark": {
+                              "type": "number",
+                              "example": 1.443396
+                            },
+                            "recommendation_mark_prev": {
+                              "type": "number",
+                              "example": 1.5
+                            },
+                            "recommendation_mark_change": {
+                              "type": "number",
+                              "example": -0.056604
+                            },
+                            "counts": {
+                              "type": "object",
+                              "properties": {
+                                "strong_buy": {
+                                  "type": "number",
+                                  "example": 26
+                                },
+                                "buy": {
+                                  "type": "number",
+                                  "example": 11
+                                },
+                                "hold": {
+                                  "type": "number",
+                                  "example": 14
+                                },
+                                "sell": {
+                                  "type": "number",
+                                  "example": 0
+                                },
+                                "strong_sell": {
+                                  "type": "number",
+                                  "example": 2
+                                },
+                                "total": {
+                                  "type": "number",
+                                  "example": 53
+                                }
+                              }
+                            },
+                            "price_target": {
+                              "type": "object",
+                              "properties": {
+                                "average": {
+                                  "type": "number",
+                                  "example": 301.617561
+                                },
+                                "average_prev": {
+                                  "type": "number",
+                                  "example": 298.1
+                                },
+                                "median": {
+                                  "type": "number",
+                                  "example": 310
+                                },
+                                "high": {
+                                  "type": "number",
+                                  "example": 350
+                                },
+                                "low": {
+                                  "type": "number",
+                                  "example": 215
+                                },
+                                "estimates_num": {
+                                  "type": "number",
+                                  "example": 41
+                                },
+                                "up_num": {
+                                  "type": "number",
+                                  "example": 10
+                                },
+                                "down_num": {
+                                  "type": "number",
+                                  "example": 0
+                                },
+                                "date": {
+                                  "type": "string",
+                                  "nullable": true,
+                                  "example": "2026-04-20"
+                                }
+                              }
+                            },
+                            "recommendation_date": {
+                              "type": "string",
+                              "nullable": true,
+                              "example": "2026-04-16"
+                            }
+                          }
                         }
                       }
                     },
@@ -13543,6 +13554,35 @@
                       "price_target_average": 301.617561,
                       "price_target_date": "2026-04-20",
                       "recommendation_buy": 26
+                    },
+                    "summary": {
+                      "rating": {
+                        "key": "strong_buy",
+                        "label": "Strong Buy"
+                      },
+                      "recommendation_mark": 1.443396,
+                      "recommendation_mark_prev": null,
+                      "recommendation_mark_change": null,
+                      "counts": {
+                        "strong_buy": 26,
+                        "buy": 11,
+                        "hold": 14,
+                        "sell": 0,
+                        "strong_sell": 2,
+                        "total": 53
+                      },
+                      "price_target": {
+                        "average": 301.617561,
+                        "average_prev": null,
+                        "median": 310,
+                        "high": 350,
+                        "low": 215,
+                        "estimates_num": 41,
+                        "up_num": 10,
+                        "down_num": 0,
+                        "date": "2026-04-20"
+                      },
+                      "recommendation_date": "2026-04-16"
                     }
                   },
                   "msg": "Success"
@@ -13599,6 +13639,304 @@
         "operationId": "getMarketDataAnalystRecommendations"
       }
     },
+    "/api/market-data/{symbol}/forecast": {
+      "get": {
+        "tags": [
+          "Market Data"
+        ],
+        "summary": "Get forecast and outlook data",
+        "description": "Get analyst targets, earnings and revenue forecasts, recommendation metrics, and upcoming earnings timing data.",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NASDAQ:AAPL"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "symbol": {
+                          "type": "string",
+                          "example": "NASDAQ:AAPL"
+                        },
+                        "forecast": {
+                          "type": "object",
+                          "description": "Forecast and outlook-related fields, including analyst summary, price targets, earnings release timing, forecast revenue/EPS, and actual reported revenue/EPS values when TradingView exposes them."
+                        }
+                      }
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "Success"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "symbol": "NASDAQ:AAPL",
+                    "forecast": {
+                      "analyst": {
+                        "rating": {
+                          "key": "strong_buy",
+                          "label": "Strong Buy"
+                        },
+                        "recommendation_mark": 1.443396,
+                        "recommendation_mark_prev": null,
+                        "recommendation_mark_change": null,
+                        "recommendation_date": "2026-04-16"
+                      },
+                      "coverage": {
+                        "strong_buy": 26,
+                        "buy": 11,
+                        "hold": 14,
+                        "sell": 0,
+                        "strong_sell": 2,
+                        "total": 53
+                      },
+                      "price_target": {
+                        "average": 301.617561,
+                        "average_prev": null,
+                        "median": 310,
+                        "high": 350,
+                        "low": 215,
+                        "estimates_num": 41,
+                        "up_num": 10,
+                        "down_num": 0,
+                        "date": "2026-04-20"
+                      },
+                      "earnings": {
+                        "release": {
+                          "recent_date": 1769722200,
+                          "recent_time": 1,
+                          "recent_calendar_date": 1767139200,
+                          "next_date": 1777581000,
+                          "next_time": 1,
+                          "next_calendar_date": 1774915200
+                        }
+                      },
+                      "eps": {
+                        "forecast_next_fq": 1.942915,
+                        "forecast_fy": 7.381826,
+                        "forecast_next_fy": 8.500259
+                      },
+                      "revenue": {
+                        "forecast_next_fq": 109347054075,
+                        "forecast_fy": 415406882375,
+                        "forecast_next_fy": 465619085380
+                      }
+                    }
+                  },
+                  "msg": "Success"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Symbol not found"
+          }
+        }
+      }
+    },
+    "/api/market-data/{symbol}/related/bonds": {
+      "get": {
+        "tags": [
+          "Market Data"
+        ],
+        "summary": "Get bonds related to a symbol",
+        "description": "Get related government or bond instruments for the specified symbol.",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NASDAQ:AAPL"
+            }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "en",
+              "example": "en"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 24,
+              "maximum": 150
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true,
+                  "data": {
+                    "symbol": "SSE:601398",
+                    "related_type": "bonds",
+                    "relation_key": "symbol_primary_name",
+                    "totalCount": 3,
+                    "items": [
+                      {
+                        "rank": 1,
+                        "symbol": "TVC:CN10Y",
+                        "description": "ICBCIL Finance Co. Limited 3.625% 15-NOV-2027",
+                        "kind": "delay",
+                        "kind_delay": 14400,
+                        "logo": null,
+                        "logoid": "",
+                        "name": "CHIN4569396",
+                        "type": "bond",
+                        "typespecs": [
+                          "corporate"
+                        ],
+                        "yieldtoworst": 4.7331065653463344,
+                        "bondclose": 97.1,
+                        "currentcoupon": 3.625,
+                        "maturitydate": 20271115,
+                        "outstandingamount": 243210000,
+                        "facevalue": 1000,
+                        "currency": "USD",
+                        "snpratinglongterm": null
+                      }
+                    ]
+                  },
+                  "msg": "Success"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Related bond query failed"
+          }
+        }
+      }
+    },
+    "/api/market-data/{symbol}/related/etfs": {
+      "get": {
+        "tags": [
+          "Market Data"
+        ],
+        "summary": "Get ETFs related to a symbol",
+        "description": "Get related ETF instruments for the specified symbol.",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NASDAQ:AAPL"
+            }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "en",
+              "example": "en"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "maximum": 150
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true,
+                  "data": {
+                    "symbol": "SSE:601398",
+                    "related_type": "etfs",
+                    "relation_key": "symbol_primary_listing",
+                    "totalCount": 2,
+                    "items": [
+                      {
+                        "rank": 1,
+                        "symbol": "SSE:510300",
+                        "name": "510300",
+                        "description": "沪深300ETF",
+                        "marketvalue": 1250000000
+                      },
+                      {
+                        "rank": 2,
+                        "symbol": "SSE:510050",
+                        "name": "510050",
+                        "description": "上证50ETF",
+                        "marketvalue": 830000000
+                      }
+                    ]
+                  },
+                  "msg": "Success"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Related ETF query failed"
+          }
+        }
+      }
+    },
     "/api/market-data/{symbol}/enterprise-value": {
       "get": {
         "tags": [
@@ -13607,9 +13945,6 @@
         "summary": "Get enterprise value metrics",
         "description": "Get enterprise value, EV/EBITDA, and other enterprise valuation metrics",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "symbol",
             "in": "path",
@@ -13641,7 +13976,7 @@
                         },
                         "enterprise_value": {
                           "type": "object",
-                          "description": "Enterprise value metrics (enterprise_value_current, enterprise_value_to_ebit_ttm, enterprise_value_to_ebitda_ttm, enterprise_value_to_revenue_ttm)"
+                          "description": "Enterprise value metrics such as enterprise_value_current, sum_for_enterprise_value, enterprise_value_to_ebit_ttm, enterprise_value_to_ebitda_ttm, and enterprise_value_to_revenue_ttm."
                         }
                       }
                     },
@@ -13703,9 +14038,6 @@
         "summary": "Get credit ratings",
         "description": "Get credit rating information from agencies like S&P, Fitch, etc.",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "symbol",
             "in": "path",
@@ -13825,9 +14157,6 @@
         "description": "Get operating, investing, financing cash flow and other cash flow statement data",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "symbol",
             "in": "path",
             "required": true,
@@ -13936,13 +14265,17 @@
     "/api/mcp/generate": {
       "post": {
         "summary": "Generate MCP JWT Token",
-        "description": "Generate JWT Token for MCP connections, supports four expiry time types",
+        "description": "Generate a JWT for MCP connections. Token lifetime follows your plan.",
         "tags": [
           "MCP Management"
         ],
         "security": [
           {
-            "BearerAuth": []
+            "ApiKeyAuth": []
+          },
+          {
+            "RapidAPIKey": [],
+            "RapidAPIHost": []
           }
         ],
         "requestBody": {
@@ -13962,46 +14295,12 @@
             "description": "Token generated successfully",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "token": {
-                      "type": "string",
-                      "description": "JWT Token",
-                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                    },
-                    "expiresIn": {
-                      "type": "string",
-                      "description": "Human-readable expiry time description",
-                      "example": "15 days"
-                    },
-                    "expiresAt": {
-                      "type": "number",
-                      "description": "Expiry timestamp (milliseconds)",
-                      "example": 1705567890123
-                    },
-                    "mcpUrl": {
-                      "type": "string",
-                      "description": "MCP service address",
-                      "example": "http://localhost:3001/mcp"
-                    },
-                    "exampleConfig": {
-                      "type": "object",
-                      "description": "MCP client configuration example (token and url replaced)"
-                    }
-                  }
-                },
                 "example": {
                   "success": true,
                   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NzY2OTYyMDUsImV4cCI6MTc3Nzk5MjIwNSwic291cmNlIjoibWNwLWp3dCIsInVzZXJJZCI6InVzZXIxMjMifQ.lN6USNXNryLZ36mD9PqmivsfwBok0lUQu6nEq7cua_Q",
                   "expiresIn": "15 days",
                   "expiresAt": 1777992205000,
                   "mcpUrl": "http://localhost:3001/mcp",
-                  "usMcpUrl": "https://us-mcp.tradingviewapi.com/mcp",
                   "exampleConfig": {
                     "mcpServers": {
                       "tradingview": {
@@ -14019,34 +14318,15 @@
             }
           },
           "400": {
-            "description": "Invalid request parameters",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "example": false
-                    },
-                    "error": {
-                      "type": "string",
-                      "example": "Invalid type parameter"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Invalid request parameters"
+          },
+          "403": {
+            "description": "Plan or credential cannot mint tokens"
           },
           "500": {
             "description": "Internal server error"
           }
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          }
-        ]
+        }
       }
     },
     "/api/metadata/markets": {
@@ -14099,12 +14379,7 @@
               }
             }
           }
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          }
-        ]
+        }
       }
     },
     "/api/metadata/world-economy/indicators": {
@@ -14115,9 +14390,6 @@
         "summary": "Get world economy indicator metadata",
         "description": "Return world economy indicator list, supports category filtering (multiple categories separated by comma)",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "category",
             "in": "query",
@@ -14262,9 +14534,6 @@
         "summary": "Get tab list",
         "description": "Return id, title, and type of all tabs",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "type",
             "in": "query",
@@ -14428,12 +14697,7 @@
               }
             }
           }
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          }
-        ]
+        }
       }
     },
     "/api/metadata/languages": {
@@ -14496,11 +14760,6 @@
             }
           }
         },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          }
-        ],
         "x-codeSamples": [
           {
             "lang": "curl",
@@ -14621,12 +14880,7 @@
               }
             }
           }
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          }
-        ]
+        }
       }
     },
     "/api/news": {
@@ -14635,11 +14889,8 @@
           "News"
         ],
         "summary": "Get news list",
-        "description": "Get financial news list, supports filtering by trading pair",
+        "description": "Get financial news list. Filter by symbol, language, market, country, and optional sector.",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "symbol",
             "in": "query",
@@ -14675,6 +14926,15 @@
             "schema": {
               "type": "string",
               "example": "US"
+            }
+          },
+          {
+            "name": "sector",
+            "in": "query",
+            "description": "Optional industry filter.",
+            "schema": {
+              "type": "string",
+              "example": "Commercial Services"
             }
           }
         ],
@@ -14870,9 +15130,6 @@
         "description": "Get bond market news list",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "symbol",
             "in": "query",
             "description": "Trading pair symbol (optional)",
@@ -15040,9 +15297,6 @@
         "description": "Get cryptocurrency market news list",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "symbol",
             "in": "query",
             "description": "Trading pair symbol (optional)",
@@ -15202,9 +15456,6 @@
         "description": "Get economic news list",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "symbol",
             "in": "query",
             "description": "Trading pair symbol (optional)",
@@ -15355,9 +15606,6 @@
         "summary": "Get ETF news",
         "description": "Get ETF market news list",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "symbol",
             "in": "query",
@@ -15516,9 +15764,6 @@
         "description": "Get forex market news list",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "symbol",
             "in": "query",
             "description": "Trading pair symbol (optional)",
@@ -15646,9 +15891,6 @@
         "summary": "Get futures news",
         "description": "Get futures market news list",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "symbol",
             "in": "query",
@@ -15810,9 +16052,6 @@
         "description": "Get index market news list",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "symbol",
             "in": "query",
             "description": "Trading pair symbol (optional)",
@@ -15969,9 +16208,6 @@
         "description": "Get stock market news list",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "symbol",
             "in": "query",
             "description": "Trading pair symbol (optional)",
@@ -16125,9 +16361,6 @@
         "summary": "Get news detail",
         "description": "Get detailed news content by news ID",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "newsId",
             "in": "path",
@@ -16299,9 +16532,6 @@
         "description": "Get candlestick historical data for a specified trading pair",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "symbol",
             "in": "path",
             "required": true,
@@ -16354,10 +16584,15 @@
           {
             "name": "type",
             "in": "query",
-            "description": "Chart type (HeikinAshi/Range)",
+            "description": "Chart candle type. Supported values: Japanese, HeikinAshi, Range. Omit for HeikinAshi; use Japanese or an empty value for default Japanese candles.",
             "schema": {
               "type": "string",
-              "example": "HeikinAshi"
+              "example": "HeikinAshi",
+              "enum": [
+                "Japanese",
+                "HeikinAshi",
+                "Range"
+              ]
             }
           }
         ],
@@ -16588,6 +16823,192 @@
         "operationId": "getPrice"
       }
     },
+    "/api/price/{symbol}/events": {
+      "get": {
+        "tags": [
+          "Price Data"
+        ],
+        "summary": "Get chart event markers",
+        "description": "Get chart event markers such as earnings, dividends, and splits.",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "description": "Trading pair symbol",
+            "schema": {
+              "type": "string",
+              "example": "NASDAQ:AAPL"
+            }
+          },
+          {
+            "name": "timeframe",
+            "in": "query",
+            "description": "Timeframe used to resolve the event study",
+            "schema": {
+              "type": "string",
+              "default": "D",
+              "example": "W"
+            }
+          },
+          {
+            "name": "range",
+            "in": "query",
+            "description": "Number of candles used to build event markers",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "example": 200
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "symbol": {
+                          "type": "string",
+                          "example": "NASDAQ:AAPL"
+                        },
+                        "timeframe": {
+                          "type": "string",
+                          "example": "W"
+                        },
+                        "events": {
+                          "type": "array",
+                          "description": "Event markers such as earnings, dividends, and splits.\nAll events include a primary `time` field, while event-specific date and metric fields are returned when available.\n",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "earn_1"
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "earnings",
+                                  "dividends",
+                                  "splits"
+                                ],
+                                "example": "earnings"
+                              },
+                              "label": {
+                                "type": "string",
+                                "nullable": true,
+                                "example": "Earnings"
+                              },
+                              "time": {
+                                "type": "integer",
+                                "description": "Primary event timestamp (Unix timestamp in seconds)",
+                                "example": 1698000000
+                              },
+                              "index": {
+                                "type": "integer",
+                                "nullable": true,
+                                "description": "Matched candle index when the event comes from chart graphics",
+                                "example": 0
+                              },
+                              "actual": {
+                                "type": "number",
+                                "nullable": true,
+                                "description": "Actual earnings per share value for earnings events",
+                                "example": 1.5
+                              },
+                              "estimate": {
+                                "type": "number",
+                                "nullable": true,
+                                "description": "Estimated earnings per share value for earnings events",
+                                "example": 1.3
+                              },
+                              "report_date": {
+                                "type": "integer",
+                                "nullable": true,
+                                "description": "Earnings report/publication timestamp (Unix timestamp in seconds)",
+                                "example": 1697920000
+                              },
+                              "revenue_estimate": {
+                                "type": "number",
+                                "nullable": true,
+                                "description": "Estimated revenue for earnings events",
+                                "example": 100
+                              },
+                              "revenue_actual": {
+                                "type": "number",
+                                "nullable": true,
+                                "description": "Actual revenue for earnings events",
+                                "example": 120
+                              },
+                              "ex_date": {
+                                "type": "integer",
+                                "nullable": true,
+                                "description": "Ex-dividend timestamp (Unix timestamp in seconds)",
+                                "example": 1699000000
+                              },
+                              "gross": {
+                                "type": "number",
+                                "nullable": true,
+                                "description": "Gross dividend amount",
+                                "example": 0.25
+                              },
+                              "net": {
+                                "type": "number",
+                                "nullable": true,
+                                "description": "Net dividend amount",
+                                "example": 0.24
+                              },
+                              "pay_date": {
+                                "type": "integer",
+                                "nullable": true,
+                                "description": "Dividend payment timestamp (Unix timestamp in seconds)",
+                                "example": 1699600000
+                              },
+                              "split_date": {
+                                "type": "integer",
+                                "nullable": true,
+                                "description": "Split effective timestamp (Unix timestamp in seconds)",
+                                "example": 1700000000
+                              },
+                              "numerator": {
+                                "type": "number",
+                                "nullable": true,
+                                "description": "Split ratio numerator",
+                                "example": 1
+                              },
+                              "denominator": {
+                                "type": "number",
+                                "nullable": true,
+                                "description": "Split ratio denominator",
+                                "example": 4
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "Success"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/price/batch": {
       "post": {
         "tags": [
@@ -16604,6 +17025,23 @@
                 "properties": {
                   "requests": {
                     "type": "array",
+                    "example": [
+                      {
+                        "symbol": "BINANCE:BTCUSDT",
+                        "timeframe": "60",
+                        "range": 20
+                      },
+                      {
+                        "symbol": "BINANCE:ETHUSDT",
+                        "timeframe": "60",
+                        "range": 20
+                      },
+                      {
+                        "symbol": "NASDAQ:AAPL",
+                        "timeframe": "D",
+                        "range": 10
+                      }
+                    ],
                     "items": {
                       "type": "object",
                       "properties": {
@@ -16620,11 +17058,40 @@
                           "type": "integer",
                           "example": 20,
                           "description": "Number of candles"
+                        },
+                        "type": {
+                          "type": "string",
+                          "example": "HeikinAshi",
+                          "description": "Chart candle type. Supported values: Japanese, HeikinAshi, Range. Omit for HeikinAshi; use Japanese or an empty value for default Japanese candles.",
+                          "enum": [
+                            "Japanese",
+                            "HeikinAshi",
+                            "Range"
+                          ]
                         }
                       }
                     }
                   }
                 }
+              },
+              "example": {
+                "requests": [
+                  {
+                    "symbol": "BINANCE:BTCUSDT",
+                    "timeframe": "60",
+                    "range": 20
+                  },
+                  {
+                    "symbol": "BINANCE:ETHUSDT",
+                    "timeframe": "60",
+                    "range": 20
+                  },
+                  {
+                    "symbol": "NASDAQ:AAPL",
+                    "timeframe": "D",
+                    "range": 10
+                  }
+                ]
               }
             }
           }
@@ -16845,11 +17312,6 @@
             "description": "Server error"
           }
         },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          }
-        ],
         "x-codeSamples": [
           {
             "lang": "curl",
@@ -16868,6 +17330,190 @@
           }
         ],
         "operationId": "batchGetPrice"
+      }
+    },
+    "/api/price/ohlcv/{symbol}": {
+      "get": {
+        "tags": [
+          "Price Data"
+        ],
+        "summary": "Get standard OHLCV candlestick data",
+        "description": "Returns real market Open, High, Low, Close, and Volume data using standard Japanese candlesticks. This endpoint never uses synthetic Heikin-Ashi prices.",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NASDAQ:AAPL"
+            }
+          },
+          {
+            "name": "timeframe",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "5",
+              "enum": [
+                "1",
+                "5",
+                "15",
+                "30",
+                "60",
+                "240",
+                "D",
+                "W",
+                "M"
+              ]
+            }
+          },
+          {
+            "name": "range",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Target timestamp in Unix seconds",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "strictTo",
+            "in": "query",
+            "description": "Preserve a near-live target timestamp as an uncached historical query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Standard OHLCV data in the same response shape as the price endpoint"
+          },
+          "504": {
+            "description": "TradingView request timeout"
+          }
+        }
+      }
+    },
+    "/api/price/ohlcv/batch": {
+      "post": {
+        "tags": [
+          "Price Data"
+        ],
+        "summary": "Batch get standard OHLCV candlestick data",
+        "description": "Returns real market OHLCV for up to 10 symbols using standard Japanese candlesticks. This endpoint never uses synthetic Heikin-Ashi prices.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "requests"
+                ],
+                "properties": {
+                  "requests": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10,
+                    "example": [
+                      {
+                        "symbol": "BINANCE:BTCUSDT",
+                        "timeframe": "60",
+                        "range": 20
+                      },
+                      {
+                        "symbol": "BINANCE:ETHUSDT",
+                        "timeframe": "60",
+                        "range": 20
+                      },
+                      {
+                        "symbol": "NASDAQ:AAPL",
+                        "timeframe": "D",
+                        "range": 10
+                      }
+                    ],
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "symbol"
+                      ],
+                      "properties": {
+                        "symbol": {
+                          "type": "string",
+                          "example": "NASDAQ:AAPL"
+                        },
+                        "timeframe": {
+                          "type": "string",
+                          "default": "5",
+                          "enum": [
+                            "1",
+                            "5",
+                            "15",
+                            "30",
+                            "60",
+                            "240",
+                            "D",
+                            "W",
+                            "M"
+                          ]
+                        },
+                        "range": {
+                          "type": "integer",
+                          "default": 10
+                        },
+                        "to": {
+                          "type": "integer",
+                          "description": "Target timestamp in Unix seconds"
+                        },
+                        "strictTo": {
+                          "type": "boolean",
+                          "default": false
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "requests": [
+                  {
+                    "symbol": "BINANCE:BTCUSDT",
+                    "timeframe": "60",
+                    "range": 20
+                  },
+                  {
+                    "symbol": "BINANCE:ETHUSDT",
+                    "timeframe": "60",
+                    "range": 20
+                  },
+                  {
+                    "symbol": "NASDAQ:AAPL",
+                    "timeframe": "D",
+                    "range": 10
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Per-symbol standard OHLCV results in the same response shape as the price batch endpoint"
+          },
+          "504": {
+            "description": "TradingView connection timeout"
+          }
+        }
       }
     },
     "/api/quote/batch": {
@@ -17084,11 +17730,6 @@
             "description": "Server error"
           }
         },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          }
-        ],
         "x-codeSamples": [
           {
             "lang": "curl",
@@ -17118,9 +17759,6 @@
         "description": "Get real-time quote data for a specified trading pair",
         "parameters": [
           {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
             "name": "symbol",
             "in": "path",
             "required": true,
@@ -17143,7 +17781,7 @@
           {
             "name": "fields",
             "in": "query",
-            "description": "Return fields (all or specific fields)",
+            "description": "Return fields (`all`, `price`, `enhanced`, or a comma-separated custom field list). Commonly used extended fields include bid_size, ask_size, listed_exchange, regular_close, regular_close_time, market_cap_calc, enterprise_value_current, last_splits, isin, cusip, and figi.",
             "schema": {
               "type": "string",
               "default": "all",
@@ -17172,7 +17810,7 @@
                         },
                         "data": {
                           "type": "object",
-                          "description": "Quote data including price, volume, etc."
+                          "description": "Quote data including real-time price fields (lp, ch, chp, volume, bid, ask, bid_size, ask_size), session fields (current_session, subsession_id, regular_close, regular_close_time), and identity/fundamental fields such as listed_exchange, source_id, market_cap_calc, enterprise_value_current, isin, cusip, and figi."
                         }
                       }
                     },
@@ -17278,22 +17916,847 @@
         "operationId": "getQuote"
       }
     },
+    "/api/screener/scan": {
+      "post": {
+        "tags": [
+          "Screener"
+        ],
+        "summary": "Scan stock assets with custom filters and field groups",
+        "description": "Run a TradingView-style stock screener request with default stock filters, simplified filters, preset field groups, and optional extra fields. Call GET /api/screener/filter-options first to discover supported filter fields, operations, and enum values.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "market": {
+                    "type": "string",
+                    "description": "Market code, e.g. china, america, or global",
+                    "example": "america"
+                  },
+                  "lang": {
+                    "type": "string",
+                    "description": "TradingView language code used for localized field values",
+                    "example": "en"
+                  },
+                  "range": {
+                    "type": "array",
+                    "description": "TradingView range [start, endExclusive]",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "example": [
+                      0,
+                      100
+                    ]
+                  },
+                  "preset_fields": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "fields": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "extra_fields": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "filters": {
+                    "type": "object"
+                  },
+                  "sort": {
+                    "type": "object"
+                  }
+                }
+              },
+              "example": {
+                "market": "america",
+                "lang": "en",
+                "range": [
+                  0,
+                  50
+                ],
+                "preset_fields": [
+                  "overview",
+                  "technicals"
+                ],
+                "fields": [
+                  "change_abs",
+                  "Perf.1W"
+                ],
+                "extra_fields": [
+                  "RSI",
+                  "SMA50"
+                ],
+                "filters": {
+                  "market_cap_basic": {
+                    "operation": "greater_or_equal",
+                    "value": 10000000000
+                  },
+                  "volume": {
+                    "operation": "greater_or_equal",
+                    "value": 1000000
+                  }
+                },
+                "sort": {
+                  "sortBy": "market_cap_basic",
+                  "sortOrder": "desc"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Stock screener data"
+          }
+        }
+      }
+    },
+    "/api/screener/presets": {
+      "get": {
+        "tags": [
+          "Screener"
+        ],
+        "summary": "Get screener preset field groups",
+        "description": "Return available preset field groups for the selected screener asset type. Use the preset id values in preset_fields when calling the matching asset-specific scan endpoint. If asset_type is omitted, stock presets are returned.",
+        "parameters": [
+          {
+            "name": "asset_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "stock",
+              "enum": [
+                "stock",
+                "crypto",
+                "etf",
+                "bond",
+                "cex",
+                "dex"
+              ]
+            },
+            "example": "crypto"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Screener preset field groups"
+          }
+        }
+      }
+    },
+    "/api/screener/filter-options": {
+      "get": {
+        "tags": [
+          "Screener"
+        ],
+        "summary": "Get screener filter option metadata",
+        "description": "Return supported screener filter field definitions plus enum value dictionaries for the selected asset type. If asset_type is omitted, stock metadata is returned.",
+        "parameters": [
+          {
+            "name": "asset_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "stock",
+              "enum": [
+                "stock",
+                "crypto",
+                "etf",
+                "bond",
+                "cex",
+                "dex"
+              ]
+            },
+            "example": "crypto"
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "en"
+            },
+            "example": "zh"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "crypto_common_categories,technical_rating"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Screener filter option metadata"
+          }
+        }
+      }
+    },
+    "/api/screener/etf/scan": {
+      "post": {
+        "tags": [
+          "Screener"
+        ],
+        "summary": "Scan ETF assets with custom filters and field groups",
+        "description": "Run a TradingView-style ETF screener request based on https://www.tradingview.com/etf-screener/. Call GET /api/screener/filter-options?asset_type=etf first to discover supported filter fields, operations, and enum values.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lang": {
+                    "type": "string",
+                    "description": "TradingView language code used for localized field values",
+                    "example": "en"
+                  },
+                  "range": {
+                    "type": "array",
+                    "description": "TradingView range [start, endExclusive]",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "example": [
+                      0,
+                      100
+                    ]
+                  },
+                  "preset_fields": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "fields": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "extra_fields": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "filters": {
+                    "type": "object"
+                  },
+                  "sort": {
+                    "type": "object"
+                  }
+                }
+              },
+              "example": {
+                "lang": "en",
+                "range": [
+                  0,
+                  30
+                ],
+                "preset_fields": [
+                  "overview",
+                  "classification"
+                ],
+                "fields": [
+                  "fund_flows.1M",
+                  "etf_holdings_count"
+                ],
+                "extra_fields": [
+                  "nav",
+                  "leverage.tr"
+                ],
+                "filters": {
+                  "aum": {
+                    "operation": "greater_or_equal",
+                    "value": 500000000
+                  },
+                  "expense_ratio": {
+                    "operation": "less_or_equal",
+                    "value": 0.5
+                  },
+                  "technical_rating": [
+                    "Buy",
+                    "StrongBuy"
+                  ]
+                },
+                "sort": {
+                  "sortBy": "aum",
+                  "sortOrder": "desc"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ETF screener data"
+          }
+        }
+      }
+    },
+    "/api/screener/bond/scan": {
+      "post": {
+        "tags": [
+          "Screener"
+        ],
+        "summary": "Scan bond assets with custom filters and field groups",
+        "description": "Run a TradingView-style bond screener request based on https://www.tradingview.com/bond-screener/. Call GET /api/screener/filter-options?asset_type=bond first to discover supported filter fields, operations, and enum values.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lang": {
+                    "type": "string",
+                    "description": "TradingView language code used for localized field values",
+                    "example": "en"
+                  },
+                  "range": {
+                    "type": "array",
+                    "description": "TradingView range [start, endExclusive]",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "example": [
+                      0,
+                      100
+                    ]
+                  },
+                  "preset_fields": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "fields": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "extra_fields": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "filters": {
+                    "type": "object"
+                  },
+                  "sort": {
+                    "type": "object"
+                  }
+                }
+              },
+              "example": {
+                "lang": "en",
+                "range": [
+                  0,
+                  25
+                ],
+                "preset_fields": [
+                  "overview",
+                  "ratings"
+                ],
+                "fields": [
+                  "yield_to_call",
+                  "yield_to_worst"
+                ],
+                "extra_fields": [
+                  "snp_rating_long_term.tr",
+                  "fitch_outlook.tr"
+                ],
+                "filters": {
+                  "yield_to_maturity": {
+                    "operation": "greater_or_equal",
+                    "value": 4
+                  },
+                  "days_to_maturity": {
+                    "operation": "less_or_equal",
+                    "value": 3650
+                  }
+                },
+                "sort": {
+                  "sortBy": "yield_to_maturity",
+                  "sortOrder": "desc"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Bond screener data"
+          }
+        }
+      }
+    },
+    "/api/screener/cex/scan": {
+      "post": {
+        "tags": [
+          "Screener"
+        ],
+        "summary": "Scan centralized exchange crypto pairs with custom filters and field groups",
+        "description": "Run a TradingView-style CEX screener request based on https://www.tradingview.com/cex-screener/. Call GET /api/screener/filter-options?asset_type=cex first to discover supported filter fields, operations, and enum values.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lang": {
+                    "type": "string",
+                    "description": "TradingView language code used for localized field values",
+                    "example": "en"
+                  },
+                  "range": {
+                    "type": "array",
+                    "description": "TradingView range [start, endExclusive]",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "example": [
+                      0,
+                      100
+                    ]
+                  },
+                  "preset_fields": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "fields": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "extra_fields": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "filters": {
+                    "type": "object"
+                  },
+                  "sort": {
+                    "type": "object"
+                  }
+                }
+              },
+              "example": {
+                "lang": "en",
+                "range": [
+                  0,
+                  25
+                ],
+                "preset_fields": [
+                  "overview",
+                  "market_data"
+                ],
+                "fields": [
+                  "Perf.1W"
+                ],
+                "extra_fields": [
+                  "RSI",
+                  "MACD.macd"
+                ],
+                "filters": {
+                  "exchange": [
+                    "HTX"
+                  ],
+                  "technical_rating": [
+                    "Buy"
+                  ]
+                },
+                "sort": {
+                  "sortBy": "24h_vol_cmc",
+                  "sortOrder": "desc"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "CEX screener data"
+          }
+        }
+      }
+    },
+    "/api/screener/dex/scan": {
+      "post": {
+        "tags": [
+          "Screener"
+        ],
+        "summary": "Scan decentralized exchange crypto pairs with custom filters and field groups",
+        "description": "Run a TradingView-style DEX screener request based on https://www.tradingview.com/dex-screener/. Call GET /api/screener/filter-options?asset_type=dex first to discover supported filter fields, operations, and enum values.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lang": {
+                    "type": "string",
+                    "description": "TradingView language code used for localized field values",
+                    "example": "en"
+                  },
+                  "range": {
+                    "type": "array",
+                    "description": "TradingView range [start, endExclusive]",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "example": [
+                      0,
+                      100
+                    ]
+                  },
+                  "preset_fields": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "fields": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "extra_fields": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "filters": {
+                    "type": "object"
+                  },
+                  "sort": {
+                    "type": "object"
+                  }
+                }
+              },
+              "example": {
+                "lang": "en",
+                "range": [
+                  0,
+                  25
+                ],
+                "preset_fields": [
+                  "overview",
+                  "trading_activity"
+                ],
+                "fields": [
+                  "Perf.1W"
+                ],
+                "extra_fields": [
+                  "TechRating_1D",
+                  "TechRating_1D.tr"
+                ],
+                "filters": {
+                  "exchange": [
+                    "UNISWAP",
+                    "PANCAKESWAP"
+                  ],
+                  "dex_trading_volume_24h": {
+                    "operation": "greater_or_equal",
+                    "value": 1000000
+                  },
+                  "dex_buyers_24h": {
+                    "operation": "greater_or_equal",
+                    "value": 200
+                  }
+                },
+                "sort": {
+                  "sortBy": "dex_trading_volume_24h",
+                  "sortOrder": "desc"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "DEX screener data"
+          }
+        }
+      }
+    },
+    "/api/screener/crypto/scan": {
+      "post": {
+        "tags": [
+          "Screener"
+        ],
+        "summary": "Scan crypto assets with custom filters and field groups",
+        "description": "Run a TradingView-style crypto screener request based on https://www.tradingview.com/crypto-coins-screener/. Call GET /api/screener/filter-options?asset_type=crypto first to discover supported filter fields, operations, and enum values.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lang": {
+                    "type": "string",
+                    "description": "TradingView language code used for localized field values",
+                    "example": "zh"
+                  },
+                  "range": {
+                    "type": "array",
+                    "description": "TradingView range [start, endExclusive]",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "example": [
+                      0,
+                      100
+                    ]
+                  },
+                  "preset_fields": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "fields": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "extra_fields": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "filters": {
+                    "type": "object"
+                  },
+                  "sort": {
+                    "type": "object"
+                  }
+                }
+              },
+              "example": {
+                "lang": "zh",
+                "range": [
+                  0,
+                  25
+                ],
+                "preset_fields": [
+                  "overview",
+                  "sentiment"
+                ],
+                "fields": [
+                  "Perf.1W"
+                ],
+                "extra_fields": [
+                  "RSI",
+                  "MACD.macd"
+                ],
+                "filters": {
+                  "market_cap_calc": {
+                    "operation": "greater_or_equal",
+                    "value": 500000000
+                  },
+                  "technical_rating": [
+                    "Buy",
+                    "StrongBuy"
+                  ]
+                },
+                "sort": {
+                  "sortBy": "crypto_total_rank",
+                  "sortOrder": "asc"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Crypto screener data"
+          }
+        }
+      }
+    },
     "/api/search/market/{query}": {
       "get": {
         "tags": [
           "Search"
         ],
         "summary": "Search markets",
-        "description": "Search stocks, cryptocurrencies, and other markets by keyword (Enhanced version: returns more data and fields, including Logo, currency, country, etc.)",
+        "description": "Search stocks, cryptocurrencies, and other markets by name, symbol, ISIN, or CUSIP. `EXCHANGE:SYMBOL` input, such as `NASDAQ:AAPL`, is automatically split into the symbol text and exchange filter.",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "query",
             "in": "path",
             "required": true,
-            "description": "Search keyword (supports EXCHANGE:SYMBOL format, e.g., NASDAQ:AAPL)",
+            "description": "Search keyword. Supports instrument name, ticker symbol/code, ISIN, and CUSIP. `EXCHANGE:SYMBOL` input (for example, `NASDAQ:AAPL`) is split into symbol and exchange.",
             "schema": {
               "type": "string",
               "example": "AAPL"
@@ -17317,6 +18780,55 @@
                 "undefined"
               ],
               "example": "stock"
+            }
+          },
+          {
+            "name": "hl",
+            "in": "query",
+            "description": "Enable matched-keyword highlighting (0 or 1). Defaults to 0.",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                0,
+                1
+              ],
+              "default": 0
+            }
+          },
+          {
+            "name": "exchange",
+            "in": "query",
+            "description": "Exchange filter, for example NASDAQ. Ignored when query uses EXCHANGE:SYMBOL format.",
+            "schema": {
+              "type": "string",
+              "example": "NASDAQ"
+            }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "description": "Result language. Defaults to an empty string.",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "sort_by_country",
+            "in": "query",
+            "description": "Country code used to prioritize results, for example CN. Defaults to an empty string.",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "enable_grouping",
+            "in": "query",
+            "description": "Group matching results. Defaults to false.",
+            "schema": {
+              "type": "boolean",
+              "default": false
             }
           }
         ],
@@ -17546,13 +19058,14 @@
         ],
         "security": [
           {
-            "BearerAuth": []
+            "ApiKeyAuth": []
+          },
+          {
+            "RapidAPIKey": [],
+            "RapidAPIHost": []
           }
         ],
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "in": "query",
             "name": "symbols",
@@ -17606,9 +19119,6 @@
         "summary": "Get technical analysis",
         "description": "Get technical analysis data for a specified trading pair (multi-timeframe summary with buy/sell/neutral signals)",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "symbol",
             "in": "path",
@@ -17675,10 +19185,6 @@
                           "type": "object"
                         }
                       }
-                    },
-                    "msg": {
-                      "type": "string",
-                      "example": "Success"
                     }
                   }
                 },
@@ -17761,11 +19267,8 @@
           "Technical Analysis"
         ],
         "summary": "Get detailed technical indicators",
-        "description": "Get detailed technical indicator data for a specified trading pair (including RSI, MACD, Stoch, CCI, ADX, moving averages, pivot points, etc.)",
+        "description": "Get detailed technical indicator data for a specified trading pair (including RSI, MACD, Stoch, CCI, ADX, moving averages, pivot points, etc.).",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
           {
             "name": "symbol",
             "in": "path",
@@ -17774,6 +19277,16 @@
             "schema": {
               "type": "string",
               "example": "NASDAQ:TSLA"
+            }
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "required": false,
+            "description": "Optional timeframe alias. Supports 1, 5, 15, 60, 120, 240, 1D, 1W, 1M and aliases like 1h, 2h, 4h. Default is 1D.",
+            "schema": {
+              "type": "string",
+              "example": "2h"
             }
           }
         ],
@@ -17791,6 +19304,7 @@
                     },
                     "data": {
                       "type": "object",
+                      "description": "Indicator data. For non-1D interval requests, this object uses normalized keys without the |interval suffix.",
                       "properties": {
                         "RSI": {
                           "type": "number",
@@ -17863,6 +19377,40 @@
                           }
                         }
                       }
+                    },
+                    "interval": {
+                      "type": "string",
+                      "description": "Normalized interval identifier. Only included for non-1D interval requests.",
+                      "example": "1W"
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "summary": "Default 1D indicator response",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "RSI": 45.158800972098234,
+                        "ADX": 16.16495285376519,
+                        "EMA10": 53.582623666828134,
+                        "SMA10": 53.55200000000011,
+                        "MACD.macd": -0.9861682919359964,
+                        "MACD.signal": -1.146519736094983
+                      },
+                      "msg": "Success"
+                    }
+                  },
+                  "interval_2h": {
+                    "summary": "2-hour indicator response when interval=2h",
+                    "value": {
+                      "success": true,
+                      "interval": 120,
+                      "data": {
+                        "RSI": 56.23813845578864,
+                        "EMA10": 53.49952335507073
+                      },
+                      "msg": "Success"
                     },
                     "msg": {
                       "type": "string",
@@ -17987,13 +19535,17 @@
     "/api/token/generate": {
       "post": {
         "summary": "Generate JWT Token",
-        "description": "Generate JWT Token for WebSocket and SSE connections, supports three expiry time types",
+        "description": "Generate a JWT for WebSocket and SSE connections. Token lifetime follows your plan.",
         "tags": [
           "Token Management"
         ],
         "security": [
           {
-            "BearerAuth": []
+            "ApiKeyAuth": []
+          },
+          {
+            "RapidAPIKey": [],
+            "RapidAPIHost": []
           }
         ],
         "requestBody": {
@@ -18013,45 +19565,6 @@
             "description": "Token generated successfully",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "token": {
-                      "type": "string",
-                      "description": "JWT Token",
-                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                    },
-                    "expiresIn": {
-                      "type": "string",
-                      "description": "Human-readable expiry time description",
-                      "example": "6 hours"
-                    },
-                    "expiresAt": {
-                      "type": "number",
-                      "description": "Expiry timestamp (milliseconds)",
-                      "example": 1705567890123
-                    },
-                    "wsUrl": {
-                      "type": "string",
-                      "description": "WebSocket service address",
-                      "example": "ws://localhost:8080"
-                    },
-                    "sseUrl": {
-                      "type": "string",
-                      "description": "SSE service address",
-                      "example": "https://ws.tradingviewapi.com/sse/stream"
-                    },
-                    "sseExample": {
-                      "type": "string",
-                      "description": "SSE curl example command (ready to copy and run)",
-                      "example": "curl --location 'https://ws.tradingviewapi.com/sse/stream?token=xxx&symbols=BINANCE:BTCUSDT,BINANCE:ETHUSDT'"
-                    }
-                  }
-                },
                 "example": {
                   "success": true,
                   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NzY3Njc2NzMsImV4cCI6MTc3Njc2OTQ3Mywic291cmNlIjoid3Mtand0IiwidXNlcklkIjoidXNlcl8xNzc2NzY3NjczNzczX3AwcGFtMHJ6ZiJ9.H60ARnQ1EAVfwI0rHznQgehmz-_ZMHxWqtz-jZJwflU",
@@ -18065,222 +19578,13 @@
             }
           },
           "400": {
-            "description": "Invalid request parameters",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "example": false
-                    },
-                    "error": {
-                      "type": "string",
-                      "example": "Invalid type parameter"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Invalid request parameters"
+          },
+          "403": {
+            "description": "Plan or credential cannot mint tokens"
           },
           "500": {
             "description": "Internal server error"
-          }
-        },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          }
-        ]
-      }
-    },
-    "/api/world-economy/indicators/{indicator}": {
-      "get": {
-        "summary": "Get economic indicator ranking list",
-        "description": "Filter economic indicators by region, data fetched in real-time from TradingView scanner, sorted by latest value in descending order. Indicator definitions come from config/world-economy/*.json (generated by script).",
-        "tags": [
-          "World Economy"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/RapidAPIHostHeader"
-          },
-          {
-            "name": "indicator",
-            "in": "path",
-            "required": true,
-            "description": "Indicator type",
-            "schema": {
-              "type": "string",
-              "description": "Supported indicator slug, full list available at GET /api/metadata/world-economy/indicators (data from config/world-economy/*.json)",
-              "example": "full-year-gdp-growth"
-            }
-          },
-          {
-            "name": "region",
-            "in": "query",
-            "required": false,
-            "description": "Region filter, default g20",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "g20",
-                "world",
-                "north-america",
-                "europe",
-                "middle-east-africa",
-                "latin-america",
-                "asia-pacific"
-              ],
-              "default": "g20"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Request processed (success=true indicates success, success=false indicates business failure)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "indicator": {
-                          "type": "string",
-                          "example": "full-year-gdp-growth"
-                        },
-                        "region": {
-                          "type": "string",
-                          "example": "g20"
-                        },
-                        "total": {
-                          "type": "integer",
-                          "example": 20
-                        },
-                        "rows": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "symbol": {
-                                "type": "string",
-                                "example": "INFYGDPG"
-                              },
-                              "full_symbol": {
-                                "type": "string",
-                                "example": "ECONOMICS:INFYGDPG"
-                              },
-                              "name": {
-                                "type": "string",
-                                "example": "India Full Year GDP Growth"
-                              },
-                              "country_code": {
-                                "type": "string",
-                                "example": "IN"
-                              },
-                              "logoid": {
-                                "type": "string",
-                                "example": "country/IN"
-                              },
-                              "latest": {
-                                "type": "number",
-                                "example": 7.6
-                              },
-                              "previous": {
-                                "type": "number",
-                                "example": 7.1
-                              },
-                              "observation": {
-                                "type": "string",
-                                "description": "Observation period (year)",
-                                "example": "2026"
-                              },
-                              "unit": {
-                                "type": "string",
-                                "example": "Percent"
-                              },
-                              "frequency": {
-                                "type": "string",
-                                "example": "Annual"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "msg": {
-                      "type": "string",
-                      "example": "Success"
-                    },
-                    "error": {
-                      "type": "string",
-                      "nullable": true,
-                      "example": "Unsupported indicator: xxx"
-                    }
-                  }
-                },
-                "example": {
-                  "success": true,
-                  "data": {
-                    "indicator": "full-year-gdp-growth",
-                    "region": "g20",
-                    "total": 20,
-                    "rows": [
-                      {
-                        "symbol": "INFYGDPG",
-                        "full_symbol": "ECONOMICS:INFYGDPG",
-                        "name": "India Full Year GDP Growth",
-                        "country_code": "IN",
-                        "logoid": "country/IN",
-                        "latest": 7.6,
-                        "previous": 7.1,
-                        "observation": "2026",
-                        "unit": "Percent",
-                        "frequency": "Annual"
-                      },
-                      {
-                        "symbol": "IDFYGDPG",
-                        "full_symbol": "ECONOMICS:IDFYGDPG",
-                        "name": "Indonesia Full Year GDP Growth",
-                        "country_code": "ID",
-                        "logoid": "country/ID",
-                        "latest": 5.11,
-                        "previous": 5.03,
-                        "observation": "2025",
-                        "unit": "Percent",
-                        "frequency": "Annual"
-                      },
-                      {
-                        "symbol": "CNFYGDPG",
-                        "full_symbol": "ECONOMICS:CNFYGDPG",
-                        "name": "China Full Year GDP Growth",
-                        "country_code": "CN",
-                        "logoid": "country/CN",
-                        "latest": 5,
-                        "previous": 5,
-                        "observation": "2025",
-                        "unit": "Percent",
-                        "frequency": "Annual"
-                      }
-                    ]
-                  },
-                  "msg": "Success"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Missing API Token (returned by global auth middleware)"
-          },
-          "403": {
-            "description": "Invalid API Token (returned by global auth middleware)"
           }
         }
       }
@@ -18330,6 +19634,10 @@
     {
       "name": "Real-time Quote",
       "description": "Real-time quote data"
+    },
+    {
+      "name": "Screener",
+      "description": "Custom asset screener with filters, fields, presets, language, and pagination"
     },
     {
       "name": "Search",

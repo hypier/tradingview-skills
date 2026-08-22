@@ -1,7 +1,6 @@
 curl --request GET \
-	--url https://tradingview-data1.p.rapidapi.com/api/ta/NASDAQ:TSLA/indicators \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url https://api.tradingviewapi.com/api/ta/NASDAQ:TSLA/indicators \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 
   {
   "success": true,
@@ -93,9 +92,8 @@ curl --request GET \
 
 
 curl --request GET \
-	--url https://tradingview-data1.p.rapidapi.com/api/ta/NASDAQ:AAPL \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url https://api.tradingviewapi.com/api/ta/NASDAQ:AAPL \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 
   {
   "success": true,

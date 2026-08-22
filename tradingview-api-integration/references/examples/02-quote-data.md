@@ -11,10 +11,9 @@
 
 ```bash
 curl --request POST \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/quote/batch' \
+	--url 'https://api.tradingviewapi.com/api/quote/batch' \
 	--header 'Content-Type: application/json' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY' \
+	--header 'Authorization: Bearer YOUR_API_KEY' \
 	--data '{"symbols":["BINANCE:BTCUSDT","BINANCE:ETHUSDT"],"session":"regular","fields":"all"}'
 ```
 
@@ -136,9 +135,8 @@ OpenAPI example / fallback
 
 ```bash
 curl --request GET \
-	--url 'https://tradingview-data1.p.rapidapi.com/api/quote/NASDAQ:AAPL?session=regular&fields=all' \
-	--header 'x-rapidapi-host: tradingview-data1.p.rapidapi.com' \
-	--header 'x-rapidapi-key: YOUR_RAPIDAPI_KEY'
+	--url 'https://api.tradingviewapi.com/api/quote/NASDAQ:AAPL?session=regular&fields=all' \
+	--header 'Authorization: Bearer YOUR_API_KEY'
 ```
 
 ### Response
