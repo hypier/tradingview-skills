@@ -31,7 +31,7 @@ tradingview_get_metadata(type='languages')      # optional language selection
 Choose the most relevant field groups first:
 
 ```
-GET /api/screener/presets?asset_type=stock
+tradingview_get_screener_presets(asset_type='stock')
 ```
 
 Typical preset groups:
@@ -50,7 +50,7 @@ Typical preset groups:
 Fetch filter definitions before writing the scan body:
 
 ```
-GET /api/screener/filter-options?asset_type=stock&lang=en
+tradingview_get_screener_filter_options(asset_type='stock', lang='en')
 ```
 
 Check for:
@@ -60,29 +60,27 @@ Check for:
 
 ### Step 5: Build the Scan Payload
 
-Use a JSON body with `market`, `range`, `preset_fields`, `filters`, and optional `sort`.
+Pass `market`, `range`, `preset_fields`, `filters`, and optional `sort` to `tradingview_screen_assets`.
 
-```json
-{
-  "market": "america",
-  "range": [0, 50],
-  "preset_fields": ["overview", "valuation", "profitability", "technicals"],
-  "filters": {
-    "market_cap_basic": { "operation": "greater_or_equal", "value": 10000000000 },
-    "price_earnings_ttm": { "operation": "less_or_equal", "value": 15 },
-    "RSI": { "operation": "less_or_equal", "value": 30 }
+```
+tradingview_screen_assets(
+  asset_type='stock',
+  market='america',
+  range=[0, 50],
+  preset_fields=['overview', 'valuation', 'profitability', 'technicals'],
+  filters={
+    'market_cap_basic': { 'operation': 'greater_or_equal', 'value': 10000000000 },
+    'price_earnings_ttm': { 'operation': 'less_or_equal', 'value': 15 },
+    'RSI': { 'operation': 'less_or_equal', 'value': 30 }
   },
-  "sort": {
-    "sortBy": "market_cap_basic",
-    "sortOrder": "desc"
-  }
-}
+  sort={'sortBy': 'market_cap_basic', 'sortOrder': 'desc'}
+)
 ```
 
 ### Step 6: Run the Scan and Validate the Results
 
 ```
-POST /api/screener/scan
+tradingview_screen_assets(...)
 ```
 
 Validation checklist:
@@ -98,7 +96,7 @@ For the top 5-10 results, use:
 ```
 tradingview_get_quote(symbol)
 tradingview_get_ta(symbol, include_indicators=true)
-tradingview_get_price(symbol, timeframe='D', range=60)
+tradingview_get_ohlcv(symbol, timeframe='D', range=60)
 ```
 
 This avoids over-trusting one screener snapshot.
@@ -108,9 +106,9 @@ This avoids over-trusting one screener snapshot.
 **User**: "Screen US dividend stocks with PE below 20, ROE above 15%, and RSI under 40"
 
 **Execution**:
-1. `get_metadata(type='markets')` -> confirm `america`
-2. `GET /api/screener/presets?asset_type=stock`
-3. `GET /api/screener/filter-options?asset_type=stock&lang=en`
-4. `POST /api/screener/scan` with valuation + profitability + technical filters
-5. Spot-check top results with `get_quote` and `get_ta`
+1. `tradingview_get_metadata(type='markets')` -> confirm `america`
+2. `tradingview_get_screener_presets(asset_type='stock')`
+3. `tradingview_get_screener_filter_options(asset_type='stock', lang='en')`
+4. `tradingview_screen_assets` with valuation + profitability + technical filters
+5. Spot-check top results with `tradingview_get_quote` and `tradingview_get_ta`
 6. Return ranked results with reasons and risks

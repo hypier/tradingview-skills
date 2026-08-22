@@ -20,7 +20,7 @@ Examples:
 Get the available world-economy indicator list first:
 
 ```
-GET /api/metadata/world-economy/indicators
+tradingview_get_world_economy_indicator_metadata()
 ```
 
 Typical indicators include GDP growth, inflation, unemployment, interest rates, industrial production, and retail sales.
@@ -28,7 +28,7 @@ Typical indicators include GDP growth, inflation, unemployment, interest rates, 
 ### Step 3: Pull World Economy Rankings
 
 ```
-GET /api/world-economy/indicators/{indicator}?region=g20
+tradingview_get_world_economy_indicators(indicator, region='g20')
 ```
 
 Useful regions:
@@ -87,8 +87,8 @@ Tie the macro view back to tradable assets:
 **User**: "Build me a G20 macro dashboard for next week"
 
 **Execution**:
-1. `GET /api/metadata/world-economy/indicators`
-2. Pull 2-4 ranking indicators such as GDP growth and inflation
-3. Pull next-week economic calendar
-4. Pull macro news headlines
+1. `tradingview_get_world_economy_indicator_metadata`
+2. Pull 2-4 ranking indicators such as GDP growth and inflation with `tradingview_get_world_economy_indicators`
+3. Pull next-week economic calendar with `tradingview_get_calendar`
+4. Pull macro news headlines with `tradingview_get_news`
 5. Return a concise top-down report with asset implications

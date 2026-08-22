@@ -34,12 +34,12 @@ Extract key data:
 Call in parallel to get data for different periods:
 
 ```
-tradingview_get_price(symbol, timeframe='D', range=120)   # Daily - medium-term trend
-tradingview_get_price(symbol, timeframe='W', range=52)    # Weekly - medium to long-term
-tradingview_get_price(symbol, timeframe='60', range=100)  # 60-minute - short-term details
+tradingview_get_ohlcv(symbol, timeframe='D', range=120)   # Daily - medium-term trend
+tradingview_get_ohlcv(symbol, timeframe='W', range=52)    # Weekly - medium to long-term
+tradingview_get_ohlcv(symbol, timeframe='60', range=100)  # 60-minute - short-term details
 ```
 
-Optional: `type='HeikinAshi'` to get Heikin Ashi candles for clearer trend visualization.
+Optional: `tradingview_get_price(..., type='HeikinAshi')` for clearer trend visualization. Use `tradingview_get_ohlcv` for actual prices.
 
 ### Step 4: Get Detailed Technical Analysis
 
@@ -71,9 +71,10 @@ tradingview_get_news_detail(news_id, lang="zh-Hans")
 
 ```
 tradingview_get_calendar(type="earnings", from=now, to=now+30days, market="china")
+tradingview_get_price_events(symbol, timeframe='D', range=120)
 ```
 
-Check for upcoming earnings, dividends, and other events.
+Check for upcoming earnings, dividends, and other events, then overlay historical event markers on the chart.
 
 ### Step 7: Generate Comprehensive Report
 
@@ -118,9 +119,10 @@ Output structure:
 **User**: "Help me analyze Primeton"
 
 **Execution**:
-1. `search_market(query="普元信息", filter="stock")` → SSE:688118
-2. `get_quote(symbol="SSE:688118")` → Real-time quote
-3. `get_price` × 3 timeframes → Chart data
-4. `get_ta(include_indicators=true)` → Detailed technical indicators
-5. `get_news(symbol="SSE:688118", lang="zh-Hans")` → Related news
-6. Comprehensive scoring, generate report
+1. `tradingview_search_market(query="普元信息", filter="stock")` → SSE:688118
+2. `tradingview_get_quote(symbol="SSE:688118")` → Real-time quote
+3. `tradingview_get_ohlcv` × 3 timeframes → Chart data
+4. `tradingview_get_ta(include_indicators=true)` → Detailed technical indicators
+5. `tradingview_get_news(symbol="SSE:688118", lang="zh-Hans")` → Related news
+6. `tradingview_get_price_events` → Earnings/dividend/split markers
+7. Comprehensive scoring, generate report

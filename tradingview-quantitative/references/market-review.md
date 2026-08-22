@@ -125,9 +125,9 @@ Correlate companies/industries in news with gainers/losers:
 **User**: "How was the A-share market today?"
 
 **Execution**:
-1. `get_metadata(type='markets')` → china
-2. `get_leaderboard` × 4 (gainers/losers/active/unusual-volume)
-3. `get_news(market_country='CN', lang='zh-Hans')` + details
-4. `get_quote_batch` → Index quotes
+1. `tradingview_get_metadata(type='markets')` → china
+2. `tradingview_get_leaderboard` × 4 (gainers/losers/active/unusual-volume)
+3. `tradingview_get_news(market_country='CN', lang='zh-Hans')` + details
+4. `tradingview_get_quote_batch` → Index quotes
 5. Sector categorization → Hot sector identification → News correlation
 6. Generate review report

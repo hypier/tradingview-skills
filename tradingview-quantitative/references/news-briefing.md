@@ -81,15 +81,15 @@ Extract from each news item:
 **User**: "Generate today's China financial news briefing"
 
 **Execution**:
-1. `get_news(market_country='CN', lang='zh-Hans', limit=10)` → News list
-2. For each `get_news_detail(news_id, lang='zh-Hans')` → Full content
+1. `tradingview_get_news(market_country='CN', lang='zh-Hans', limit=10)` → News list
+2. For each `tradingview_get_news_detail(news_id, lang='zh-Hans')` → Full content
 3. Analyze impact, categorize by sector
 4. Generate structured briefing
 
 **User**: "Compare financial news from China, US, and Japan"
 
 **Execution**:
-1. `get_news` separately for CN/US/JP news
+1. `tradingview_get_news` separately for CN/US/JP news
 2. Get details separately
 3. Cross-market comparative analysis
 4. Generate comparison briefing

@@ -15,15 +15,15 @@ Pattern recognition algorithms and success rate statistics can be found in `patt
 Get sufficiently long daily data for pattern recognition:
 
 ```
-tradingview_get_price(symbol, timeframe='D', range=120)
+tradingview_get_ohlcv(symbol, timeframe='D', range=120)
 ```
 
 For short-term patterns (candlestick combinations), additionally get hourly data:
 ```
-tradingview_get_price(symbol, timeframe='60', range=100)
+tradingview_get_ohlcv(symbol, timeframe='60', range=100)
 ```
 
-Optional: `type='HeikinAshi'` to get Heikin Ashi candles for clearer trend structure visualization.
+Optional: `tradingview_get_price(..., type='HeikinAshi')` for clearer trend structure visualization. Do not use Heikin-Ashi prices for breakout levels or measured moves.
 
 ### Step 2: Get Technical Indicators
 
@@ -110,8 +110,8 @@ Only recommend trades when risk-reward ratio > 1.5.
 **User**: "Analyze BTC/USDT technical patterns"
 
 **Execution**:
-1. `get_price(symbol='BINANCE:BTCUSDT', timeframe='D', range=120)` → Daily candles
-2. `get_ta(symbol='BINANCE:BTCUSDT', include_indicators=true)` → Technical indicators
+1. `tradingview_get_ohlcv(symbol='BINANCE:BTCUSDT', timeframe='D', range=120)` → Daily candles
+2. `tradingview_get_ta(symbol='BINANCE:BTCUSDT', include_indicators=true)` → Technical indicators
 3. Analyze candlestick data to identify patterns (refer to `pattern-library.md`)
 4. Calculate confidence and key price levels
 5. Generate trading strategy report

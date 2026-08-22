@@ -70,11 +70,12 @@ tradingview_get_leaderboard(
 
 ### Step 5: Analyze Beneficiary Stock Quotes
 
-For identified beneficiary stocks (5-10), get quotes and technical analysis:
+For identified beneficiary stocks (5-10), get quotes, technical analysis, and chart event markers:
 
 ```
 tradingview_get_quote_batch(symbols=[...])  # Real-time quotes
 tradingview_get_ta(symbol, include_indicators=true)  # Technical confirmation
+tradingview_get_price_events(symbol, timeframe='D', range=100)  # Earnings/dividend/split markers
 ```
 
 ### Step 6: Assess Impact Level
@@ -136,9 +137,9 @@ Impact levels:
 **User**: "Analyze the impact of cloud computing price increases on related companies"
 
 **Execution**:
-1. `get_news(market='stock', market_country='CN', lang='zh-Hans')` → Related news
-2. `get_news_detail(news_id)` → News details
-3. `search_market(query='云计算', filter='stock')` → Related stocks
-4. `get_leaderboard(tab='gainers', market_code='china')` → Verify gainers list
-5. `get_quote_batch` + `get_ta` → Quotes and technical analysis
+1. `tradingview_get_news(market='stock', market_country='CN', lang='zh-Hans')` → Related news
+2. `tradingview_get_news_detail(news_id)` → News details
+3. `tradingview_search_market(query='云计算', filter='stock')` → Related stocks
+4. `tradingview_get_leaderboard(tab='gainers', market_code='china')` → Verify gainers list
+5. `tradingview_get_quote_batch` + `tradingview_get_ta` + `tradingview_get_price_events` → Quotes, technicals, and chart events
 6. Assess impact level → Generate analysis report

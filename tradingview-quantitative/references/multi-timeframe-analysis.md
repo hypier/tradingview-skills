@@ -17,13 +17,13 @@ Use candlestick data and technical indicators across multiple timeframes to conf
 Call in parallel to get 4 timeframes:
 
 ```
-tradingview_get_price(symbol, timeframe='M', range=24)    # Monthly - 2 years
-tradingview_get_price(symbol, timeframe='W', range=52)    # Weekly - 1 year
-tradingview_get_price(symbol, timeframe='D', range=120)   # Daily - 6 months
-tradingview_get_price(symbol, timeframe='60', range=120)  # Hourly - 5 days
+tradingview_get_ohlcv(symbol, timeframe='M', range=24)    # Monthly - 2 years
+tradingview_get_ohlcv(symbol, timeframe='W', range=52)    # Weekly - 1 year
+tradingview_get_ohlcv(symbol, timeframe='D', range=120)   # Daily - 6 months
+tradingview_get_ohlcv(symbol, timeframe='60', range=120)  # Hourly - 5 days
 ```
 
-Optional: Use `type='HeikinAshi'` to get Heikin Ashi candles, filtering noise for clearer trend identification.
+Optional: `tradingview_get_price(..., type='HeikinAshi')` to filter noise for trend identification. Use `tradingview_get_ohlcv` for actual highs/lows and entry prices.
 
 ### Step 2: Get Technical Analysis Signals
 
@@ -101,8 +101,8 @@ Assess trend direction for each timeframe:
 **User**: "Multi-timeframe analysis of BTCUSDT"
 
 **Execution**:
-1. `get_price` × 4 timeframes (M/W/D/60)
-2. `get_ta(include_indicators=true)` → Multi-period signals
+1. `tradingview_get_ohlcv` × 4 timeframes (M/W/D/60)
+2. `tradingview_get_ta(include_indicators=true)` → Multi-period signals
 3. Assess trend consistency across periods
 4. Identify key support/resistance levels
 5. Output trend consistency report and entry recommendations

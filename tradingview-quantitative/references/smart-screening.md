@@ -66,7 +66,7 @@ Screening criteria (see `technical-analysis.md` scoring model):
 For Top 10 that pass technical screening, get K-line confirmation:
 
 ```
-tradingview_get_price(symbol, timeframe='D', range=60)
+tradingview_get_ohlcv(symbol, timeframe='D', range=60)
 ```
 
 Verify:
@@ -107,9 +107,9 @@ Calculate total score (100-point system) according to `technical-analysis.md` sc
 **User**: "Help me select strong stocks from China A-shares"
 
 **Execution**:
-1. `get_metadata(type='markets')` → china
-2. `get_leaderboard(tab='gainers', market_code='china', count=100)` → Gainers
-3. `get_leaderboard(tab='gainers', market_code='china', columnset='valuation')` → Valuation
-4. Top 20 individual `get_ta(include_indicators=true)` → Technical screening
-5. Top 10 `get_price(timeframe='D', range=60)` → K-line verification
+1. `tradingview_get_metadata(type='markets')` → china
+2. `tradingview_get_leaderboard(tab='gainers', market_code='china', count=100)` → Gainers
+3. `tradingview_get_leaderboard(tab='gainers', market_code='china', columnset='valuation')` → Valuation
+4. Top 20 individual `tradingview_get_ta(include_indicators=true)` → Technical screening
+5. Top 10 `tradingview_get_ohlcv(timeframe='D', range=60)` → K-line verification
 6. Comprehensive scoring → Output Top 10 report

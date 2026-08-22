@@ -50,7 +50,7 @@ Organize search results into readable format, including:
 Based on search results, suggest subsequent operations users can perform:
 - View real-time quotes: `tradingview_get_quote`
 - View technical analysis: `tradingview_get_ta`
-- View historical K-lines: `tradingview_get_price`
+- View historical K-lines: `tradingview_get_ohlcv`
 - View related news: `tradingview_get_news`
 
 ## Example Conversations

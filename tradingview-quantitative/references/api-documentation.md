@@ -1,5 +1,7 @@
 # TradingView Data API
 
+This file is the REST parameter dictionary (market codes, tabs, columnsets, languages, exchanges). For live data retrieval in this skill, call the `tradingview_*` MCP tools listed in `SKILL.md` and `mcp-tools-guide.md`, not these REST paths.
+
 Access real-time market data from TradingView with our comprehensive REST API, WebSocket support, and Model Context Protocol (MCP) integration. Get stock quotes, candlestick data, technical analysis, market leaderboards, and financial news for stocks, crypto, forex, futures, bonds, and ETFs. Includes WebSocket support for live data streaming with real-time price updates and quotes, and MCP support for AI assistant integration.
 
 ## Available Endpoints

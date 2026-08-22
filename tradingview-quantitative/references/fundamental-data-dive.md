@@ -4,7 +4,7 @@ description: Fundamental data deep dive workflow - Analyze company profile, fina
 
 # Fundamental Data Deep Dive Workflow
 
-Use the market-data endpoint family to build a fundamentals-first view of a company, including profile, valuation, historical financials, dividends, and analyst expectations.
+Use `tradingview_get_market_data` to build a fundamentals-first view of a company, including profile, valuation, historical financials, dividends, and analyst expectations.
 
 ## Execution Steps
 
@@ -21,10 +21,10 @@ tradingview_search_market(query="Apple", filter="stock")
 Start with a profile-level overview:
 
 ```
-GET /api/market-data/{symbol}/company
-GET /api/market-data/{symbol}/current
-GET /api/market-data/{symbol}/indicators
-GET /api/market-data/{symbol}/ttm
+tradingview_get_market_data(symbol, category='company')
+tradingview_get_market_data(symbol, category='current')
+tradingview_get_market_data(symbol, category='indicators')
+tradingview_get_market_data(symbol, category='ttm')
 ```
 
 Focus on:
@@ -37,11 +37,11 @@ Focus on:
 Pull both annual and quarterly views:
 
 ```
-GET /api/market-data/{symbol}/financials-quarterly
-GET /api/market-data/{symbol}/financials-annual
-GET /api/market-data/{symbol}/history-quarterly
-GET /api/market-data/{symbol}/history-annual
-GET /api/market-data/{symbol}/cash-flow
+tradingview_get_market_data(symbol, category='financials_quarterly')
+tradingview_get_market_data(symbol, category='financials_annual')
+tradingview_get_market_data(symbol, category='history_quarterly')
+tradingview_get_market_data(symbol, category='history_annual')
+tradingview_get_market_data(symbol, category='cash_flow')
 ```
 
 Check for:
@@ -54,10 +54,10 @@ Check for:
 ### Step 4: Review Capital Return and Analysts
 
 ```
-GET /api/market-data/{symbol}/dividend
-GET /api/market-data/{symbol}/analyst-recommendations
-GET /api/market-data/{symbol}/enterprise-value
-GET /api/market-data/{symbol}/credit-ratings
+tradingview_get_market_data(symbol, category='dividend')
+tradingview_get_market_data(symbol, category='analyst_recommendations')
+tradingview_get_market_data(symbol, category='enterprise_value')
+tradingview_get_market_data(symbol, category='credit_ratings')
 ```
 
 Look at:
@@ -72,7 +72,7 @@ Combine fundamentals with market behavior:
 
 ```
 tradingview_get_quote(symbol)
-tradingview_get_price(symbol, timeframe='D', range=120)
+tradingview_get_ohlcv(symbol, timeframe='D', range=120)
 tradingview_get_ta(symbol, include_indicators=true)
 ```
 
@@ -100,9 +100,9 @@ Suggested structure:
 **User**: "Do a fundamentals-first analysis of Apple"
 
 **Execution**:
-1. `search_market(query='Apple', filter='stock')` -> `NASDAQ:AAPL`
-2. Pull company/current/indicators/ttm
-3. Pull quarterly and annual financials
-4. Pull dividend and analyst recommendation data
+1. `tradingview_search_market(query='Apple', filter='stock')` -> `NASDAQ:AAPL`
+2. `tradingview_get_market_data` for company/current/indicators/ttm
+3. `tradingview_get_market_data` for quarterly and annual financials
+4. `tradingview_get_market_data` for dividend and analyst recommendation data
 5. Cross-check with quote and price trend
 6. Return a concise bull vs bear thesis

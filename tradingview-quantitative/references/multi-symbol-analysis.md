@@ -27,7 +27,7 @@ Parameter description:
 
 ### Step 3: Batch Get Historical Charts
 
-Call `tradingview_get_price_batch` to get historical data for all symbols:
+Call `tradingview_get_ohlcv_batch` to get real historical candles for all symbols:
 
 ```
 Parameter description:
@@ -64,7 +64,7 @@ Output comprehensive comparison report:
 
 **Execution**:
 1. Call `tradingview_get_quote_batch` to get real-time quotes
-2. Call `tradingview_get_price_batch` to get daily chart data
+2. Call `tradingview_get_ohlcv_batch` to get daily chart data
 3. Call `tradingview_get_ta` individually to get technical analysis
 4. Generate comparison table, highlighting best performers for each metric
 
@@ -84,6 +84,6 @@ Output comprehensive comparison report:
 
 **Execution**:
 1. Call `tradingview_get_quote_batch`, symbols=["BINANCE:BTCUSDT", "BINANCE:ETHUSDT"]
-2. Call `tradingview_get_price_batch` to get historical charts
+2. Call `tradingview_get_ohlcv_batch` to get historical charts
 3. Get technical analysis signals individually
 4. Compare trend strength and overbought/oversold conditions

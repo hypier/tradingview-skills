@@ -52,6 +52,14 @@ Filter based on user focus:
 - Filter by industry/sector
 - Filter by specific securities
 
+For a specific symbol, overlay historical chart markers:
+
+```
+tradingview_get_price_events(symbol, timeframe='D', range=100)
+```
+
+This returns earnings, dividend, and split markers aligned to candles.
+
 ### Step 6: Generate Calendar Report
 
 Output formatted calendar report:

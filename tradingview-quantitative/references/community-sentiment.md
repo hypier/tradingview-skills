@@ -21,8 +21,8 @@ Determine whether the user wants:
 For broad discovery:
 
 ```
-GET /api/ideas/hot?page=1&lang=en
-GET /api/ideas/editors-picks?page=1&lang=en
+tradingview_get_ideas_hot(page=1, lang='en')
+tradingview_get_ideas_editors_picks(page=1, lang='en')
 ```
 
 Collect:
@@ -37,8 +37,8 @@ Collect:
 For a single instrument:
 
 ```
-GET /api/ideas/list/{symbol}?page=1&per_page=20&lang=en
-GET /api/ideas/{symbol}/minds?lang=en
+tradingview_get_ideas_by_symbol(symbol, page=1, per_page=20, lang='en')
+tradingview_get_minds(symbol, lang='en')
 ```
 
 Use these to measure:
@@ -51,7 +51,7 @@ Use these to measure:
 If a list response returns `image_url`, fetch the detail page:
 
 ```
-GET /api/ideas/{imageUrl}
+tradingview_get_idea_detail(image_url)
 ```
 
 Read for:
@@ -67,7 +67,7 @@ Never rely on ideas alone. Compare them with:
 ```
 tradingview_get_quote(symbol)
 tradingview_get_ta(symbol, include_indicators=true)
-tradingview_get_price(symbol, timeframe='D', range=90)
+tradingview_get_ohlcv(symbol, timeframe='D', range=90)
 ```
 
 ### Step 6: Summarize Narrative vs Reality
@@ -83,8 +83,8 @@ Return:
 **User**: "What is TradingView community sentiment on BTCUSDT right now?"
 
 **Execution**:
-1. `GET /api/ideas/list/BINANCE:BTCUSDT?page=1&per_page=20&lang=en`
-2. `GET /api/ideas/BINANCE:BTCUSDT/minds?lang=en`
-3. Fetch 2-3 representative idea details
-4. Compare with `get_ta` and daily price data
+1. `tradingview_get_ideas_by_symbol(symbol='BINANCE:BTCUSDT', page=1, per_page=20, lang='en')`
+2. `tradingview_get_minds(symbol='BINANCE:BTCUSDT', lang='en')`
+3. Fetch 2-3 representative idea details with `tradingview_get_idea_detail`
+4. Compare with `tradingview_get_ta` and daily price data
 5. Return sentiment summary plus contrarian risks
