@@ -442,7 +442,8 @@ curl ".../api/search/market/Apple?filter=stock"
 | **Search** | `/api/search/market/{query}?filter=stock\|etf\|crypto\|forex` |
 | **Metadata** | `/api/metadata/markets`, `/exchanges`, `/tabs`, `/columnsets`, `/languages`, `/world-economy/indicators` |
 | **World Economy** | `/api/world-economy/indicators/{indicator}` |
-| **Realtime** | `/sse/stream` (JWT required), `/api/token/generate`, `/api/mcp/generate` |
+| **Realtime** | `/sse/stream` (JWT from `/api/token/generate`) |
+| **MCP** | Hosted `https://mcp.tradingviewapi.com/mcp` (`"type": "http"` + Console OAuth). JWT via `POST /api/mcp/generate` (`exampleConfig` + `exampleConfigStreamableHttp`) |
 | **Health** | `/health` |
 
 ---

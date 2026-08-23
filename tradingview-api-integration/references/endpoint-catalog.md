@@ -379,7 +379,7 @@ JWT for WebSocket/SSE connections. Body: `token-jwt-type` (`1`=30min, `2`=6h, `3
 
 ### `POST /api/mcp/generate`
 
-JWT for the MCP (Model Context Protocol) server. Body: `token-jwt-type` (`1`=30min, `2`=15d, `3`=30d, `4`=365d; required), optional `userId`. Returns `token`, `mcpUrl`, `exampleConfig`.
+JWT for the MCP (Model Context Protocol) server. Body: `token-jwt-type` (`1`=30min, `2`=15d, `3`=30d, `4`=365d; required), optional `userId`. Returns `token`, `mcpUrl`, `exampleConfig` (`type: http` for Cursor / VS Code), and `exampleConfigStreamableHttp` for older clients. Recommended MCP setup is still the hosted URL plus Console OAuth (no JWT).
 
 ---
 

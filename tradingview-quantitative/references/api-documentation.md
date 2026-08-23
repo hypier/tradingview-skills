@@ -279,17 +279,15 @@ Get TradingView logo images. The logo path should be obtained from currency-logo
 | **Countries/Regions** | `country/EU`, `country/US`, `country/GB`, `country/JP`, `country/CN`, `country/CA`, `country/AU`, `country/DE`, `country/FR`, `country/IN`, `country/KR`, `country/SG`, `country/HK`, `country/CH`, `country/NL` |
 
 ### 🤖 Model Context Protocol (MCP)
-Access TradingView data through the Model Context Protocol, enabling AI assistants (like Claude, Cursor) to interact with TradingView tools using a standardized protocol.
+Access TradingView data through the Model Context Protocol, enabling AI assistants (Claude, Cursor, VS Code) to call 25 hosted `tradingview_*` tools.
 
-**Note:** This section describes the API structure for reference. The actual MCP server endpoints shown use example domains for documentation purposes.
+**Recommended:** add `https://mcp.tradingviewapi.com/mcp` with `"type": "http"` and sign in with Console. Older clients may use `"type": "streamable-http"`.
 
-### 🔐 Token Generation
-Generate a short-lived token for MCP, SSE, or WebSocket integrations.
-- **POST /api/token/generate** - Generate a realtime/MCP access token
+**JWT fallback:** `POST /api/mcp/generate` (Console Bearer or RapidAPI headers). The response includes `exampleConfig` (`http`) and `exampleConfigStreamableHttp`. Hosted MCP expects this MCP JWT or OAuth — not a Console API key in `headers`.
 
-**Typical use cases:**
-- Browser or backend apps that need streaming auth
-- Bridging Console or RapidAPI credentials into MCP or realtime sessions
+**RapidAPI local:** `npx -y @ivotoby/openapi-mcp-server` exposes OpenAPI tools; it is not the hosted `tradingview_*` server.
+
+Do not use `POST /api/token/generate` for MCP. That token is for WebSocket/SSE only.
 
 ### ⚡ WebSocket Real-time Data
 WebSocket endpoint for real-time price updates, quotes, and market data streaming.

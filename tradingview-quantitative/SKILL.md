@@ -7,6 +7,8 @@ description: Use when current TradingView data must be retrieved through availab
 
 Use available TradingView MCP tools to retrieve current data, then apply the relevant quantitative workflow. For direct Console/RapidAPI integration, endpoint debugging, or requests without those MCP tools, use `tradingview-api-integration` instead.
 
+Hosted MCP (25 `tradingview_*` tools): add `https://mcp.tradingviewapi.com/mcp` with `"type": "http"` and sign in with Console. Older clients may use `"type": "streamable-http"`. JWT fallback: `POST /api/mcp/generate`, then copy `exampleConfig`. RapidAPI without Console OAuth: local `npx -y @ivotoby/openapi-mcp-server` (OpenAPI tools, not hosted `tradingview_*`).
+
 ## Core Rules
 
 ### Metadata First Principle

@@ -80,6 +80,7 @@ Map the user's need to an endpoint family:
 | GDP, inflation, interest rates by country | `GET /api/world-economy/indicators/{slug}?region=` | `14-world-economy.md` |
 | Symbol logo image | `GET /logo?url={logoid}` (public, no key) | `09-logo.md` |
 | Live streaming updates | `POST /api/token/generate` → SSE `/sse/stream` or WebSocket | `15-token.md`, `11-websocket.md` |
+| MCP for Cursor / VS Code / Claude | Hosted `https://mcp.tradingviewapi.com/mcp` + Console OAuth (`"type": "http"`). JWT via `POST /api/mcp/generate`. RapidAPI local OpenAPI MCP | `10-mcp.md` |
 | Valid parameter values (markets, tabs, columnsets, …) | `GET /api/metadata/...` (see metadata section below) | `07-metadata.md` |
 
 Full parameter tables, enums, and request/response shapes: read **[references/endpoint-catalog.md](references/endpoint-catalog.md)**.
@@ -124,6 +125,23 @@ The screener is the most powerful but most complex endpoint. Always follow this 
 4. `POST /api/screener/{...}/scan` with body `{ market, range, preset_fields, filters, sort }`
 
 Filter syntax: array = multi-select, `{ "operation": "greater_or_equal", "value": n }` = comparison, scalar = equality. Details in the catalog.
+
+## MCP (AI assistants)
+
+Recommended for Cursor, VS Code, and Claude: add the hosted URL and sign in with Console. No JWT in the config file.
+
+```json
+{
+  "mcpServers": {
+    "tradingview": {
+      "type": "http",
+      "url": "https://mcp.tradingviewapi.com/mcp"
+    }
+  }
+}
+```
+
+Older clients may use `"type": "streamable-http"`. JWT fallback: `POST /api/mcp/generate`, then copy `exampleConfig` (`http`) or `exampleConfigStreamableHttp`. RapidAPI local OpenAPI MCP: `npx -y @ivotoby/openapi-mcp-server` (OpenAPI tools, not hosted `tradingview_*`). Details: **[references/examples/10-mcp.md](references/examples/10-mcp.md)**.
 
 ## Symbol format
 

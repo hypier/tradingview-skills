@@ -54,7 +54,7 @@ Replace `tradingview-api-integration` with the desired directory name in either 
 ## Prerequisites
 
 - **API integration and equity research:** Set `TRADINGVIEW_API_KEY` and call `https://api.tradingviewapi.com` with `Authorization: Bearer`. RapidAPI (`RAPIDAPI_KEY`) remains supported as an alternate. `tradingview-api-integration` can save a key to `.api-key` only after explicit consent.
-- **Quantitative analysis:** Configure TradingView MCP tools in the agent runtime. Without them, use `tradingview-api-integration` for direct API access.
+- **Quantitative analysis:** Configure hosted TradingView MCP in the agent runtime: `"type": "http"` and `https://mcp.tradingviewapi.com/mcp`, then sign in with Console. JWT (`POST /api/mcp/generate`) and RapidAPI local OpenAPI MCP are fallbacks. Without MCP tools, use `tradingview-api-integration` for direct API access.
 - **OpenClaw frameworks:** Supply market, financial, or news data when current information is required. The skill does not treat templates or historical examples as live market data.
 - **Equity research:** Prefer exchange-qualified tickers such as `NASDAQ:AAPL` or `HKEX:9988`. Cite the retrieval date and endpoint for live data used in a report.
 

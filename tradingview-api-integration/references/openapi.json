@@ -14265,7 +14265,7 @@
     "/api/mcp/generate": {
       "post": {
         "summary": "Generate MCP JWT Token",
-        "description": "Generate a JWT for MCP connections. Token lifetime follows your plan.",
+        "description": "Generate a JWT for MCP connections. Token lifetime follows your plan. `exampleConfig` uses `\"type\": \"http\"` (Cursor / VS Code). Older clients can copy `exampleConfigStreamableHttp` (`\"type\": \"streamable-http\"`). The URL and headers are the same. Recommended setup is still the hosted URL plus Console OAuth (no JWT).",
         "tags": [
           "MCP Management"
         ],
@@ -14302,6 +14302,18 @@
                   "expiresAt": 1777992205000,
                   "mcpUrl": "http://localhost:3001/mcp",
                   "exampleConfig": {
+                    "mcpServers": {
+                      "tradingview": {
+                        "type": "http",
+                        "url": "http://localhost:3001/mcp",
+                        "headers": {
+                          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NzY2OTYyMDUsImV4cCI6MTc3Nzk5MjIwNSwic291cmNlIjoibWNwLWp3dCIsInVzZXJJZCI6InVzZXIxMjMifQ.lN6USNXNryLZ36mD9PqmivsfwBok0lUQu6nEq7cua_Q",
+                          "Accept": "application/json, text/event-stream"
+                        }
+                      }
+                    }
+                  },
+                  "exampleConfigStreamableHttp": {
                     "mcpServers": {
                       "tradingview": {
                         "type": "streamable-http",
