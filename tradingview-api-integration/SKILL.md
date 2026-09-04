@@ -79,7 +79,7 @@ Map the user's need to an endpoint family:
 | Earnings / IPO / dividend / macro event dates | `GET /api/calendar/{earnings\|ipo\|revenue\|economic}?from=&to=` (Unix seconds, ≤40-day window) | `08-calendar.md` |
 | GDP, inflation, interest rates by country | `GET /api/world-economy/indicators/{slug}?region=` | `14-world-economy.md` |
 | Symbol logo image | `GET /logo?url={logoid}` (public, no key) | `09-logo.md` |
-| Live streaming updates | `POST /api/token/generate` → SSE `/sse/stream` or WebSocket | `15-token.md`, `11-websocket.md` |
+| Live streaming updates | `POST /api/token/generate` → SSE `https://ws.tradingviewapi.com/sse/stream` or WS `wss://ws.tradingviewapi.com/ws` | `15-token.md`, `11-websocket.md` |
 | MCP for Cursor / VS Code / Claude | Hosted `https://mcp.tradingviewapi.com/mcp` + Console OAuth (`"type": "http"`). JWT via `POST /api/mcp/generate`. RapidAPI local OpenAPI MCP | `10-mcp.md` |
 | Valid parameter values (markets, tabs, columnsets, …) | `GET /api/metadata/...` (see metadata section below) | `07-metadata.md` |
 
@@ -142,6 +142,29 @@ Recommended for Cursor, VS Code, and Claude: add the hosted URL and sign in with
 ```
 
 Older clients may use `"type": "streamable-http"`. JWT fallback: `POST /api/mcp/generate`, then copy `exampleConfig` (`http`) or `exampleConfigStreamableHttp`. RapidAPI local OpenAPI MCP: `npx -y @ivotoby/openapi-mcp-server` (OpenAPI tools, not hosted `tradingview_*`). Details: **[references/examples/10-mcp.md](references/examples/10-mcp.md)**.
+
+## Streaming (WebSocket & SSE)
+
+Streaming is a different host from REST. Mint a JWT first, then connect to `ws.tradingviewapi.com`. Do not call `/sse/stream` on `api.tradingviewapi.com`.
+
+```bash
+# 1. JWT (Console API key)
+curl --request POST \
+  --url 'https://api.tradingviewapi.com/api/token/generate' \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --data '{}'
+
+# 2a. SSE — token in the query string (EventSource cannot set Authorization)
+curl --request GET \
+  --url 'https://ws.tradingviewapi.com/sse/stream?token=YOUR_JWT&symbols=BINANCE:BTCUSDT&type=quote' \
+  --header 'Accept: text/event-stream' \
+  --no-buffer
+```
+
+WebSocket: connect to `wss://ws.tradingviewapi.com/ws?token=YOUR_JWT`, then send JSON actions (`subscribe` with `symbol` + optional `timeframe`; `subscribe_quote` with `symbols` array). Server messages are `update` and `quote_update`.
+
+When generating client code for streaming, read **[references/examples/11-websocket.md](references/examples/11-websocket.md)** (and `15-token.md` for the mint response).
 
 ## Symbol format
 

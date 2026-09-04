@@ -33,7 +33,7 @@ curl --request POST \
 	--url 'https://api.tradingviewapi.com/api/mcp/generate' \
 	--header 'Content-Type: application/json' \
 	--header 'Authorization: Bearer YOUR_API_KEY' \
-	--data '{"token-jwt-type": 2, "userId": "user123"}'
+	--data '{}'
 ```
 
 RapidAPI:
@@ -57,12 +57,12 @@ OpenAPI example / fallback. `exampleConfig` uses `"type": "http"` (Cursor / VS C
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NzY2OTYyMDUsImV4cCI6MTc3Nzk5MjIwNSwic291cmNlIjoibWNwLWp3dCIsInVzZXJJZCI6InVzZXIxMjMifQ.lN6USNXNryLZ36mD9PqmivsfwBok0lUQu6nEq7cua_Q",
   "expiresIn": "15 days",
   "expiresAt": 1777992205000,
-  "mcpUrl": "http://localhost:3001/mcp",
+  "mcpUrl": "https://mcp.tradingviewapi.com/mcp",
   "exampleConfig": {
     "mcpServers": {
       "tradingview": {
         "type": "http",
-        "url": "http://localhost:3001/mcp",
+        "url": "https://mcp.tradingviewapi.com/mcp",
         "headers": {
           "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NzY2OTYyMDUsImV4cCI6MTc3Nzk5MjIwNSwic291cmNlIjoibWNwLWp3dCIsInVzZXJJZCI6InVzZXIxMjMifQ.lN6USNXNryLZ36mD9PqmivsfwBok0lUQu6nEq7cua_Q",
           "Accept": "application/json, text/event-stream"
@@ -74,7 +74,7 @@ OpenAPI example / fallback. `exampleConfig` uses `"type": "http"` (Cursor / VS C
     "mcpServers": {
       "tradingview": {
         "type": "streamable-http",
-        "url": "http://localhost:3001/mcp",
+        "url": "https://mcp.tradingviewapi.com/mcp",
         "headers": {
           "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NzY2OTYyMDUsImV4cCI6MTc3Nzk5MjIwNSwic291cmNlIjoibWNwLWp3dCIsInVzZXJJZCI6InVzZXIxMjMifQ.lN6USNXNryLZ36mD9PqmivsfwBok0lUQu6nEq7cua_Q",
           "Accept": "application/json, text/event-stream"

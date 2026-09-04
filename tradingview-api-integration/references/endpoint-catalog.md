@@ -375,11 +375,11 @@ Examples: `examples/15-token.md`, `examples/10-mcp.md`
 
 ### `POST /api/token/generate`
 
-JWT for WebSocket/SSE connections. Body: `token-jwt-type` (`1`=30min, `2`=6h, `3`=24h; default 1), optional `userId`. Returns `token`, `wsUrl`, `sseUrl`.
+JWT for WebSocket/SSE. Console body can be `{}`; lifetime follows the plan (`token-jwt-type` is for Rapid/static keys: `1`=30min, `2`=6h, `3`=24h). Returns `token`, `wsUrl` (`wss://ws.tradingviewapi.com/ws`), `sseUrl` (`https://ws.tradingviewapi.com/sse/stream`).
 
 ### `POST /api/mcp/generate`
 
-JWT for the MCP (Model Context Protocol) server. Body: `token-jwt-type` (`1`=30min, `2`=15d, `3`=30d, `4`=365d; required), optional `userId`. Returns `token`, `mcpUrl`, `exampleConfig` (`type: http` for Cursor / VS Code), and `exampleConfigStreamableHttp` for older clients. Recommended MCP setup is still the hosted URL plus Console OAuth (no JWT).
+JWT for MCP clients that cannot complete Console OAuth. Console body can be `{}`. Returns `token`, `mcpUrl` (`https://mcp.tradingviewapi.com/mcp`), `exampleConfig` (`type: http`), and `exampleConfigStreamableHttp`. Recommended setup is still the hosted URL plus Console OAuth (no JWT).
 
 ---
 
@@ -387,13 +387,15 @@ JWT for the MCP (Model Context Protocol) server. Body: `token-jwt-type` (`1`=30m
 
 Examples: `examples/11-websocket.md`
 
-### SSE: `GET /sse/stream?symbols=SYM1,SYM2&type={quote|price}&token=<jwt>`
+Streaming host is `ws.tradingviewapi.com`, not the REST host.
 
-- Auth: JWT from `/api/token/generate` (as `?token=`) or API key headers
+### SSE: `GET https://ws.tradingviewapi.com/sse/stream?token=<jwt>&symbols=SYM1,SYM2&type={quote|price}`
+
+- Auth: JWT from `/api/token/generate` as `?token=` (required for `EventSource`)
 - `type=quote` (default): quote updates; `type=price`: 5-minute candle updates
-- Events: `connected`, `quote_update`, `price_update`, `error`, heartbeat comments
+- Events: `connected`, `quote_update`, `price_update`, `error`, `auth_expiring`, `auth_expired`; heartbeats are comments (`: heartbeat`)
 
-### WebSocket: connect to the API host with auth headers or `?token=<jwt>`
+### WebSocket: `wss://ws.tradingviewapi.com/ws?token=<jwt>`
 
 Client → server messages (JSON `{ "action": ... }`):
 
