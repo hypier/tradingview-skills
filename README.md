@@ -30,7 +30,7 @@ npx skills add hypier/tradingview-skills/tradingview-openclaw
 
 Restart the agent session after installation. Invoke a skill explicitly, for example `$tradingview-api-integration`, or describe a matching task in natural language.
 
-`tradingview-quantitative` and `equity-research-analyst` require hosted MCP tools named `tradingview_*`. Install from https://www.tradingviewapi.com/mcp/ (`https://mcp.tradingviewapi.com/mcp`, `"type": "http"`) and sign in with Console. RapidAPI OpenAPI MCP uses different tool names — use `tradingview-api-integration` or mint a JWT via `POST /api/mcp/generate`. `tradingview-openclaw` does not fetch live data. `tradingview-api-integration` prefers those same hosted tools when they are connected, otherwise REST.
+`tradingview-quantitative` and `equity-research-analyst` require hosted MCP tools named `tradingview_*`. Per-IDE install (Cursor, VS Code, Claude Code, Claude Desktop, Codex, Gemini, Windsurf) lives in each skill's `references/mcp-install.md`, or use the one-click page: https://www.tradingviewapi.com/mcp/. RapidAPI OpenAPI MCP uses different tool names — use `tradingview-api-integration` or mint a JWT via `POST /api/mcp/generate`. `tradingview-openclaw` does not fetch live data. `tradingview-api-integration` prefers those same hosted tools when they are connected, otherwise REST.
 
 Leaderboard `columnset` values are camelCase (`incomeStatement`, `balanceSheet`, `cashFlow`, `technicals`). Screener presets stay snake_case. Calendar `from`/`to` are Unix seconds integers, max 40 days. Sector screens use `tradingview_screen_assets` after discovering sector enums — leaderboard is not a sector filter.
 
@@ -57,8 +57,8 @@ Replace `tradingview-api-integration` with the desired directory name in either 
 
 ## Prerequisites
 
-- **API integration:** Prefer hosted MCP when `tradingview_*` tools are connected (install: https://www.tradingviewapi.com/mcp/). Otherwise set `TRADINGVIEW_API_KEY` and call `https://api.tradingviewapi.com` with `Authorization: Bearer`. RapidAPI (`RAPIDAPI_KEY`) remains supported as an alternate. `tradingview-api-integration` can save a key to `.api-key` only after explicit consent.
-- **Quantitative analysis and equity research:** Configure hosted TradingView MCP from https://www.tradingviewapi.com/mcp/: `"type": "http"` and `https://mcp.tradingviewapi.com/mcp`, then sign in with Console. JWT (`POST /api/mcp/generate`) is a fallback. **Pro does not include MCP.** Without MCP tools, use `tradingview-api-integration` for direct API access. Do not ask for an API key inside those two skills.
+- **API integration:** Prefer hosted MCP when `tradingview_*` tools are connected. Per-IDE steps: `tradingview-api-integration/references/mcp-install.md` or https://www.tradingviewapi.com/mcp/. Otherwise set `TRADINGVIEW_API_KEY` and call `https://api.tradingviewapi.com` with `Authorization: Bearer`. RapidAPI (`RAPIDAPI_KEY`) remains supported as an alternate. `tradingview-api-integration` can save a key to `.api-key` only after explicit consent.
+- **Quantitative analysis and equity research:** Hosted MCP is required. Install from that skill's `references/mcp-install.md` (Cursor one-click, VS Code one-click / `servers` JSON, Claude Code / Codex / Gemini CLI, Claude Desktop connector, Windsurf `serverUrl`). JWT (`POST /api/mcp/generate`) is a fallback. **Pro does not include MCP.** Without MCP tools, use `tradingview-api-integration` for direct API access. Do not ask for an API key inside those two skills.
 - **OpenClaw frameworks:** Supply market, financial, or news data when current information is required. The skill does not treat templates or historical examples as live market data.
 - **Equity research:** Prefer exchange-qualified tickers such as `NASDAQ:AAPL` or `HKEX:9988`. Cite the retrieval date and MCP tool for live data used in a report.
 

@@ -12,82 +12,9 @@ Do **not** send a Console API key or RapidAPI key to `https://mcp.tradingviewapi
 
 ## Install (OAuth)
 
-After install, the first connection opens Console in the browser. The client stores refresh credentials.
+Per-IDE one-click links, CLI commands, and JSON configs (Cursor, VS Code, Claude Code, Claude Desktop, Codex, Gemini, Windsurf): **[mcp-install.md](../mcp-install.md)**.
 
-### Cursor
-
-One-click: https://www.tradingviewapi.com/mcp/ (Add to Cursor). Or `~/.cursor/mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "tradingview": {
-      "type": "http",
-      "url": "https://mcp.tradingviewapi.com/mcp"
-    }
-  }
-}
-```
-
-### VS Code
-
-One-click from the same page, then use Copilot Agent mode. Workspace file is `.vscode/mcp.json` with `servers` (not `mcpServers`):
-
-```json
-{
-  "servers": {
-    "tradingview": {
-      "type": "http",
-      "url": "https://mcp.tradingviewapi.com/mcp"
-    }
-  }
-}
-```
-
-```bash
-code --add-mcp '{"name":"tradingview","type":"http","url":"https://mcp.tradingviewapi.com/mcp"}'
-```
-
-### Claude Desktop / claude.ai
-
-Customize → Connectors → Add custom connector. Paste `https://mcp.tradingviewapi.com/mcp`, then sign in. Connectors UI: https://claude.ai/settings/connectors
-
-Claude Desktop config path: `~/Library/Application Support/Claude/claude_desktop_config.json` (same `mcpServers` JSON as Cursor).
-
-### CLI
-
-```bash
-claude mcp add --transport http tradingview https://mcp.tradingviewapi.com/mcp
-```
-
-Then run `/mcp` in the session and finish the browser login.
-
-```bash
-codex mcp add tradingview --url https://mcp.tradingviewapi.com/mcp
-codex mcp login tradingview
-```
-
-```bash
-gemini mcp add --transport http tradingview https://mcp.tradingviewapi.com/mcp
-```
-
-If Gemini asks to authenticate, run `/mcp auth tradingview`.
-
-### Windsurf
-
-`~/.codeium/windsurf/mcp_config.json`. The remote field is `serverUrl`, not `url`:
-
-```json
-{
-  "mcpServers": {
-    "tradingview": {
-      "serverUrl": "https://mcp.tradingviewapi.com/mcp"
-    }
-  }
-}
-```
-
-Older clients may use `"type": "streamable-http"` instead of `"http"`. The URL is the same. Transport is Streamable HTTP (JSON-RPC 2.0): POST for `initialize` / `tools/list` / `tools/call`; GET opens the MCP session SSE stream (not market quote streaming).
+After install, the first connection opens Console in the browser. The client stores refresh credentials. Older clients may use `"type": "streamable-http"` instead of `"http"`. Transport is Streamable HTTP (JSON-RPC 2.0): POST for `initialize` / `tools/list` / `tools/call`; GET opens the MCP session SSE stream (not market quote streaming).
 
 ## JWT fallback
 

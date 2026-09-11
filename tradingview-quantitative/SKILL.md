@@ -1,16 +1,17 @@
 ---
 name: tradingview-quantitative
-description: Use when current TradingView data must be retrieved through available MCP tools for quantitative market analysis, including screening, technical analysis, risk assessment, event analysis, market review, or multi-symbol comparisons.
+description: Use when current TradingView data must be retrieved through available MCP tools for quantitative market analysis, including screening, technical analysis, risk assessment, event analysis, market review, or multi-symbol comparisons. Requires hosted TradingView MCP (https://mcp.tradingviewapi.com/mcp); install per IDE from this skill's mcp-install reference (Cursor, VS Code, Claude Code, Claude Desktop, Codex, Gemini, Windsurf).
 ---
 
 # Quantitative Investment Analysis Expert
 
 Use available TradingView MCP tools to retrieve current data, then apply the relevant quantitative workflow. For direct Console/RapidAPI integration, endpoint debugging, or requests without those MCP tools, use `tradingview-api-integration` instead.
 
-**This skill only runs when hosted `tradingview_*` MCP tools are available.** If those tools are missing, stop and tell the user to connect MCP before analyzing.
+**This skill only runs when hosted `tradingview_*` MCP tools are available.** If those tools are missing, stop analyzing, read **[references/mcp-install.md](references/mcp-install.md)**, and give **only the install section for the user's IDE**. Do not ask for an API key. Do not dump every client.
 
-- Console (required for this skill): add `https://mcp.tradingviewapi.com/mcp` with `"type": "http"` and sign in with Console. Install steps: https://www.tradingviewapi.com/mcp/. Older clients may use `"type": "streamable-http"`.
-- RapidAPI / no Console login: `POST https://api.tradingviewapi.com/api/mcp/generate` with the API key, then paste `exampleConfig` (JWT). Local `npx -y @ivotoby/openapi-mcp-server` exposes REST-shaped tools, not `tradingview_*` — switch to `tradingview-api-integration` instead of this skill.
+- Console: `https://mcp.tradingviewapi.com/mcp` with `"type": "http"`, then sign in. One-click: https://www.tradingviewapi.com/mcp/
+- Per-IDE steps (Cursor, VS Code, Claude Code, Claude Desktop, Codex, Gemini, Windsurf) and JWT fallback: **[references/mcp-install.md](references/mcp-install.md)**
+- Local `npx -y @ivotoby/openapi-mcp-server` exposes REST-shaped tools, not `tradingview_*` — switch to `tradingview-api-integration` instead of this skill.
 
 ## Core Rules
 
@@ -94,6 +95,7 @@ Read the relevant workflow reference before performing a multi-step analysis:
 
 Read these references only when their subject is required:
 
+- [mcp-install.md](references/mcp-install.md) - Hosted MCP install per IDE (Cursor, VS Code, Claude, Codex, Gemini, Windsurf) and JWT fallback
 - [api-documentation.md](references/api-documentation.md) - REST parameter dictionary (market codes/tabs/columnsets/exchanges). Live calls use `tradingview_*` MCP tools
 - [mcp-tools-guide.md](references/mcp-tools-guide.md) - MCP tools usage guide (ohlcv vs price, metadata-first, screener/fundamentals/macro)
 - [technical-analysis.md](references/technical-analysis.md) - Technical analysis methodology (search: `comprehensive scoring model`, `RSI`, `MACD`)

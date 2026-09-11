@@ -1,6 +1,6 @@
 ---
 name: tradingview-api-integration
-description: Use when integrating with, troubleshooting, or querying the TradingView Data API on api.tradingviewapi.com (Console, recommended) or RapidAPI, including live market data, screeners, calendar data, metadata, streaming, hosted MCP tools, endpoint selection, and API parameter validation.
+description: Use when integrating with, troubleshooting, or querying the TradingView Data API on api.tradingviewapi.com (Console, recommended) or RapidAPI, including live market data, screeners, calendar data, metadata, streaming, hosted MCP tools, endpoint selection, and API parameter validation. Also use when installing hosted TradingView MCP (https://mcp.tradingviewapi.com/mcp) in Cursor, VS Code, Claude Code, Claude Desktop, Codex, Gemini CLI, or Windsurf.
 ---
 
 # TradingView API Integration
@@ -28,17 +28,15 @@ Prefer Console for new integrations and generated examples. Use RapidAPI only wh
 
 ## Choose MCP vs REST
 
-Public install guide: https://www.tradingviewapi.com/mcp/
-
 If hosted tools named `tradingview_*` are available in this session, call those tools directly. Do not mint a JWT and do not use `scripts/tv_api.py` unless MCP cannot express the request.
 
 MCP cannot cover: `GET /api/symbols`, logo, `POST /api/token/generate`, SSE, WebSocket, health, news `sector` extra filters, search `hl` / `exchange` / `enable_grouping`, related-asset `start`/`count`. Use REST for those.
 
-When the user asks how to **install or configure MCP**, read **[references/examples/10-mcp.md](references/examples/10-mcp.md)** (Cursor / VS Code / Claude / Codex / Gemini / Windsurf, OAuth, JWT, RapidAPI local). Tool names and REST equivalents: **[references/mcp-tools.md](references/mcp-tools.md)**.
+When the user asks how to **install or configure MCP**, or `tradingview_*` tools are missing, read **[references/mcp-install.md](references/mcp-install.md)** and give **only the section for their IDE** (Cursor, VS Code, Claude Code, Claude Desktop, Codex, Gemini, Windsurf). If the client is unknown, ask. Do not dump every block. JWT / RapidAPI local details: **[references/examples/10-mcp.md](references/examples/10-mcp.md)**. Tool names: **[references/mcp-tools.md](references/mcp-tools.md)**.
 
 - Hosted URL: `https://mcp.tradingviewapi.com/mcp` with `"type": "http"`. Sign in with Console. Do not put an API key on that URL.
 - Plans: Basic (testing), Ultra / Mega (production). **Pro does not include MCP**.
-- JWT fallback: `POST /api/mcp/generate`, then copy `exampleConfig`. RapidAPI local OpenAPI MCP (`npx -y @ivotoby/openapi-mcp-server`) is REST-shaped tools, not hosted `tradingview_*`.
+- One-click page: https://www.tradingviewapi.com/mcp/
 
 ## API key workflow (REST only)
 
@@ -102,7 +100,7 @@ Map the user's need to an endpoint family. MCP names in parentheses.
 | GDP, inflation, interest rates | `GET /api/world-economy/indicators/{slug}?region=` (`tradingview_get_world_economy_indicators`) | `14-world-economy.md` |
 | Symbol logo image | `GET /logo?url={logoid}` (public, no key; REST only) | `09-logo.md` |
 | Live streaming updates | `POST /api/token/generate` → SSE/WS on `ws.tradingviewapi.com` (REST only) | `15-token.md`, `11-websocket.md` |
-| MCP for Cursor / VS Code / Claude | Hosted `https://mcp.tradingviewapi.com/mcp` + Console OAuth. JWT via `POST /api/mcp/generate` | `10-mcp.md` |
+| MCP for Cursor / VS Code / Claude / Codex / Gemini / Windsurf | Hosted `https://mcp.tradingviewapi.com/mcp` + Console OAuth. Per-IDE install in `mcp-install.md`. JWT via `POST /api/mcp/generate` | `mcp-install.md`, `10-mcp.md` |
 | Valid parameter values | `GET /api/metadata/...` (`tradingview_get_metadata`) | `07-metadata.md` |
 
 Full parameter tables, enums, and request/response shapes: **[references/endpoint-catalog.md](references/endpoint-catalog.md)**.

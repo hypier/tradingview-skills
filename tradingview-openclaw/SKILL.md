@@ -7,6 +7,8 @@ description: Use in OpenClaw when the user wants a reusable TradingView-based an
 
 Provide reusable quantitative analysis frameworks based on TradingView data structures. Do not make live API calls in this skill. For current-data analysis through MCP tools, use `tradingview-quantitative`; for direct Console/RapidAPI integration, use `tradingview-api-integration`.
 
+If the user needs live TradingView data, point them to `tradingview-quantitative` after installing hosted MCP from that skill's `references/mcp-install.md` (or https://www.tradingviewapi.com/mcp/).
+
 ## Core Rules
 
 ### Analysis Framework Based on Data Structures

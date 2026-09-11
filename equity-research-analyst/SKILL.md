@@ -1,16 +1,17 @@
 ---
 name: equity-research-analyst
-description: Use when the user asks for institutional-style equity research on a public company, ETF, or TradingView-resolvable ticker, including initiation reports, earnings updates or previews, catalyst calendars, morning notes, sector or peer overviews, thesis reviews, model refreshes, and stock screening or idea generation.
+description: Use when the user asks for institutional-style equity research on a public company, ETF, or TradingView-resolvable ticker, including initiation reports, earnings updates or previews, catalyst calendars, morning notes, sector or peer overviews, thesis reviews, model refreshes, and stock screening or idea generation. Requires hosted TradingView MCP (https://mcp.tradingviewapi.com/mcp); install per IDE from this skill's mcp-install reference (Cursor, VS Code, Claude Code, Claude Desktop, Codex, Gemini, Windsurf).
 ---
 
 # Equity Research Analyst
 
 Produce institutional-grade equity research deliverables through the selected workflow. Each workflow has a dedicated reference file in `references/workflows/`; this SKILL.md is the dispatcher and the hub for cross-workflow conventions.
 
-**This skill only runs when hosted `tradingview_*` MCP tools are available.** Do not ask for an API key and do not construct REST curls. If those tools are missing, stop and tell the user to connect MCP before researching.
+**This skill only runs when hosted `tradingview_*` MCP tools are available.** Do not ask for an API key and do not construct REST curls. If those tools are missing, stop researching, read **[references/mcp-install.md](references/mcp-install.md)**, and give **only the install section for the user's IDE**. Do not dump every client.
 
-- Console (required for this skill): add `https://mcp.tradingviewapi.com/mcp` with `"type": "http"` and sign in with Console. Install steps: https://www.tradingviewapi.com/mcp/. Older clients may use `"type": "streamable-http"`.
-- RapidAPI / no Console login: mint a JWT with `POST https://api.tradingviewapi.com/api/mcp/generate` and paste `exampleConfig`. Local `npx -y @ivotoby/openapi-mcp-server` exposes REST-shaped tools, not `tradingview_*` — switch to `tradingview-api-integration` instead of this skill.
+- Console: `https://mcp.tradingviewapi.com/mcp` with `"type": "http"`, then sign in. One-click: https://www.tradingviewapi.com/mcp/
+- Per-IDE steps (Cursor, VS Code, Claude Code, Claude Desktop, Codex, Gemini, Windsurf) and JWT fallback: **[references/mcp-install.md](references/mcp-install.md)**
+- Local `npx -y @ivotoby/openapi-mcp-server` exposes REST-shaped tools, not `tradingview_*` — switch to `tradingview-api-integration` instead of this skill.
 
 ## Loading Strategy
 
@@ -111,7 +112,7 @@ SEC filings keep separate EDGAR hyperlinks. When consensus data comes from MCP, 
 - Do not fabricate data. Missing field → "N/A". Missing consensus → state "consensus not available".
 
 ## Fallback strategy
-1. Hosted `tradingview_*` tools missing → stop and tell the user to connect `https://mcp.tradingviewapi.com/mcp` and sign in with Console. Do not request an API key.
+1. Hosted `tradingview_*` tools missing → stop, read `references/mcp-install.md`, and give the install steps for the user's IDE. Do not request an API key.
 2. Ticker unresolved → ask the user for `EXCHANGE:TICKER`.
 3. Ambiguous workflow → ask the user which deliverable they want.
 4. Missing field → "N/A"; do not fabricate. Stale `fiscal_period_current` (>90 days) → flag as last reported and Web Search for a newer release.
