@@ -38,7 +38,7 @@ This task requires the financial model from Task 2. Starting without it will res
 - Valuation football field
 - Price target and recommendation
 
-**Structured data note**: Use `tradingviewapi` to prefill beta, current share price, market cap, EV / EV-based multiples, dividend data, and analyst price-target consensus before using external sources.
+**Structured data note**: Use TradingView MCP to prefill beta, current share price, market cap, EV / EV-based multiples, dividend data, and analyst price-target consensus before using external sources.
 
 ---
 
@@ -128,7 +128,7 @@ This workflow document focuses on execution steps. Reference the methodology fil
 
    Inputs:
    - Risk-Free Rate: [Current 10-year Treasury, e.g., 4.2%]
-   - Beta: [Company beta from `tradingviewapi` (`/api/market-data/{symbol}`) or peer average if unavailable]
+   - Beta: [Company beta from `tradingview_get_market_data(symbol, category='all')` or peer average if unavailable]
    - Equity Risk Premium: 5-6% (historical average)
 
    Example:
@@ -323,7 +323,7 @@ Base Case: Rev CAGR = 25%, EBITDA Margin = 32% → $56
 - EBITDA margin
 
 **Data sources:**
-- `tradingviewapi` first: `/api/market-data/{symbol}`, `/analyst-recommendations`, `/enterprise-value`
+- MCP first: `tradingview_get_market_data` (`all`, `analyst_recommendations`, `enterprise_value`)
 - Company 10-Ks/10-Qs for actuals and audit support
 - External peer / transaction datasets for supplemental detail if needed
 - External consensus sources only as fallback if structured data is unavailable
@@ -364,7 +364,7 @@ Median               38.9     3.5x    3.2x    15.2x      13.8x      25x   17%   
 Minimum              28.5     2.8x    2.6x    12.8x      11.2x      20x   12%     22%
 
 Note: Market data as of [Date]. LTM = Last Twelve Months. NTM = Next Twelve Months.
-Source: Structured data via tradingviewapi (TradingView), company filings, [Analyst] estimates.
+Source: Structured data via TradingView MCP, company filings, [Analyst] estimates.
 ```
 
 **CRITICAL**: The statistical summary (max/75th/median/25th/min) is MANDATORY.

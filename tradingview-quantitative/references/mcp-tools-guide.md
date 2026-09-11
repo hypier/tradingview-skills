@@ -37,10 +37,12 @@ No need to call metadata every time, here are common values:
 | valuation | PE, PB, PS, EV/EBITDA | Valuation screening |
 | dividends | Dividend yield, payout ratio, ex-dividend date | High dividend strategy |
 | profitability | ROE, ROA, gross margin, net margin | Profitability screening |
-| income_statement | Revenue, net profit, EPS | Financial analysis |
-| balance_sheet | Total assets, debt ratio, current ratio | Financial health |
-| cash_flow | Operating/investing/financing cash flow | Cash flow analysis |
-| technical | RSI, Beta, SMA, ATR | Technical overview |
+| incomeStatement | Revenue, net profit, EPS | Financial analysis |
+| balanceSheet | Total assets, debt ratio, current ratio | Financial health |
+| cashFlow | Operating/investing/financing cash flow | Cash flow analysis |
+| technicals | RSI, Beta, SMA | Technical overview |
+
+Screener `preset_fields` use snake_case (`income_statement`, `balance_sheet`, `cash_flow`, `technicals`). Leaderboard `columnset` uses camelCase above.
 
 ---
 
@@ -86,9 +88,9 @@ Signal consistency: Monthly/weekly/daily trend direction consistent → High con
 
 ```
 1. tradingview_get_metadata(type='tabs', asset_type='stocks') → Get all tabs
-2. tradingview_get_leaderboard(tab='best-performing', columnset='performance') → Sector performance
+2. tradingview_get_leaderboard(tab='best-performing', columnset='performance', market_code='america') → Sector performance
 3. Compare performance columnset data from different tabs
-4. tradingview_get_news(market='stock', market_country='CN') → News confirm hotspots
+4. tradingview_get_news(market='stock', market_country='US', lang='en') → News confirm hotspots
 ```
 
 ### Pattern 5: Fundamental Screening
@@ -107,7 +109,7 @@ Signal consistency: Monthly/weekly/daily trend direction consistent → High con
 2. tradingview_get_leaderboard(tab='losers', market_code, count=50) → Losers
 3. tradingview_get_leaderboard(tab='active', market_code) → Active stocks
 4. tradingview_get_leaderboard(tab='unusual-volume', market_code) → Unusual volume
-5. tradingview_get_news(market_country='CN', lang='zh-Hans', limit=10) → News
+5. tradingview_get_news(market_country='US', lang='en', limit=10) → News
 6. For each news: tradingview_get_news_detail(news_id) → Full content
 ```
 
@@ -249,15 +251,12 @@ When using the screener, always follow this order:
 
 ### tradingview_get_calendar Timestamps
 
-Calendar queries require Unix timestamps (seconds), time span not exceeding 40 days:
+`from` and `to` must be Unix timestamps in **seconds** (integers). Never pass the strings `now` or `now+14days`. Time span cannot exceed 40 days:
 
 ```javascript
-// Current time
 const now = Math.floor(Date.now() / 1000);
-// 7 days later
-const weekLater = now + 7 * 24 * 60 * 60;
-// 14 days later
 const twoWeeksLater = now + 14 * 24 * 60 * 60;
+tradingview_get_calendar({ type: 'earnings', from: now, to: twoWeeksLater, market: 'america' })
 ```
 
 ---

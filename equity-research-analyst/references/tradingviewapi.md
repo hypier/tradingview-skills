@@ -1,102 +1,87 @@
-# tradingviewapi Structured Data Reference
+# TradingView MCP Structured Data Reference
 
-This document lists every `tradingviewapi` (TradingView proxy service) endpoint and maps its response fields to equity research report sections. Shared by all skills in the `equity-research` plugin. **Prefer the structured API for numeric data**; use Web Search only for narrative content (MD&A, forward guidance, earnings call transcripts, segment breakdowns, risk factors).
+Workflow-facing index for the `equity-research-analyst` skill. **Live numeric data comes from hosted `tradingview_*` MCP tools.** Do not ask for an API key and do not construct REST curls. Use Web Search only for narrative content (MD&A, forward guidance, earnings call transcripts, segment breakdowns, risk factors).
 
 ## Quick Navigation
 
-1. [Authentication](#authentication)
-2. [Symbol Format](#symbol-format)
-3. [Scenario A: Quarterly Earnings Analysis](#scenario-a-quarterly-earnings-analysis-earnings-analysis-earnings-preview)
-4. [Scenario B: Initiation Report](#scenario-b-initiation-report-initiating-coverage)
-5. [Scenario C: Catalyst Calendar](#scenario-c-catalyst-calendar-catalyst-calendar)
-6. [Scenario D: Morning Note](#scenario-d-morning-note-morning-note)
-7. [Scenario E: Screening / Idea Generation](#scenario-e-screening--idea-generation-idea-generation)
-8. [Scenario F: Sector Overview](#scenario-f-sector-overview-sector-overview)
-9. [Scenario G: Model Update](#scenario-g-model-update-model-update)
-10. [Scenario H: Thesis Tracker](#scenario-h-thesis-tracker-thesis-tracker)
-11. [Ticker Resolution](#ticker-resolution-generic-preflight)
-12. [Full Endpoint Catalog](#full-endpoint-catalog-60-endpoints)
-13. [Citation Convention](#citation-convention-aligned-with-earnings-analysisskillmd-lines-50-107)
+1. [Connect MCP](#connect-mcp)
+2. [Tool map](#tool-map)
+3. [Symbol Format](#symbol-format)
+4. [Scenario A: Quarterly Earnings Analysis](#scenario-a-quarterly-earnings-analysis-earnings-analysis-earnings-preview)
+5. [Scenario B: Initiation Report](#scenario-b-initiation-report-initiating-coverage)
+6. [Scenario C: Catalyst Calendar](#scenario-c-catalyst-calendar-catalyst-calendar)
+7. [Scenario D: Morning Note](#scenario-d-morning-note-morning-note)
+8. [Scenario E: Screening / Idea Generation](#scenario-e-screening--idea-generation-idea-generation)
+9. [Scenario F: Sector Overview](#scenario-f-sector-overview-sector-overview)
+10. [Scenario G: Model Update](#scenario-g-model-update-model-update)
+11. [Scenario H: Thesis Tracker](#scenario-h-thesis-tracker-thesis-tracker)
+12. [Ticker Resolution](#ticker-resolution-generic-preflight)
+13. [Citation Convention](#citation-convention)
 14. [Fallback Strategy](#fallback-strategy)
 
 ## Lookup Tips
 
 `references/tradingviewapi.md` is the workflow-facing index and field-mapping guide.
-For exact endpoint behavior, downloaded API docs, and real executed example payloads, always refer to `references/tradingviewapi-docs/` first.
-In case of any mismatch, treat `references/tradingviewapi-docs/` as the source of truth and update this file to match it.
+`references/tradingviewapi-docs/` is a payload-shape lookup only. Bundled curls and OpenAPI paths are **not** live request recipes.
 
 ### Reference priority
 
-Use the bundled references in this order:
+1. This file — which MCP tool to call, which arguments to pass, and which JSON paths to cite.
+2. `tradingviewapi-docs/examples/` — response payload shape after a successful tool call.
+3. `tradingviewapi-docs/openapi.json` — field names and enums only.
 
-1. `tradingviewapi-docs/openapi.json` — source of truth for parameter names, required fields, defaults, and enum constraints
-2. `tradingviewapi-docs/examples/` — request / response examples and payload-shape hints
-3. `tradingviewapi.md` — workflow routing and report-field mapping
-
-If sources disagree:
-
-- Trust `openapi.json` for how to build the request.
-- Use `examples/` to understand the returned payload shape after the request has been validated against the spec.
-- Treat `examples/` as potentially illustrative rather than universally valid for every asset class or symbol family.
+If sources disagree, trust this file for how to call data. Use `examples/` only to parse returned JSON.
 
 ### Parameter discipline
 
-- Match the endpoint family to the symbol family. Example: `/api/news/crypto` should use crypto symbols such as `BINANCE:BTCUSDT`, not stock tickers.
-- For `/api/search/market/{query}`, set `filter` to the actual asset class you want (`stock`, `crypto`, `forex`, `futures`, `index`, `funds`, `bond`, `options`, or `undefined`) instead of relying on a reused stock example.
-- For `/api/quote/{symbol}`, prefer `?session=regular&fields=all` unless the workflow explicitly needs a different session or a reduced field set.
-- When an example appears to conflict with endpoint semantics, verify the allowed parameters in `openapi.json` before using the example verbatim.
+- Match the tool family to the symbol family. Example: news with `market='crypto'` should use crypto symbols such as `BINANCE:BTCUSDT`, not stock tickers.
+- For `tradingview_search_market`, set `filter` to the actual asset class (`stock`, `crypto`, `forex`, `futures`, `index`, `funds`, `bond`, `options`).
+- For `tradingview_get_quote`, prefer `session='regular'` and `fields='all'` unless the workflow needs a different session.
+- Calendar `from` / `to` are Unix-seconds **integers**. Never pass empty strings, `"now"`, or date labels.
+- Leaderboard `columnset` is camelCase (`incomeStatement`, `balanceSheet`, `cashFlow`, `technicals`). Screener `preset_fields` stay snake_case (`income_statement`, `technicals`).
+- Real prices and report charts: `tradingview_get_ohlcv`. Use `tradingview_get_price` only for Heikin-Ashi or Range.
 
 ### Common pitfalls
 
-- `GET /api/news/crypto`
-  Use crypto symbols such as `BINANCE:BTCUSDT` when passing `symbol`. Do not reuse stock placeholders from unrelated examples.
-- `GET /api/search/market/{query}`
-  The `filter` value materially changes results. Use `filter=stock` for equities, `filter=crypto` for crypto, `filter=forex` for FX, and so on.
-- `GET /api/quote/{symbol}`
-  Prefer `?session=regular&fields=all` for analysis workflows. The returned quote fields are nested under `data.data`, not flat at the top level.
-- `GET /api/market-data/{symbol}/analyst-recommendations`
-  The payload is a single object at `data.analyst_recommendations`, not an array. Do not parse it as `data[0]`.
-- `GET /api/market-data/{symbol}`
-  Treat the request symbol or preflight search result as canonical. Do not rely on `data.company.ticker` or `data.company.exchange` to reconstruct the primary listing.
-
-- Read this file before opening `tradingviewapi-docs/openapi.json` or any file in `tradingviewapi-docs/examples/`.
-- Search `tradingviewapi-docs/examples/` by endpoint path or JSON field name, not by workflow name.
-- Treat `tradingviewapi-docs/examples/` as the real executed sample set, not just illustrative pseudodata.
-- Most common files:
-  - `examples/10-market-data.md` for company, TTM, current-period, and analyst data
-  - `examples/08-calendar.md` for earnings and macro events
-  - `examples/01-price-data.md`, `02-quote-data.md`, `04-technical-analysis.md` for chart inputs
-  - `examples/06-news.md` for narrative news sourcing
-
-- OpenAPI source (bundled): `./tradingviewapi-docs/openapi.json`
-- Call examples (bundled, grouped by endpoint): `./tradingviewapi-docs/examples/`
-- Recommended base URL: `https://api.tradingviewapi.com`
-- Alternate RapidAPI host: `https://api.tradingviewapi.com`
-
-> 📦 **Self-contained note**: `tradingviewapi-docs/` is the bundled local copy of the downloaded `tradingviewapi` documentation set for this skill, including real request examples and sample payloads captured from execution. If the contents look stale, refresh the affected files manually from the published API materials and re-align this file to those downloaded docs.
+- Quote fields are nested under `data.data`, not flat at the top level.
+- `tradingview_get_market_data(..., category='analyst_recommendations')` returns a single object at `data.analyst_recommendations`, not an array.
+- Treat the request symbol or preflight search result as canonical. Do not rebuild the listing from `data.company.ticker` / `data.company.exchange`.
+- Leaderboard does not filter by sector. Use `tradingview_screen_assets` after discovering sector enums.
+- `NASDAQ:AAPL` sector is `Electronic Technology`, not `Technology`.
 
 ---
 
-## Authentication
+## Connect MCP
 
-**Console (recommended):**
+No API key is required when hosted MCP is connected.
 
-```bash
-curl -H "Authorization: Bearer $TRADINGVIEW_API_KEY" \
-     "https://api.tradingviewapi.com/api/market-data/NASDAQ:AAPL"
-```
+- Console: add `https://mcp.tradingviewapi.com/mcp` with `"type": "http"` and sign in.
+- Older clients: `"type": "streamable-http"`.
+- RapidAPI without Console: `POST https://api.tradingviewapi.com/api/mcp/generate` and paste `exampleConfig` (JWT).
+- Local OpenAPI MCP (`npx -y @ivotoby/openapi-mcp-server`) is the wrong tool set. Use `tradingview-api-integration` instead of this skill.
 
-**RapidAPI (alternate):**
+If `tradingview_*` tools are missing, stop and tell the user to connect MCP. Do not fall back to curl.
 
-```bash
-curl -H "x-rapidapi-host: tradingview-data1.p.rapidapi.com" \
-     -H "x-rapidapi-key: $RAPIDAPI_KEY" \
-     "https://tradingview-data1.p.rapidapi.com/api/market-data/NASDAQ:AAPL"
-```
+---
 
-Environment variables: `TRADINGVIEW_API_KEY` (preferred), `RAPIDAPI_KEY` (legacy), optional `TRADINGVIEW_API_BASE`.
+## Tool map
 
-For persistent user setup guidance, prefer the user-level shell configuration described in `./tradingviewapi-docs/README.md` and avoid storing real secrets inside the skill folder or packaged `.skill` artifact.
+| Need | Tool | Key arguments |
+|---|---|---|
+| Resolve a name to a ticker | `tradingview_search_market` | query, filter=`stock` |
+| Company / financials / consensus | `tradingview_get_market_data` | symbol, category (`all`, `company`, `ipo`, `ttm`, `current`, `indicators`, `financials_quarterly`, `financials_annual`, `history_quarterly`, `history_annual`, `dividend`, `analyst_recommendations`, `enterprise_value`, `credit_ratings`, `cash_flow`) |
+| Live quote | `tradingview_get_quote` / `tradingview_get_quote_batch` | symbol, session=`regular`, fields=`all` |
+| Real OHLCV for charts | `tradingview_get_ohlcv` | symbol, timeframe=`D`, range=252 |
+| Technicals | `tradingview_get_ta` | symbol, include_indicators=`true` for RSI/MACD/MAs |
+| Earnings / dividend / IPO / macro calendar | `tradingview_get_calendar` | type, from, to (Unix seconds integers, span ≤ 40 days), market |
+| News | `tradingview_get_news` / `tradingview_get_news_detail` | market, market_country, lang, symbol |
+| Ranked lists (gainers, high dividend) | `tradingview_get_leaderboard` | asset_type=`stocks`, tab, market_code, columnset |
+| Sector / factor screens | `tradingview_get_screener_filter_options` then `tradingview_screen_assets` | asset_type=`stock`, market, filters, preset_fields |
+| Community ideas | `tradingview_get_ideas_hot` / `tradingview_get_ideas_by_symbol` / `tradingview_get_minds` | lang=`en` |
+| Macro series | `tradingview_get_world_economy_indicators` | indicator slug, region |
+| Parameter dictionaries | `tradingview_get_metadata` | type=`markets` / `tabs` / `columnsets` / `languages` / `exchanges` |
+
+Call `tradingview_get_metadata` before a leaderboard when you are unsure of `market_code`, `tab`, or `columnset`. Common US defaults: `market_code='america'`, `market_country='US'`, `lang='en'`.
 
 ---
 
@@ -105,27 +90,26 @@ For persistent user setup guidance, prefer the user-level shell configuration de
 All `{symbol}` parameters use `EXCHANGE:TICKER` format:
 
 - Stocks: `NASDAQ:AAPL`, `NYSE:JPM`, `NASDAQ:TSLA`
-- ETFs: `NYSE:SPY`, `NASDAQ:QQQ`
+- ETFs: `AMEX:SPY`, `NASDAQ:QQQ`
 - Crypto: `BINANCE:BTCUSDT`
 - Indices: `SP:SPX`, `NASDAQ:NDX`
 - Forex: `FX:EURUSD`
 - Futures: `CME_MINI:ES1!`
 
-If the ticker is ambiguous, resolve it first via `/api/search/market/{query}?filter=stock`.
+If the ticker is ambiguous, resolve it first via `tradingview_search_market(query, filter='stock')`.
 
 Pick the `filter` that matches the asset class you are researching:
 
-- Equities / ETFs for this skill's default workflows: `filter=stock`
-- Crypto pairs: `filter=crypto`
-- FX pairs: `filter=forex`
-- Futures: `filter=futures`
-- Indices: `filter=index`
+- Equities / ETFs for this skill's default workflows: `filter='stock'`
+- Crypto pairs: `filter='crypto'`
+- FX pairs: `filter='forex'`
+- Futures: `filter='futures'`
+- Indices: `filter='index'`
 
-**Observed response shape (verified 2026-04-26):**
+**Observed response shape:**
 
-```bash
-curl -H "Authorization: Bearer $TRADINGVIEW_API_KEY" \
-     "https://api.tradingviewapi.com/api/search/market/NVIDIA?filter=stock"
+```
+tradingview_search_market(query='NVIDIA', filter='stock')
 ```
 
 Use `data.markets[]`, not `data[]`.
@@ -143,14 +127,13 @@ Use `data.markets[]`, not `data[]`.
 
 ### One-shot fetch (highest information density)
 
-```bash
-curl -H "Authorization: Bearer $TRADINGVIEW_API_KEY" \
-  "https://api.tradingviewapi.com/api/market-data/NASDAQ:AAPL"
+```
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='all')
 ```
 
-**Observed symbol / fiscal-label caveats (verified 2026-04-26):**
+**Observed symbol / fiscal-label caveats:**
 
-- Treat the request symbol (for example `NASDAQ:NVDA`) or the preflight search result from `/api/search/market/{query}` as canonical.
+- Treat the request symbol (for example `NASDAQ:NVDA`) or the preflight search result as canonical.
 - Do not rely on `data.company.ticker` or `data.company.exchange` as the canonical listing fields; they may be null or may show a quote venue such as `Cboe One`.
 - Treat `data.current.fiscal_period_current` as a provider-side structured label. If it conflicts with the company's own IR / SEC quarter naming, use the latest primary-source quarter label in narrative output and keep the API label only as a structured-data citation detail.
 
@@ -199,19 +182,12 @@ Returns 5 blocks that populate the following report fields:
 
 ### Beat / miss analysis
 
-```bash
-# Analyst ratings, price targets, buy/hold/sell distribution
-curl -H "Authorization: Bearer $TRADINGVIEW_API_KEY" \
-  "https://api.tradingviewapi.com/api/market-data/NASDAQ:AAPL/analyst-recommendations"
-
-# Quarterly three-statement data (balance sheet / income / cash flow)
-curl -H "Authorization: Bearer $TRADINGVIEW_API_KEY" \
-  "https://api.tradingviewapi.com/api/market-data/NASDAQ:AAPL/financials-quarterly"
+```
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='analyst_recommendations')
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='financials_quarterly')
 ```
 
-**Observed analyst payload shape (verified 2026-04-26):**
-
-The endpoint returns a single object under `data.analyst_recommendations`, not an array.
+The analyst payload is a single object under `data.analyst_recommendations`, not an array.
 
 | Needed field | JSON path |
 |---|---|
@@ -223,27 +199,11 @@ The endpoint returns a single object under `data.analyst_recommendations`, not a
 
 ### Price chart and technicals
 
-```bash
-# Daily 252 bars (~1 year) for stock price chart
-curl -H "Authorization: Bearer $TRADINGVIEW_API_KEY" \
-  "https://api.tradingviewapi.com/api/price/NASDAQ:AAPL?timeframe=D&range=252"
-
-# Real-time quote (pre/post-market, daily change, volume)
-curl -H "Authorization: Bearer $TRADINGVIEW_API_KEY" \
-  "https://api.tradingviewapi.com/api/quote/NASDAQ:AAPL?session=regular&fields=all"
-
-# Multi-timeframe technical signals (for the technical section)
-curl -H "Authorization: Bearer $TRADINGVIEW_API_KEY" \
-  "https://api.tradingviewapi.com/api/ta/NASDAQ:AAPL"
-
-# 50+ individual indicators (RSI / MACD / moving averages / pivots)
-curl -H "Authorization: Bearer $TRADINGVIEW_API_KEY" \
-  "https://api.tradingviewapi.com/api/ta/NASDAQ:AAPL/indicators"
 ```
-
-**Observed quote payload shape (verified 2026-04-26):**
-
-The quote endpoint returns metadata at `data.symbol` and quote fields under nested `data.data`.
+tradingview_get_ohlcv(symbol='NASDAQ:AAPL', timeframe='D', range=252)
+tradingview_get_quote(symbol='NASDAQ:AAPL', session='regular', fields='all')
+tradingview_get_ta(symbol='NASDAQ:AAPL', include_indicators=true)
+```
 
 | Needed field | JSON path |
 |---|---|
@@ -261,32 +221,32 @@ The quote endpoint returns metadata at `data.symbol` and quote fields under nest
 
 **Task 1 — Company Research:**
 
-```bash
-curl ".../api/market-data/NASDAQ:AAPL/company"          # Company basic info
-curl ".../api/market-data/NASDAQ:AAPL/ipo"              # IPO info
-curl ".../api/market-data/NASDAQ:AAPL/credit-ratings"   # S&P / Moody's / Fitch ratings
+```
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='company')
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='ipo')
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='credit_ratings')
 ```
 
 **Task 2 — Financial Modeling:**
 
-```bash
-curl ".../api/market-data/NASDAQ:AAPL/financials-annual"   # Annual three statements
-curl ".../api/market-data/NASDAQ:AAPL/history-annual"      # Multi-year history arrays
-curl ".../api/market-data/NASDAQ:AAPL/cash-flow"           # Cash flow breakdown
+```
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='financials_annual')
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='history_annual')
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='cash_flow')
 ```
 
 **Task 3 — Valuation:**
 
-```bash
-curl ".../api/market-data/NASDAQ:AAPL/enterprise-value"         # EV / EV/EBITDA
-curl ".../api/market-data/NASDAQ:AAPL/ttm"                      # Full TTM ratios
-curl ".../api/market-data/NASDAQ:AAPL/analyst-recommendations"  # Target-price consensus
-curl ".../api/market-data/NASDAQ:AAPL/dividend"                 # Dividend history
+```
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='enterprise_value')
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='ttm')
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='analyst_recommendations')
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='dividend')
 ```
 
 **Task 4 — Chart Generation:**
 
-Use `/api/price/` plus the `*_h[]` arrays from `/api/market-data/`. No external data needed.
+Use `tradingview_get_ohlcv` plus the `*_h[]` arrays from `tradingview_get_market_data`. No external price vendor is needed.
 
 **Sections still requiring Web Search (~10%):**
 
@@ -300,98 +260,129 @@ Use `/api/price/` plus the `*_h[]` arrays from `/api/market-data/`. No external 
 
 ## Scenario C: Catalyst Calendar (`catalyst-calendar`)
 
-```bash
-# Ranges must be ≤ 40 days, Unix seconds
-FROM=$(date -v+0d +%s)
-TO=$(date -v+30d +%s)
+`from` and `to` are required Unix-seconds integers. Compute them; never leave them blank and never pass `"now"`. A single window must be ≤ 40 days.
 
-# Next 30 days of US earnings releases
-curl -H "Authorization: Bearer $TRADINGVIEW_API_KEY" \
-  "https://api.tradingviewapi.com/api/calendar/earnings?from=$FROM&to=$TO&market=america"
-
-# Dividend calendar
-curl ".../api/calendar/revenue?from=$FROM&to=$TO&market=america"
-
-# IPO calendar
-curl ".../api/calendar/ipo?from=$FROM&to=$TO&market=america"
-
-# Macro economic events (CPI, NFP, FOMC)
-curl ".../api/calendar/economic?from=$FROM&to=$TO&market=america,china"
 ```
+from = Math.floor(Date.now() / 1000)
+to = from + 30 * 86400
+
+tradingview_get_calendar(type='earnings', from=from, to=to, market='america')
+tradingview_get_calendar(type='revenue', from=from, to=to, market='america')
+tradingview_get_calendar(type='ipo', from=from, to=to, market='america')
+tradingview_get_calendar(type='economic', from=from, to=to, market='america')
+```
+
+Use `market='america,china'` for economic events only when the user asked for China / A-share macro. English/US prompts stay `america`.
+
+For a single name's next print, prefer `tradingview_get_market_data(symbol, category='indicators')` and read `earnings_release_next_date`.
 
 ---
 
 ## Scenario D: Morning Note (`morning-note`)
 
-```bash
-curl ".../api/news/stock?lang=en&market_country=US"                      # US equity news tape
-curl ".../api/news/economic?lang=en"                                     # Macro news tape
-curl ".../api/news?symbol=NASDAQ:AAPL&lang=en&market=stock&market_country=US"  # Single-stock news
-curl ".../api/quote/NASDAQ:AAPL?session=regular&fields=all"              # Pre/post-market quote
-curl ".../api/calendar/economic?from=$FROM&to=$TO&market=america"        # Today's macro releases
-curl ".../api/calendar/earnings?from=$FROM&to=$TO&market=america"        # Today's / tomorrow's earnings
+```
+from = Math.floor(Date.now() / 1000)
+to = from + 2 * 86400   # today + tomorrow; still ≤ 40 days
+
+tradingview_get_news(market='stock', lang='en', market_country='US')
+tradingview_get_news(market='economic', lang='en')
+tradingview_get_news(symbol='NASDAQ:AAPL', lang='en', market='stock', market_country='US')
+tradingview_get_quote(symbol='NASDAQ:AAPL', session='premarket', fields='all')
+tradingview_get_calendar(type='economic', from=from, to=to, market='america')
+tradingview_get_calendar(type='earnings', from=from, to=to, market='america')
 ```
 
-For multi-name coverage universes, use `POST /api/quote/batch` to pull the same quote fields across the watchlist in one request.
+For multi-name coverage universes, use `tradingview_get_quote_batch` instead of one quote per name.
 
 ---
 
 ## Scenario E: Screening / Idea Generation (`idea-generation`)
 
-```bash
-# Top US gainers / losers / high dividend / 52-week highs
-curl ".../api/leaderboard/stocks?tab=gainers&market_code=america&count=50"
-curl ".../api/leaderboard/stocks?tab=losers&market_code=america&count=50"
-curl ".../api/leaderboard/stocks?tab=high_dividend&market_code=america&count=50"
+Leaderboard is for ranked slices (gainers, losers, high dividend). It is **not** a sector filter.
 
-# Hot investment ideas (TradingView community)
-curl ".../api/ideas/hot?lang=en&page=1"
+```
+tradingview_get_metadata(type='tabs', asset_type='stocks')
+tradingview_get_leaderboard(asset_type='stocks', tab='gainers', market_code='america', count=50)
+tradingview_get_leaderboard(asset_type='stocks', tab='losers', market_code='america', count=50)
+tradingview_get_leaderboard(asset_type='stocks', tab='high-dividend', market_code='america', columnset='dividends', count=50)
 
-# Community views on a specific stock
-curl ".../api/ideas/list/NASDAQ:AAPL?lang=en"
-curl ".../api/ideas/NASDAQ:AAPL/minds?lang=en"
-
-# Follow-up diligence on screened candidates
-curl ".../api/market-data/NASDAQ:AAPL"
-curl ".../api/quote/NASDAQ:AAPL?session=regular&fields=all"
-curl ".../api/ta/NASDAQ:AAPL"
+tradingview_get_ideas_hot(lang='en')
+tradingview_get_ideas_by_symbol(symbol='NASDAQ:AAPL', lang='en')
+tradingview_get_minds(symbol='NASDAQ:AAPL', lang='en')
 ```
 
-Full list of `tab` values: `/api/metadata/tabs?type=stocks`. Common picks: `gainers`, `losers`, `large_cap`, `high_dividend`, `most_volatile`, `52wk_high`, `overbought`, `oversold`, `penny_stocks`.
+For a sector, factor, or "stocks like X" screen, discover enums then scan:
+
+```
+tradingview_get_screener_filter_options(asset_type='stock', lang='en', ids=['sector'])
+tradingview_get_screener_presets(asset_type='stock')
+tradingview_screen_assets(
+  asset_type='stock',
+  market='america',
+  lang='en',
+  range=[0, 50],
+  preset_fields=['overview', 'valuation', 'profitability'],
+  filters={
+    'sector': {
+      'operation': 'in_range',
+      'value': ['Electronic Technology', 'Technology Services', 'Technology']
+    }
+  },
+  sort={'sortBy': 'market_cap_basic', 'sortOrder': 'desc'}
+)
+```
+
+Do not guess sector strings. `NASDAQ:AAPL` is `Electronic Technology`. Pass every matching enum returned by filter options when the user says "tech".
+
+Follow-up diligence on shortlisted names:
+
+```
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='all')
+tradingview_get_quote(symbol='NASDAQ:AAPL', session='regular', fields='all')
+tradingview_get_ta(symbol='NASDAQ:AAPL', include_indicators=true)
+```
+
+Keep shortlists to 10–20 names. Do not scan hundreds of symbols through quote / market-data / TA.
 
 ---
 
 ## Scenario F: Sector Overview (`sector-overview`)
 
-```bash
-# Sector categorization + columnset metadata (which columns are selectable)
-curl ".../api/metadata/columnsets"
-curl ".../api/metadata/tabs?type=stocks"
+Build the peer universe with the screener, not with `tab='all_stocks'` plus a guessed sector string.
 
-# Filter by sector (using leaderboard with columnset=valuation/profitability/etc.)
-curl ".../api/leaderboard/stocks?tab=all_stocks&market_code=america&columnset=valuation&count=100"
+```
+tradingview_get_screener_filter_options(asset_type='stock', lang='en', ids=['sector'])
+tradingview_screen_assets(
+  asset_type='stock',
+  market='america',
+  lang='en',
+  range=[0, 100],
+  preset_fields=['overview', 'valuation', 'profitability', 'performance'],
+  filters={
+    'sector': { 'operation': 'in_range', 'value': ['<discovered sector enums>'] }
+  },
+  sort={'sortBy': 'market_cap_basic', 'sortOrder': 'desc'}
+)
+```
 
-# Drill into representative companies after the screen
-curl ".../api/market-data/NASDAQ:AAPL"
-curl ".../api/market-data/NASDAQ:MSFT/analyst-recommendations"
+Then drill into representative companies:
 
-# Add macro context for global / cyclical sectors
-curl ".../api/world-economy/indicators/full-year-gdp-growth?region=g20"
+```
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='all')
+tradingview_get_market_data(symbol='NASDAQ:MSFT', category='analyst_recommendations')
+tradingview_get_world_economy_indicators(indicator='full-year-gdp-growth', region='g20')
 ```
 
 ---
 
 ## Scenario G: Model Update (`model-update`)
 
-```bash
-# Reported quarter actuals + rolling baselines
-curl ".../api/market-data/NASDAQ:AAPL"
-curl ".../api/market-data/NASDAQ:AAPL/financials-quarterly"
-
-# Consensus and current market context
-curl ".../api/market-data/NASDAQ:AAPL/analyst-recommendations"
-curl ".../api/quote/NASDAQ:AAPL?session=regular&fields=all"
-curl ".../api/market-data/NASDAQ:AAPL/enterprise-value"
+```
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='all')
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='financials_quarterly')
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='analyst_recommendations')
+tradingview_get_quote(symbol='NASDAQ:AAPL', session='regular', fields='all')
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='enterprise_value')
 ```
 
 Use Web Search only for updated guidance wording, transcript commentary, and one-off disclosures that are not represented in the structured payload.
@@ -400,16 +391,15 @@ Use Web Search only for updated guidance wording, transcript commentary, and one
 
 ## Scenario H: Thesis Tracker (`thesis-tracker`)
 
-```bash
-# Baseline thesis scorecard metrics
-curl ".../api/market-data/NASDAQ:AAPL"
-curl ".../api/market-data/NASDAQ:AAPL/ttm"
-curl ".../api/market-data/NASDAQ:AAPL/analyst-recommendations"
+```
+from = Math.floor(Date.now() / 1000)
+to = from + 30 * 86400
 
-# Upcoming catalysts and recent evidence
-curl ".../api/calendar/earnings?from=$FROM&to=$TO&market=america"
-curl ".../api/news?symbol=NASDAQ:AAPL&lang=en&market=stock&market_country=US"
-curl ".../api/news/stock?symbol=NASDAQ:AAPL&lang=en&market_country=US"
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='all')
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='ttm')
+tradingview_get_market_data(symbol='NASDAQ:AAPL', category='analyst_recommendations')
+tradingview_get_calendar(type='earnings', from=from, to=to, market='america')
+tradingview_get_news(symbol='NASDAQ:AAPL', lang='en', market='stock', market_country='US')
 ```
 
 This scenario is best for maintaining a structured thesis scorecard: earnings cadence, valuation anchor, estimate dispersion, and fresh confirming/disconfirming data points.
@@ -420,51 +410,30 @@ This scenario is best for maintaining a structured thesis scorecard: earnings ca
 
 If the user supplies only a company name (e.g. "Apple"), resolve it to `EXCHANGE:TICKER` first:
 
-```bash
-curl ".../api/search/market/Apple?filter=stock"
+```
+tradingview_search_market(query='Apple', filter='stock')
 # Returns: { data: { markets: [ { id: "NASDAQ:AAPL", symbol: "AAPL", description: "Apple Inc.", ... } ] } }
 ```
 
 ---
 
-## Full Endpoint Catalog (60 endpoints)
+## Citation Convention
 
-| Category | Endpoints |
-|---|---|
-| **Market Data (14)** | `/api/market-data/{symbol}` (full), `/company`, `/ipo`, `/current`, `/ttm`, `/indicators`, `/financials-quarterly`, `/financials-annual`, `/history-quarterly`, `/history-annual`, `/dividend`, `/analyst-recommendations`, `/enterprise-value`, `/credit-ratings`, `/cash-flow` |
-| **Quote** | `/api/quote/{symbol}`, `/api/quote/batch` (POST) |
-| **Price (OHLCV)** | `/api/price/{symbol}`, `/api/price/batch` (POST) |
-| **Technical** | `/api/ta/{symbol}`, `/api/ta/{symbol}/indicators` |
-| **Calendar** | `/api/calendar/earnings`, `/revenue`, `/ipo`, `/economic` |
-| **News (10)** | `/api/news`, `/news/stock`, `/news/crypto`, `/news/forex`, `/news/futures`, `/news/etf`, `/news/bond`, `/news/index`, `/news/economic`, `/news/{newsId}` |
-| **Leaderboard** | `/api/leaderboard/stocks`, `/indices`, `/crypto`, `/futures`, `/forex`, `/bonds`, `/corporate-bonds`, `/etfs`, `/data` |
-| **Ideas** | `/api/ideas/hot`, `/editors-picks`, `/list/{symbol}`, `/{symbol}/minds`, `/{imageUrl}` |
-| **Search** | `/api/search/market/{query}?filter=stock\|etf\|crypto\|forex` |
-| **Metadata** | `/api/metadata/markets`, `/exchanges`, `/tabs`, `/columnsets`, `/languages`, `/world-economy/indicators` |
-| **World Economy** | `/api/world-economy/indicators/{indicator}` |
-| **Realtime** | `/sse/stream` (JWT from `/api/token/generate`) |
-| **MCP** | Hosted `https://mcp.tradingviewapi.com/mcp` (`"type": "http"` + Console OAuth). JWT via `POST /api/mcp/generate` (`exampleConfig` + `exampleConfigStreamableHttp`) |
-| **Health** | `/health` |
-
----
-
-## Citation Convention (aligned with `earnings-analysis/SKILL.md` lines 50-107)
-
-When citing data obtained from this API in a report:
+When citing data obtained from MCP in a report:
 
 ```
-Source: Structured data via tradingviewapi (TradingView); fetched [YYYY-MM-DD]
-        Endpoint: /api/market-data/NASDAQ:AAPL
+Source: Structured data via TradingView MCP; fetched [YYYY-MM-DD]
+        Tool: tradingview_get_market_data(symbol='NASDAQ:AAPL', category='all')
         Fiscal Period: data.current.fiscal_period_current = "2026-Q1"
 ```
 
-SEC filings (10-Q / 10-K) must still be cited separately with EDGAR hyperlinks. When consensus data comes from this API, cite the `analyst-recommendations` endpoint explicitly instead of a generic terminal label.
+SEC filings (10-Q / 10-K) must still be cited separately with EDGAR hyperlinks. When consensus data comes from MCP, cite `category='analyst_recommendations'` explicitly instead of a generic terminal label.
 
 ---
 
 ## Fallback Strategy
 
-1. **API unavailable** → fall back to the skill's original Web Search flow
+1. **`tradingview_*` tools missing** → stop; tell the user to connect `https://mcp.tradingviewapi.com/mcp` and sign in with Console. Do not request an API key.
 2. **Missing field** (company has no such metric) → keep field as "N/A"; do not fabricate
 3. **Stale data** (`fiscal_period_current` > 90 days behind current quarter) → mark as "last reported" and Web Search to confirm whether a newer release exists
 4. **Ticker resolution fails** → ask the user to specify `EXCHANGE:TICKER` explicitly

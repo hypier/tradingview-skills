@@ -4,20 +4,20 @@ This document provides detailed step-by-step instructions for each phase of the 
 
 ## Structured Data Source
 
-Use `tradingviewapi` for the numeric baseline before doing narrative research:
+Use hosted TradingView MCP for the numeric baseline before doing narrative research:
 
-- `GET /api/market-data/{symbol}` — one-shot pull for company info, TTM history arrays, current-period ratios, current-quarter metadata, and next-quarter EPS forecast
-- `GET /api/market-data/{symbol}/financials-quarterly` — quarterly three-statement actuals
-- `GET /api/market-data/{symbol}/analyst-recommendations` — price-target consensus plus buy/hold/sell distribution
-- `GET /api/price/{symbol}?timeframe=D&range=252` — 1-year price history for report charts
-- `GET /api/quote/{symbol}?session=regular&fields=all` — current share price, market cap, session status, and pre/post-market reaction
+- `tradingview_get_market_data(symbol, category='all')` — company info, TTM history arrays, current-period ratios, current-quarter metadata, next-quarter EPS forecast
+- `tradingview_get_market_data(symbol, category='financials_quarterly')` — quarterly three-statement actuals
+- `tradingview_get_market_data(symbol, category='analyst_recommendations')` — price-target consensus plus buy/hold/sell distribution
+- `tradingview_get_ohlcv(symbol, timeframe='D', range=252)` — 1-year Japanese candles for report charts
+- `tradingview_get_quote(symbol, session='regular', fields='all')` — current share price, market cap, session status, pre/post-market reaction
 
 Web Search and SEC / IR materials are still required for release wording, transcript commentary, segment detail not carried in the API, and direct source hyperlinks in the finished report.
 
 ## Execution Notes
 
-- Resolve the company to `EXCHANGE:TICKER` with `/api/search/market/{query}?filter=stock` before the structured pull, and treat that resolved symbol as canonical.
-- Use `GET /api/quote/{symbol}?session=regular&fields=all` for quote context. Quote metrics are nested under `data.data`, including last price, daily move, volume, and session status.
+- Resolve the company to `EXCHANGE:TICKER` with `tradingview_search_market(query, filter='stock')` before the structured pull, and treat that resolved symbol as canonical.
+- Use `tradingview_get_quote(symbol, session='regular', fields='all')` for quote context. Quote metrics are nested under `data.data`, including last price, daily move, volume, and session status.
 - Treat `data.current.fiscal_period_current` as a provider-side structured label. If it conflicts with the latest company-reported fiscal-quarter wording, use the primary-source quarter label in the report narrative.
 
 ## Quick Navigation
@@ -36,7 +36,7 @@ Check the latest reported quarter before doing any analysis.
 1. Check today's date and write it down explicitly.
 2. Search for the latest earnings release or investor-relations posting.
 3. Confirm the release date and quarter from the primary source.
-4. Pull the structured `tradingviewapi` baseline and compare the reported quarter / next earnings fields to the primary source.
+4. Pull the structured MCP baseline and compare the reported quarter / next earnings fields to the primary source.
 5. If the latest materials are older than 90 days, search again before proceeding.
 
 ## Phase 1: Earnings Data Collection (30-60 minutes)
@@ -117,10 +117,10 @@ Many companies state their fiscal year in the earnings release header. Search `[
 **Step 1c: Pull the structured baseline after quarter verification**
 
 Once the latest quarter is confirmed from the primary source, immediately pull:
-- `/api/market-data/{symbol}`
-- `/api/market-data/{symbol}/financials-quarterly`
-- `/api/market-data/{symbol}/analyst-recommendations`
-- `/api/quote/{symbol}?session=regular&fields=all`
+- `tradingview_get_market_data(symbol, category='all')`
+- `tradingview_get_market_data(symbol, category='financials_quarterly')`
+- `tradingview_get_market_data(symbol, category='analyst_recommendations')`
+- `tradingview_get_quote(symbol, session='regular', fields='all')`
 
 Use these calls to prefill the numeric template before reading narrative materials. If `data.current.fiscal_period_current` or `earnings_release_date` appears stale relative to the newly found release, treat the API as last-reported context and rely on the current filing / release for quarter-accurate figures.
 
@@ -171,10 +171,10 @@ After SEARCHING FOR and confirming the latest quarter, collect the following:
 **⚠️ IMPORTANT: SEARCH for and ACCESS actual documents - do not rely on training data.**
 
 **Structured Pull (REQUIRED before narrative collection):**
-- Pull `/api/market-data/{symbol}` for TTM / current-period financial baselines and earnings dates
-- Pull `/api/market-data/{symbol}/financials-quarterly` for quarterly actuals
-- Pull `/api/market-data/{symbol}/analyst-recommendations` for consensus sentiment and price-target context
-- Pull `/api/quote/{symbol}?session=regular&fields=all` for current price and immediate market reaction
+- Pull `tradingview_get_market_data(symbol, category='all')` for TTM / current-period financial baselines and earnings dates
+- Pull `tradingview_get_market_data(symbol, category='financials_quarterly')` for quarterly actuals
+- Pull `tradingview_get_market_data(symbol, category='analyst_recommendations')` for consensus sentiment and price-target context
+- Pull `tradingview_get_quote(symbol, session='regular', fields='all')` for current price and immediate market reaction
 
 Treat these as the starting numeric layer. The release, filing, and transcript remain the source of truth for wording, disclosure nuance, and directly hyperlinked citations.
 
@@ -225,7 +225,7 @@ Treat these as the starting numeric layer. The release, filing, and transcript r
   - From last earnings update or initiation report
   - Check what was estimated for this quarter's metrics
 
-- **Consensus estimates** - Prefer `tradingviewapi` `/analyst-recommendations` for current Street snapshot; use other external consensus sources only when you need a pre-release consensus timestamp or a metric not present in the API
+- **Consensus estimates** - Prefer MCP `tradingview_get_market_data(..., category='analyst_recommendations')` for current Street snapshot; use other external consensus sources only when you need a pre-release consensus timestamp or a metric not present in MCP
   - CRITICAL: Use estimates from BEFORE earnings release
   - Look for "as of [date before earnings]" to ensure pre-announcement consensus
   - Needed for beat/miss analysis
@@ -244,7 +244,7 @@ Treat these as the starting numeric layer. The release, filing, and transcript r
 - [ ] ✅ **ACCESSED** actual earnings press release and read it
 - [ ] ✅ **OPENED** actual earnings call transcript and verified date
 - [ ] ✅ **CONFIRMED** this is the MOST RECENT quarter by checking dates
-- [ ] ✅ Pulled the `tradingviewapi` baseline and checked it against the primary-source quarter
+- [ ] ✅ Pulled the MCP baseline and checked it against the primary-source quarter
 - [ ] ✅ Have full financial results (revenue, EPS, margins, etc.) from actual release
 - [ ] ✅ Have pre-earnings consensus estimates with source date
 
@@ -279,7 +279,7 @@ KEY BUSINESS METRICS:
 [Metric 3]          XXX         XXX        XXX          +X% YoY
 ```
 
-Populate the reported and historical numeric lines from `tradingviewapi` first, then reconcile every current-quarter figure to the earnings release / filing before publishing.
+Populate the reported and historical numeric lines from MCP first, then reconcile every current-quarter figure to the earnings release / filing before publishing.
 
 ### Step 4: Identify Key Themes from Call
 
@@ -384,7 +384,7 @@ Based on updated estimates:
 - Determine new fair value
 - Decide if price target changes
 
-Use `/api/quote/{symbol}?session=regular&fields=all` for current price / market cap context and `/api/market-data/{symbol}/analyst-recommendations` for the live sell-side target range when framing the updated valuation.
+Use `tradingview_get_quote` for current price / market cap context and `tradingview_get_market_data(..., category='analyst_recommendations')` for the live sell-side target range when framing the updated valuation.
 
 **Price Target Decision:**
 - If estimates changed significantly (>5%) → Usually change price target
@@ -444,7 +444,7 @@ Create charts focusing on QUARTERLY TRENDS and WHAT'S NEW.
 
 8. **Valuation Chart** (P/E or EV/EBITDA multiple)
    - Historical multiple range (derive from structured price / history series when possible)
-   - Current multiple from `tradingviewapi`
+   - Current multiple from MCP
    - Fair value multiple
 
 **OPTIONAL CHARTS (if space allows):**
@@ -526,7 +526,7 @@ Before publishing, verify:
 - [ ] Every figure has specific source with document and date
 - [ ] Every table has specific source with document reference
 - [ ] Beat/miss analysis cites consensus source with date
-- [ ] If `tradingviewapi` supplied the consensus context, the endpoint and fetch date are cited clearly
+- [ ] If MCP supplied the consensus context, the tool name and fetch date are cited clearly
 - [ ] Guidance changes cite current and prior guidance sources
 - [ ] Key statistics have footnotes with specific page/slide references
 - [ ] Sources section lists all materials with URLs

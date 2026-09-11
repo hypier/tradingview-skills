@@ -61,7 +61,7 @@ Cite in every earnings update:
 - ✅ 10-Q filing (with filing date and EDGAR link)
 - ✅ Earnings call transcript (with date)
 - ✅ Investor presentation/supplemental materials (if available)
-- ✅ Consensus estimates source (`tradingviewapi` or external source, with date)
+- ✅ Consensus estimates source (TradingView MCP or external source, with date)
 - ✅ Prior guidance (from previous quarter's materials)
 
 **REFERENCE SECTION WITH CLICKABLE HYPERLINKS:**
@@ -106,20 +106,20 @@ The earnings update process follows 5 phases:
 
 ### Phase 1: Data Collection (30-60 minutes)
 
-**⭐ PREFERRED: Pull structured data via `tradingviewapi` FIRST**
+**⭐ PREFERRED: Pull structured data via TradingView MCP FIRST**
 
-Before unstructured Web Search, call the TradingView-backed API for numeric data. One call to `/api/market-data/{symbol}` returns company info, TTM financials with 8-quarter history arrays, current-period ratios, and next-quarter consensus EPS — covering ~70% of an earnings update's numerical content.
+Before unstructured Web Search, call hosted `tradingview_*` tools. One call to `tradingview_get_market_data(symbol, category='all')` returns company info, TTM financials with 8-quarter history arrays, current-period ratios, and next-quarter consensus EPS — covering ~70% of an earnings update's numerical content.
 
-See `../tradingviewapi.md` (Scenario A) for the exact curl commands and the JSON-field-to-report-field mapping table. Key endpoints for earnings updates:
+See `../tradingviewapi.md` (Scenario A) for the tool calls and the JSON-field-to-report-field mapping table:
 
-- `GET /api/market-data/{symbol}` — one-shot pull of TTM financials, 8-quarter history arrays, current-period ratios, and next-quarter consensus EPS
-- `GET /api/market-data/{symbol}/analyst-recommendations` — analyst ratings and target-price consensus
-- `GET /api/market-data/{symbol}/financials-quarterly` — quarterly three-statement data
-- `GET /api/price/{symbol}?timeframe=D&range=252` — daily OHLCV for the stock price chart
-- `GET /api/quote/{symbol}?session=regular&fields=all` — real-time quote plus pre/post-market
+- `tradingview_get_market_data(symbol, category='all')` — TTM financials, 8-quarter history arrays, current-period ratios, next-quarter consensus EPS
+- `tradingview_get_market_data(symbol, category='analyst_recommendations')` — analyst ratings and target-price consensus
+- `tradingview_get_market_data(symbol, category='financials_quarterly')` — quarterly three-statement data
+- `tradingview_get_ohlcv(symbol, timeframe='D', range=252)` — daily Japanese candles for the stock price chart
+- `tradingview_get_quote(symbol, session='regular', fields='all')` — real-time quote plus pre/post-market
 
 Execution notes:
-- Resolve the company to `EXCHANGE:TICKER` with `/api/search/market/{query}?filter=stock` first, and treat that resolved symbol as canonical.
+- Resolve the company to `EXCHANGE:TICKER` with `tradingview_search_market(query, filter='stock')` first, and treat that resolved symbol as canonical.
 - Quote metrics are nested under `data.data`.
 - If `data.current.fiscal_period_current` conflicts with the company's own fiscal-quarter wording, use the latest IR / SEC label in the report narrative.
 

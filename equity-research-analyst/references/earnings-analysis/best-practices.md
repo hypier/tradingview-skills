@@ -134,7 +134,7 @@ Before delivering earnings update, verify all items below:
 - [ ] Source citations include page numbers or slide numbers where applicable
 
 **Beat/Miss Citations:**
-- [ ] Beat/miss analysis cites the consensus source used (`tradingviewapi` or other external source)
+- [ ] Beat/miss analysis cites the consensus source used (TradingView MCP or other external source)
 - [ ] Consensus source includes "as of" date (pre-earnings close)
 - [ ] Company reported results cited to earnings release or 10-Q
 

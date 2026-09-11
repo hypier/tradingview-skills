@@ -4,7 +4,7 @@ description: Fundamental Screening Workflow - Use multiple columnsets to screen 
 
 # Fundamental Screening Workflow
 
-Use `tradingview_get_leaderboard` with various columnsets (valuation/profitability/dividends/balance_sheet/income_statement/cash_flow) to screen quality stocks from a fundamental perspective.
+Use `tradingview_get_leaderboard` with various columnsets (`valuation` / `profitability` / `dividends` / `balanceSheet` / `incomeStatement` / `cashFlow`) to screen quality stocks from a fundamental perspective.
 
 ## Execution Steps
 
@@ -16,8 +16,8 @@ Determine screening strategy based on user needs:
 |----------|---------------|-------------|
 | Value Investing | valuation | Low PE, Low PB, Low PS |
 | High Dividend | dividends | High dividend yield, stable dividends |
-| Growth Stocks | profitability + income_statement | High ROE, revenue growth |
-| Financial Health | balance_sheet + cash_flow | Low debt ratio, ample cash flow |
+| Growth Stocks | profitability + incomeStatement | High ROE, revenue growth |
+| Financial Health | balanceSheet + cashFlow | Low debt ratio, ample cash flow |
 
 ### Step 2: Get Metadata
 
@@ -34,19 +34,19 @@ Call based on strategy combination, using value investing as example:
 # Get valuation data
 tradingview_get_leaderboard(
   asset_type='stocks', tab='all-stocks',
-  market_code='china', columnset='valuation', count=100
+  market_code='america', columnset='valuation', count=100
 )
 
 # Get profitability data
 tradingview_get_leaderboard(
   asset_type='stocks', tab='all-stocks',
-  market_code='china', columnset='profitability', count=100
+  market_code='america', columnset='profitability', count=100
 )
 
 # Get dividend data
 tradingview_get_leaderboard(
   asset_type='stocks', tab='high-dividend',
-  market_code='china', columnset='dividends', count=50
+  market_code='america', columnset='dividends', count=50
 )
 ```
 
@@ -104,14 +104,14 @@ Filter out stocks with obviously weak technicals (e.g., RSI > 80 overbought, MAC
 ```
 tab='high-dividend' + columnset='dividends' → Dividend yield ranking
 Cross with columnset='profitability' → Confirm sustainable earnings
-Cross with columnset='balance_sheet' → Confirm financial health
+Cross with columnset='balanceSheet' → Confirm financial health
 ```
 
 ### Low Valuation Strategy
 ```
 tab='all-stocks' + columnset='valuation' → PE/PB ranking
-Cross with columnset='income_statement' → Confirm revenue and profit
-Cross with columnset='cash_flow' → Confirm cash flow
+Cross with columnset='incomeStatement' → Confirm revenue and profit
+Cross with columnset='cashFlow' → Confirm cash flow
 ```
 
 ### Blue Chip Strategy

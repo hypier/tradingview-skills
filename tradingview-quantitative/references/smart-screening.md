@@ -25,31 +25,54 @@ tradingview_get_metadata(type='tabs', asset_type='stocks')  # Get available tabs
 
 ### Step 3: Get Candidate Pool
 
-Choose appropriate tab and columnset based on screening direction:
+Match `market_code` to the user's market (`america` for US, `china` for A-shares). Do not copy a hardcoded market from these examples if the user asked about a different region.
+
+Choose appropriate tab and columnset based on screening direction. Leaderboard `columnset` must be one of: `overview`, `performance`, `valuation`, `dividends`, `profitability`, `incomeStatement`, `balanceSheet`, `cashFlow`, `technicals`.
+
+For a sector such as technology, prefer the screener instead of filtering leaderboard rows after the fact:
+
+```
+tradingview_get_screener_filter_options(asset_type='stock', ids=['sector'])
+tradingview_screen_assets(
+  asset_type='stock',
+  market='america',
+  range=[0, 50],
+  preset_fields=['overview', 'valuation', 'profitability', 'technicals'],
+  filters={
+    'sector': {
+      'operation': 'in_range',
+      'value': ['Technology', 'Electronic Technology', 'Technology Services']
+    }
+  },
+  sort={'sortBy': 'market_cap_basic', 'sortOrder': 'desc'}
+)
+```
+
+Then:
 
 ```
 # Technical screening - Use technical-related tabs
 tradingview_get_leaderboard(
   asset_type='stocks', tab='gainers',  # or active/unusual-volume/best-performing
-  market_code='china', columnset='overview', count=100
+  market_code='america', columnset='overview', count=100
 )
 
 # Fundamental data - Switch columnset
 tradingview_get_leaderboard(
   asset_type='stocks', tab='all-stocks',
-  market_code='china', columnset='valuation', count=100
+  market_code='america', columnset='valuation', count=100
 )
 
 # Profitability
 tradingview_get_leaderboard(
   asset_type='stocks', tab='all-stocks',
-  market_code='china', columnset='profitability', count=100
+  market_code='america', columnset='profitability', count=100
 )
 ```
 
 ### Step 4: Technical Screening
 
-For Top 20-30 in candidate pool, call individually:
+For Top 10–15 in the candidate pool, call individually (do not scan 100 names; that hits rate limits):
 
 ```
 tradingview_get_ta(symbol, include_indicators=true)
@@ -104,12 +127,13 @@ Calculate total score (100-point system) according to `technical-analysis.md` sc
 
 ## Example
 
-**User**: "Help me select strong stocks from China A-shares"
+**User**: "Screen for strong stocks in the US technology sector"
 
 **Execution**:
-1. `tradingview_get_metadata(type='markets')` → china
-2. `tradingview_get_leaderboard(tab='gainers', market_code='china', count=100)` → Gainers
-3. `tradingview_get_leaderboard(tab='gainers', market_code='china', columnset='valuation')` → Valuation
-4. Top 20 individual `tradingview_get_ta(include_indicators=true)` → Technical screening
-5. Top 10 `tradingview_get_ohlcv(timeframe='D', range=60)` → K-line verification
-6. Comprehensive scoring → Output Top 10 report
+1. `tradingview_get_screener_filter_options(asset_type='stock', ids=['sector'])` → confirm sector enum values
+2. `tradingview_screen_assets(market='america', filters.sector in_range Electronic Technology / Technology Services / Technology)` → candidate pool
+3. Top 10–15 `tradingview_get_ta(include_indicators=true)` → technical screening
+4. Top 8 `tradingview_get_ohlcv(timeframe='D', range=60)` → K-line verification
+5. Comprehensive scoring → Output Top 8 report
+
+For China A-shares, use `market_code='china'` / `market='china'` instead.

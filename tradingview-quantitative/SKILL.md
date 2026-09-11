@@ -7,7 +7,10 @@ description: Use when current TradingView data must be retrieved through availab
 
 Use available TradingView MCP tools to retrieve current data, then apply the relevant quantitative workflow. For direct Console/RapidAPI integration, endpoint debugging, or requests without those MCP tools, use `tradingview-api-integration` instead.
 
-Hosted MCP (25 `tradingview_*` tools): add `https://mcp.tradingviewapi.com/mcp` with `"type": "http"` and sign in with Console. Older clients may use `"type": "streamable-http"`. JWT fallback: `POST /api/mcp/generate`, then copy `exampleConfig`. RapidAPI without Console OAuth: local `npx -y @ivotoby/openapi-mcp-server` (OpenAPI tools, not hosted `tradingview_*`).
+**This skill only runs when hosted `tradingview_*` MCP tools are available.** If those tools are missing, stop and tell the user to connect MCP before analyzing.
+
+- Console (required for this skill): add `https://mcp.tradingviewapi.com/mcp` with `"type": "http"` and sign in with Console. Older clients may use `"type": "streamable-http"`.
+- RapidAPI / no Console login: `POST https://api.tradingviewapi.com/api/mcp/generate` with the API key, then paste `exampleConfig` (JWT). Local `npx -y @ivotoby/openapi-mcp-server` exposes REST-shaped tools, not `tradingview_*` — switch to `tradingview-api-integration` instead of this skill.
 
 ## Core Rules
 
@@ -26,6 +29,17 @@ Read [references/api-documentation.md](references/api-documentation.md) for the 
 - Real market prices, returns, stops, targets, backtests, and pattern levels: `tradingview_get_ohlcv` / `tradingview_get_ohlcv_batch` (Japanese candles only; never Heikin-Ashi)
 - Synthetic chart styles: `tradingview_get_price` / `tradingview_get_price_batch` with `type='HeikinAshi'` or `Range`
 
+### Parameter Names
+
+- Leaderboard `columnset` is camelCase: `incomeStatement`, `balanceSheet`, `cashFlow`, `technicals`. Screener presets are snake_case: `income_statement`, `balance_sheet`, `cash_flow`, `technicals`.
+- Tabs accept kebab-case or underscore (`all-stocks` / `all_stocks`).
+- Calendar `from` / `to` are Unix seconds integers. Never pass `"now"` or `"now+14days"`. Max span 40 days: `from=Math.floor(Date.now()/1000)`, `to=from+14*86400`.
+- Match `market_code` to the user request. English/US prompts default to `america`, `market_country='US'`, `lang='en'`. Use `china` only for A-shares.
+
+### Rate Limits and Scan Size
+
+Do not scan hundreds of symbols. Use leaderboard or screener first, then call quote / OHLCV / TA on the top 10–20. Pattern scans: at most 15 symbols (or analyze `AMEX:SPY` for S&P 500). On `rate_limit_exceeded`, wait and retry; do not fan out more calls.
+
 ### Tool Selection Quick Reference
 
 | Need | Tool | Key Parameters |
@@ -37,11 +51,11 @@ Read [references/api-documentation.md](references/api-documentation.md) for the 
 | Chart events | `tradingview_get_price_events` | symbol, timeframe(D), range — earnings/dividends/splits markers |
 | Technical analysis | `tradingview_get_ta` | symbol, **include_indicators=true for detailed indicators** |
 | Company fundamentals | `tradingview_get_market_data` | symbol, category(company/indicators/financials_quarterly/dividend/analyst_recommendations...) |
-| Leaderboard | `tradingview_get_leaderboard` | asset_type, tab, market_code, **columnset**(overview/performance/valuation/dividends/profitability/income_statement/balance_sheet/cash_flow/technical) |
-| Advanced screener | `tradingview_get_screener_presets` + `tradingview_get_screener_filter_options` + `tradingview_screen_assets` | asset type, preset fields, filter operators, market |
+| Leaderboard | `tradingview_get_leaderboard` | asset_type, tab, market_code, **columnset**(overview/performance/valuation/dividends/profitability/incomeStatement/balanceSheet/cashFlow/technicals) |
+| Advanced screener | `tradingview_get_screener_presets` + `tradingview_get_screener_filter_options` + `tradingview_screen_assets` | asset type, preset fields (`income_statement` snake_case), filter operators, market |
 | News | `tradingview_get_news` / `tradingview_get_news_detail` | market_country, lang(zh-Hans/en/ja), symbol |
 | Community ideas | `tradingview_get_ideas_hot` / `tradingview_get_ideas_editors_picks` / `tradingview_get_ideas_by_symbol` / `tradingview_get_minds` / `tradingview_get_idea_detail` | symbol, lang, image_url |
-| Economic calendar | `tradingview_get_calendar` | type(economic/earnings/revenue/ipo), from/to(Unix seconds), market |
+| Economic calendar | `tradingview_get_calendar` | type(economic/earnings/revenue/ipo), from/to(**Unix seconds integers**, max 40 days), market |
 | World economy | `tradingview_get_world_economy_indicators` | indicator slug, region |
 | Metadata | `tradingview_get_metadata` / `tradingview_get_world_economy_indicator_metadata` | type(markets/tabs/columnsets/languages/exchanges/world_economy_indicators) |
 

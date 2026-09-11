@@ -137,7 +137,7 @@ For tables with multiple data sources:
 ```
 Figure X - [Descriptive Title]
 [Table content]
-Source: Structured data via tradingviewapi (TradingView), company filings, [Firm Name] estimates.
+Source: Structured data via TradingView MCP, company filings, [Firm Name] estimates.
 ```
 
 ### Placement Guidelines
@@ -655,7 +655,7 @@ Median                   XX.X     X.Xx     X.Xx     XX.X       XX.X       XX%   
 25th Percentile          XX.X     X.Xx     X.Xx     XX.X       XX.X       XX%     XX%
 Min                      XX.X     X.Xx     X.Xx     XX.X       XX.X       XX%     XX%
 
-Source: Structured data via tradingviewapi (TradingView), company filings, [Firm Name] estimates.
+Source: Structured data via TradingView MCP, company filings, [Firm Name] estimates.
 ```
 
 **Implied Valuation**

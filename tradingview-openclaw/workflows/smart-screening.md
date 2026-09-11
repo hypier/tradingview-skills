@@ -31,19 +31,19 @@ Choose appropriate tab and columnset based on screening direction:
 # Technical screening - Use technical-related tabs
 tradingview_get_leaderboard(
   asset_type='stocks', tab='gainers',  # or active/unusual-volume/best-performing
-  market_code='china', columnset='overview', count=100
+  market_code='america', columnset='overview', count=100
 )
 
 # Fundamental data - Switch columnset
 tradingview_get_leaderboard(
   asset_type='stocks', tab='all-stocks',
-  market_code='china', columnset='valuation', count=100
+  market_code='america', columnset='valuation', count=100
 )
 
 # Profitability
 tradingview_get_leaderboard(
   asset_type='stocks', tab='all-stocks',
-  market_code='china', columnset='profitability', count=100
+  market_code='america', columnset='profitability', count=100
 )
 ```
 
@@ -104,12 +104,12 @@ Calculate total score (100-point system) according to `references/technical-anal
 
 ## Example
 
-**User**: "Help me select strong stocks from China A-shares"
+**User**: "Screen for strong stocks in the US technology sector"
 
 **Execution**:
-1. `get_metadata(type='markets')` → china
-2. `get_leaderboard(tab='gainers', market_code='china', count=100)` → Gainers
-3. `get_leaderboard(tab='gainers', market_code='china', columnset='valuation')` → Valuation
-4. Top 20 individual `get_ta(include_indicators=true)` → Technical screening
-5. Top 10 `get_price(timeframe='D', range=60)` → K-line verification
+1. `get_metadata(type='markets')` → america
+2. `get_leaderboard(tab='gainers', market_code='america', count=100)` → Gainers
+3. `get_leaderboard(tab='gainers', market_code='america', columnset='valuation')` → Valuation
+4. Top 10–15 individual `get_ta(include_indicators=true)` → Technical screening
+5. Top 8 OHLCV daily bars → K-line verification
 6. Comprehensive scoring → Output Top 10 report

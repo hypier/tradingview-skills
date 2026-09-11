@@ -27,10 +27,10 @@ This document provides step-by-step instructions for executing Task 1 (Company R
 ## Data Sources to Gather
 
 ### Primary Sources (Company)
-- **Structured prefill via `tradingviewapi` (for public companies):**
-  - `/api/market-data/{symbol}/company`: founding year, employee count, website, sector/industry, business description
-  - `/api/market-data/{symbol}/ipo`: IPO timing and listing history
-  - `/api/market-data/{symbol}/credit-ratings`: credit profile for mature issuers
+- **Structured prefill via TradingView MCP (for public companies):**
+  - `tradingview_get_market_data(symbol, category='company')`: founding year, employee count, website, sector/industry, business description
+  - `tradingview_get_market_data(symbol, category='ipo')`: IPO timing and listing history
+  - `tradingview_get_market_data(symbol, category='credit_ratings')`: credit profile for mature issuers
 
 - **SEC Filings (for public companies):**
   - Latest 10-K: Business description, risk factors, MD&A, financials
@@ -77,7 +77,7 @@ This document provides step-by-step instructions for executing Task 1 (Company R
 ### Step 1: Initial Data Collection
 
 1. **Prefill structured basics for public companies**
-   - Pull `/api/market-data/{symbol}/company`, `/ipo`, and `/credit-ratings`
+   - Pull `tradingview_get_market_data` with `category='company'`, `'ipo'`, and `'credit_ratings'`
    - Capture founding year, employee count, website, sector, industry, and any rating data
    - Use this as the base fact sheet before reading narrative materials
 

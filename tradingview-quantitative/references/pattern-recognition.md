@@ -8,6 +8,10 @@ Based on candlestick data and technical indicators, identify classic technical p
 
 Pattern recognition algorithms and success rate statistics can be found in `pattern-library.md`.
 
+There is no S&P 500 constituent API. For "S&P 500" requests, analyze `AMEX:SPY` (or `NASDAQ:QQQ` for Nasdaq-100), or screener/large-cap a **maximum of 15 symbols**. Do not pull OHLCV for 500 names.
+
+Pattern detection is local: compare OHLCV + TA against `pattern-library.md`. It is not a server-side pattern endpoint.
+
 ## Execution Steps
 
 ### Step 1: Get Historical Candlestick Data
@@ -107,11 +111,13 @@ Only recommend trades when risk-reward ratio > 1.5.
 
 ## Example
 
-**User**: "Analyze BTC/USDT technical patterns"
+**User**: "Analyze SPY for double bottom and flag patterns"
 
 **Execution**:
-1. `tradingview_get_ohlcv(symbol='BINANCE:BTCUSDT', timeframe='D', range=120)` → Daily candles
-2. `tradingview_get_ta(symbol='BINANCE:BTCUSDT', include_indicators=true)` → Technical indicators
+1. `tradingview_get_ohlcv(symbol='AMEX:SPY', timeframe='D', range=120)` → Daily candles
+2. `tradingview_get_ta(symbol='AMEX:SPY', include_indicators=true)` → Technical indicators
 3. Analyze candlestick data to identify patterns (refer to `pattern-library.md`)
 4. Calculate confidence and key price levels
 5. Generate trading strategy report
+
+Do not loop OHLCV across the S&P 500 membership list. If the user insists on multiple names, cap at 15 large-caps from the screener.

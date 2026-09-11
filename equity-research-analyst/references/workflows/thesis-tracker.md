@@ -4,21 +4,28 @@ description: Maintain and update investment theses for portfolio positions and w
 
 ## Structured Data Source
 
-Use `tradingviewapi` to keep the thesis scorecard data-driven:
+Use hosted TradingView MCP to keep the thesis scorecard data-driven:
 
-- `GET /api/market-data/{symbol}` — company, valuation, next earnings date, and rolling fundamental summary
-- `GET /api/market-data/{symbol}/ttm` — margin, cash flow, leverage, and return metrics for thesis pillars
-- `GET /api/market-data/{symbol}/analyst-recommendations` — current price-target and recommendation backdrop
-- `GET /api/calendar/earnings?from=&to=` — upcoming earnings catalysts
-- `GET /api/news?symbol={symbol}` or `GET /api/news/stock?symbol={symbol}` — fresh evidence for or against the thesis
+```
+from = Math.floor(Date.now() / 1000)
+to = from + 30 * 86400
+
+tradingview_get_market_data(symbol, category='all')
+tradingview_get_market_data(symbol, category='ttm')
+tradingview_get_market_data(symbol, category='analyst_recommendations')
+tradingview_get_calendar(type='earnings', from=from, to=to, market='america')
+tradingview_get_news(symbol=symbol, lang='en', market='stock', market_country='US')
+```
+
+Never pass empty calendar `from`/`to`. Use `market='america'` unless the user asked for another market.
 
 Web Search is still needed for original management wording, deep product / regulatory developments, and thesis inputs that rely on channel checks or alternative data.
 
 ## Execution Notes
 
-- Resolve the company to `EXCHANGE:TICKER` first via `/api/search/market/{query}?filter=stock` and keep that symbol as canonical in the thesis record.
+- Resolve the company to `EXCHANGE:TICKER` first via `tradingview_search_market(query, filter='stock')` and keep that symbol as canonical in the thesis record.
 - Treat `data.current.fiscal_period_current` as a provider label only. If the company's own quarter naming differs in the latest release or filing, use the primary-source label in thesis updates.
-- If you pull live market context, prefer `GET /api/quote/{symbol}?session=regular&fields=all`; quote metrics are nested under `data.data`.
+- If you pull live market context, prefer `tradingview_get_quote(symbol, session='regular', fields='all')`; quote metrics are nested under `data.data`.
 
 ## Workflow
 
@@ -47,10 +54,10 @@ For each new data point or development:
 - **Updated conviction**: High / Medium / Low
 
 Typical structured updates to log:
-- Revenue / margin / FCF progress from `/api/market-data/{symbol}` or `/ttm`
+- Revenue / margin / FCF progress from `tradingview_get_market_data` (`all` or `ttm`)
 - Price-target or recommendation drift from `/analyst-recommendations`
-- New earnings date from `/api/calendar/earnings` or `earnings_release_next_date`
-- News items that confirm or challenge the thesis from `/api/news`
+- New earnings date from `tradingview_get_calendar(type='earnings', from, to)` or `earnings_release_next_date`
+- News items that confirm or challenge the thesis from `tradingview_get_news`
 
 ### Step 3: Thesis Scorecard
 
@@ -72,7 +79,7 @@ Track upcoming catalysts:
 |------|-------|-----------------|-------|
 | | | | |
 
-Seed this table from `/api/calendar/earnings` for earnings dates and from recent `/api/news` items for company-specific follow-up events.
+Seed this table from `tradingview_get_calendar(type='earnings', from, to)` for earnings dates and from recent `tradingview_get_news` items for company-specific follow-up events.
 
 ### Step 5: Output
 
@@ -89,4 +96,4 @@ Format: Concise markdown or Word doc with the scorecard, recent updates, and cur
 - Track disconfirming evidence as rigorously as confirming evidence
 - Review theses at least quarterly, even when nothing dramatic has happened
 - If the user manages multiple positions, offer to do a full portfolio thesis review
-- Store thesis data in a structured format so it can be referenced across sessions and refreshed against `tradingviewapi`
+- Store thesis data in a structured format so it can be referenced across sessions and refreshed against MCP

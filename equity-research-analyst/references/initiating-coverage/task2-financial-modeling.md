@@ -20,7 +20,7 @@ This document provides step-by-step instructions for executing Task 2 (Financial
 
 **Prerequisites**: ⚠️ Verify before starting
 - **Required**: Access to company financial data
-  - For public companies: `tradingviewapi` annual history plus latest 10-K / recent 10-Qs for audit and gap-fill
+  - For public companies: MCP annual history plus latest 10-K / recent 10-Qs for audit and gap-fill
   - For private companies: Financial statements or estimates from available sources
   - OR: Pre-extracted historical financials provided by user
 - **Optional**: Company research (Task 1) for business context
@@ -40,7 +40,7 @@ This document provides step-by-step instructions for executing Task 2 (Financial
 **BEFORE STARTING - CHECK:**
 
 **Option A: Extract financials directly (most common)**
-- [ ] Have access to `tradingviewapi` or 10-K filings (public company)?
+- [ ] Have access to TradingView MCP or 10-K filings (public company)?
 - [ ] OR have access to financial statements (private company)?
 - [ ] Ready to create Excel file for historical extraction?
 
@@ -52,7 +52,7 @@ This document provides step-by-step instructions for executing Task 2 (Financial
 **Optional Context:**
 - [ ] Company research (Task 1) complete for business understanding?
 
-**IF VERIFICATION FAILS**: Stop and obtain access to `tradingviewapi`, financial statements, or 10-K / equivalent source before proceeding.
+**IF VERIFICATION FAILS**: Stop and obtain access to hosted TradingView MCP, financial statements, or 10-K / equivalent source before proceeding.
 
 ---
 
@@ -90,10 +90,10 @@ This document provides step-by-step instructions for executing Task 2 (Financial
 
 **For Public Companies:**
 
-1. **Seed the historicals from `tradingviewapi`**
-   - Pull `/api/market-data/{symbol}/financials-annual`
-   - Pull `/api/market-data/{symbol}/history-annual`
-   - Pull `/api/market-data/{symbol}/cash-flow`
+1. **Seed the historicals from TradingView MCP**
+   - Pull `tradingview_get_market_data(symbol, category='financials_annual')`
+   - Pull `tradingview_get_market_data(symbol, category='history_annual')`
+   - Pull `tradingview_get_market_data(symbol, category='cash_flow')`
    - Use these payloads to prefill annual revenue, margins, cash flow, leverage, and multi-year trend arrays
 
 2. **Download 10-K Filing for audit and gap-fill**
@@ -165,7 +165,7 @@ This document provides step-by-step instructions for executing Task 2 (Financial
 8. **Document Sources and Notes**
    - Create Sheet 5: "Notes"
    - Document:
-     - `tradingviewapi` fetch date and endpoints used
+     - MCP fetch date and tools used
      - 10-K filing date and fiscal year end
      - Any one-time items or adjustments noted
      - Non-GAAP vs GAAP differences

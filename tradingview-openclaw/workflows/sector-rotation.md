@@ -21,25 +21,25 @@ tradingview_get_metadata(type='tabs', asset_type='stocks')  # View all category 
 # Gainers - performance data (1W/1M/3M/6M/1Y returns)
 tradingview_get_leaderboard(
   asset_type='stocks', tab='best-performing',
-  market_code='china', columnset='performance', count=50
+  market_code='america', columnset='performance', count=50
 )
 
 # Losers
 tradingview_get_leaderboard(
   asset_type='stocks', tab='losers',
-  market_code='china', columnset='performance', count=50
+  market_code='america', columnset='performance', count=50
 )
 
 # Active stocks
 tradingview_get_leaderboard(
   asset_type='stocks', tab='active',
-  market_code='china', columnset='overview', count=50
+  market_code='america', columnset='overview', count=50
 )
 
 # Unusual volume
 tradingview_get_leaderboard(
   asset_type='stocks', tab='unusual-volume',
-  market_code='china', columnset='overview', count=50
+  market_code='america', columnset='overview', count=50
 )
 ```
 

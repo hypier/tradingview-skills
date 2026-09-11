@@ -40,9 +40,9 @@ Parameter description:
   - earnings: Earnings releases
   - revenue: Dividend distributions
   - ipo: New stock listings
-- from: Start time (required, Unix timestamp)
-- to: End time (required, Unix timestamp)
-- market: Market code (optional, comma-separated)
+- from: Start time (required, Unix timestamp in **seconds**, integer). Example: `Math.floor(Date.now()/1000)`. Never pass `"now"`.
+- to: End time (required, Unix timestamp in **seconds**, integer). Example: `from + 14*86400`. Max span 40 days. Never pass `"now+14days"`.
+- market: Market code (optional, comma-separated). Default `america` for earnings/revenue/ipo.
 ```
 
 ### Step 5: Filter and Sort Events

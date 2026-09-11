@@ -69,13 +69,19 @@ tradingview_screen_assets(
   range=[0, 50],
   preset_fields=['overview', 'valuation', 'profitability', 'technicals'],
   filters={
-    'market_cap_basic': { 'operation': 'greater_or_equal', 'value': 10000000000 },
-    'price_earnings_ttm': { 'operation': 'less_or_equal', 'value': 15 },
-    'RSI': { 'operation': 'less_or_equal', 'value': 30 }
+    'sector': {
+      'operation': 'in_range',
+      'value': ['Technology', 'Electronic Technology', 'Technology Services']
+    },
+    'market_cap_basic': { 'operation': 'greater_or_equal', 'value': 10000000000 }
   },
   sort={'sortBy': 'market_cap_basic', 'sortOrder': 'desc'}
 )
 ```
+
+Do not guess sector strings. `NASDAQ:AAPL` is `Electronic Technology`, not `Technology`. Discover values with `tradingview_get_screener_filter_options(asset_type='stock', ids=['sector'])`.
+
+Leaderboard `columnset` is camelCase (`incomeStatement`, `technicals`). Screener `preset_fields` stay snake_case (`income_statement`, `technicals`).
 
 ### Step 6: Run the Scan and Validate the Results
 

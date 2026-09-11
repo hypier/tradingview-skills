@@ -43,7 +43,7 @@ Useful regions:
 ### Step 4: Pull Upcoming Economic Events
 
 ```
-tradingview_get_calendar(type='economic', from=now, to=now+14days, market='america,china,euro-area')
+tradingview_get_calendar(type='economic', from=Math.floor(Date.now()/1000), to=Math.floor(Date.now()/1000)+14*86400, market='america,china,euro-area')
 ```
 
 Prioritize:

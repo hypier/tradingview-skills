@@ -4,20 +4,34 @@ description: Create comprehensive industry and sector landscape reports covering
 
 ## Structured Data Source
 
-Use `tradingviewapi` to build the public-company and macro backbone of the sector report:
+Use hosted TradingView MCP to build the public-company and macro backbone of the sector report:
 
-- `GET /api/metadata/columnsets` and `GET /api/metadata/tabs?type=stocks` — available screen columns and market tabs
-- `GET /api/leaderboard/stocks?...` — sector-level peer pulls with valuation / profitability / performance columns
-- `GET /api/market-data/{symbol}` — per-company revenue, margins, valuation, beta, and current period context
-- `GET /api/market-data/{symbol}/analyst-recommendations` — consensus sentiment and price-target context
-- `GET /api/world-economy/indicators/{indicator}` — macro backdrop for cyclical / global sectors
+```
+tradingview_get_screener_filter_options(asset_type='stock', lang='en', ids=['sector'])
+tradingview_screen_assets(
+  asset_type='stock',
+  market='america',
+  lang='en',
+  range=[0, 100],
+  preset_fields=['overview', 'valuation', 'profitability', 'performance'],
+  filters={
+    'sector': { 'operation': 'in_range', 'value': ['<discovered sector enums>'] }
+  },
+  sort={'sortBy': 'market_cap_basic', 'sortOrder': 'desc'}
+)
+tradingview_get_market_data(symbol, category='all')
+tradingview_get_market_data(symbol, category='analyst_recommendations')
+tradingview_get_world_economy_indicators(indicator='full-year-gdp-growth', region='g20')
+```
+
+Do **not** use leaderboard `tab`/`columnset` as a sector filter. Discover exact sector strings first (`NASDAQ:AAPL` is `Electronic Technology`, not `Technology`). Leaderboard is only for ranked slices such as gainers.
 
 Web Search is still required for TAM, third-party market share, M&A precedent detail, private companies, and proprietary industry research.
 
 ## Execution Notes
 
-- For peer universes built from company names, resolve each name through `/api/search/market/{query}?filter=stock` and keep the resolved symbol as canonical.
-- When you need live price context, use `GET /api/quote/{symbol}?session=regular&fields=all`; quote metrics live under `data.data`.
+- For peer universes built from company names, resolve each name through `tradingview_search_market(query, filter='stock')` and keep the resolved symbol as canonical.
+- When you need live price context, use `tradingview_get_quote(symbol, session='regular', fields='all')`; quote metrics live under `data.data`.
 - Treat `data.current.fiscal_period_current` as a provider-side structured label. If a company's latest IR / SEC quarter naming differs, use the primary-source label in the sector write-up.
 
 ## Workflow
@@ -38,7 +52,7 @@ Web Search is still required for TAM, third-party market share, M&A precedent de
 - Forecast growth rate and key assumptions
 - Market segmentation (by product, geography, end market, customer type)
 
-Use `tradingviewapi` for public-company revenue growth and macro baselines; use external industry sources for TAM and non-public market sizing.
+Use MCP for public-company revenue growth and macro baselines; use external industry sources for TAM and non-public market sizing.
 
 **Industry Structure**
 - Fragmented vs. consolidated — top 5 market share
@@ -81,7 +95,7 @@ Build the comparison table from structured public-company data first, then layer
 - Recent M&A transaction multiples
 - How does the sector compare to the broader market?
 
-Current public-market multiples should come from `tradingviewapi`; precedent M&A multiples still need external deal research.
+Current public-market multiples should come from MCP; precedent M&A multiples still need external deal research.
 
 ### Step 5: Investment Implications
 

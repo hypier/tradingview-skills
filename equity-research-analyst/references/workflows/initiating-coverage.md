@@ -4,7 +4,7 @@ Produces institutional-grade first-time coverage reports (JPMorgan / Goldman Sac
 
 **Execution rule**: one task per user request. Verify prerequisites, deliver the specified output, then wait for the user to request the next task. Do not auto-chain. Do not create extra deliverables beyond those listed under each task.
 
-**Structured data**: pull numerics (financials, ratios, valuation, analyst consensus, dividends, credit ratings, IPO info, prices, technicals) from `tradingviewapi` before Web Search. See `../tradingviewapi.md` (Scenarios A & B) for the endpoint catalog and JSON-to-field mapping. Web Search + SEC EDGAR are still required for: business description deep-dive (10-K Item 1), risk factors (10-K Item 1A), management bios (DEF 14A + LinkedIn), segment/geographic breakdown (10-K/10-Q footnotes), industry research, transcripts, and original guidance wording.
+**Structured data**: pull numerics (financials, ratios, valuation, analyst consensus, dividends, credit ratings, IPO info, prices, technicals) from hosted TradingView MCP before Web Search. See `../tradingviewapi.md` (Scenarios A & B) for the tool catalog and JSON-to-field mapping. Web Search + SEC EDGAR are still required for: business description deep-dive (10-K Item 1), risk factors (10-K Item 1A), management bios (DEF 14A + LinkedIn), segment/geographic breakdown (10-K/10-Q footnotes), industry research, transcripts, and original guidance wording.
 
 ## Quick Navigation
 
@@ -308,8 +308,8 @@ Required from model:
   - Comparable companies data (Task 3 tab in same Excel file)
   - Valuation ranges (Task 3 tab in same Excel file)
 - **Required**: Structured market data
-  - Historical stock price data from `tradingviewapi` `/api/price/{symbol}`
-  - History arrays and valuation series from `tradingviewapi`
+  - Historical stock price data from `tradingview_get_ohlcv(symbol, timeframe='D')`
+  - History arrays and valuation series from `tradingview_get_market_data` `*_h[]` fields
 - **Optional**: External valuation history
   - Historical valuation multiples if the user wants a bespoke history methodology
 
@@ -321,7 +321,7 @@ This task requires outputs from all three previous tasks. Starting without them 
 - Task 1: Company research document (for 9 charts)
 - Task 2: Financial model with all 6 tabs (for 8 charts)
 - Task 3: Valuation tabs added to the model (for 6 charts)
-- `tradingviewapi` price / history access (external valuation history optional)
+- MCP OHLCV / history access (external valuation history optional)
 
 Do not attempt to create placeholder charts or skip charts due to missing data.
 
@@ -355,8 +355,8 @@ Required from Task 3:
 - [ ] Valuation ranges - for chart 32 ⭐
 
 Required from External Sources:
-- [ ] `tradingviewapi` historical stock price data available (for chart 01)
-- [ ] `tradingviewapi` history / valuation series available (for chart 34 base case)
+- [ ] `tradingview_get_ohlcv` historical stock price data available (for chart 01)
+- [ ] `tradingview_get_market_data` history / valuation series available (for chart 34 base case)
 - [ ] Optional external historical valuation multiples available (only if needed)
 ```
 

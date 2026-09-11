@@ -13,17 +13,12 @@ Track major events, analyze market impact, identify beneficiary stocks, and prov
 Call calendar based on event type (time span not exceeding 40 days):
 
 ```
-# Earnings calendar
-tradingview_get_calendar(type='earnings', from=now, to=now+14days, market='china')
-
-# Dividend calendar
-tradingview_get_calendar(type='revenue', from=now, to=now+14days, market='china')
-
-# Economic data calendar
-tradingview_get_calendar(type='economic', from=now, to=now+7days, market='america,china')
-
-# IPO calendar
-tradingview_get_calendar(type='ipo', from=now, to=now+14days, market='china')
+now = Math.floor(Date.now() / 1000)
+# integers only; never pass the strings "now" or "now+14days"; max span 40 days
+tradingview_get_calendar(type='earnings', from=now, to=now+14*86400, market='america')
+tradingview_get_calendar(type='revenue', from=now, to=now+14*86400, market='america')
+tradingview_get_calendar(type='economic', from=now, to=now+7*86400, market='america,china')
+tradingview_get_calendar(type='ipo', from=now, to=now+14*86400, market='america')
 ```
 
 ### Step 2: Get Related News
@@ -64,7 +59,7 @@ For industry events, also find same-sector stocks via leaderboard:
 ```
 tradingview_get_leaderboard(
   asset_type='stocks', tab='gainers',
-  market_code='china', columnset='overview', count=50
+  market_code='america', columnset='overview', count=50
 )
 ```
 

@@ -59,18 +59,20 @@ See `technical-analysis.md` for detailed scoring methodology.
 ### Step 5: Get Related News
 
 ```
-tradingview_get_news(symbol=symbol, lang="zh-Hans", limit=5)
+tradingview_get_news(symbol=symbol, lang="en", limit=5)
 ```
 
 Get details for important news:
 ```
-tradingview_get_news_detail(news_id, lang="zh-Hans")
+tradingview_get_news_detail(news_id, lang="en")
 ```
 
 ### Step 6: Query Upcoming Events
 
 ```
-tradingview_get_calendar(type="earnings", from=now, to=now+30days, market="china")
+now = Math.floor(Date.now() / 1000)
+to = now + 30 * 86400  # integers only; max span 40 days
+tradingview_get_calendar(type="earnings", from=now, to=to, market="america")
 tradingview_get_price_events(symbol, timeframe='D', range=120)
 ```
 

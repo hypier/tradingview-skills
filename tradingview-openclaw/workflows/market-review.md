@@ -22,25 +22,25 @@ Call in parallel to get multi-dimensional data:
 # Gainers
 tradingview_get_leaderboard(
   asset_type='stocks', tab='gainers',
-  market_code='china', columnset='overview', count=50
+  market_code='america', columnset='overview', count=50
 )
 
 # Losers
 tradingview_get_leaderboard(
   asset_type='stocks', tab='losers',
-  market_code='china', columnset='overview', count=50
+  market_code='america', columnset='overview', count=50
 )
 
 # Most active (highest volume)
 tradingview_get_leaderboard(
   asset_type='stocks', tab='active',
-  market_code='china', columnset='overview', count=30
+  market_code='america', columnset='overview', count=30
 )
 
 # Unusual volume
 tradingview_get_leaderboard(
   asset_type='stocks', tab='unusual-volume',
-  market_code='china', columnset='overview', count=30
+  market_code='america', columnset='overview', count=30
 )
 ```
 

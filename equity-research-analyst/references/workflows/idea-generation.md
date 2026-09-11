@@ -4,22 +4,33 @@ description: Systematic stock screening and investment idea sourcing. Combines q
 
 ## Structured Data Source
 
-Use `tradingviewapi` to source and rank candidates before doing deeper fundamental work:
+Use hosted TradingView MCP to source and rank candidates before doing deeper fundamental work:
 
-- `GET /api/leaderboard/stocks` — screen starting universe by gainers / losers / high dividend / 52-week highs / volatility
-- `GET /api/metadata/tabs?type=stocks` and `GET /api/metadata/columnsets` — discover available leaderboard slices
-- `GET /api/market-data/{symbol}` — validate revenue growth, margins, ROIC, leverage, and valuation
-- `GET /api/quote/{symbol}?session=regular&fields=all` and `GET /api/ta/{symbol}` — trading context and momentum confirmation
-- `GET /api/ideas/hot` and `GET /api/ideas/list/{symbol}` — crowd positioning and community idea flow
-- `GET /api/calendar/ipo?from=&to=` — recent / upcoming IPO names for special-situation work
+```
+from = Math.floor(Date.now() / 1000)
+to = from + 30 * 86400
+
+tradingview_get_metadata(type='tabs', asset_type='stocks')
+tradingview_get_leaderboard(asset_type='stocks', tab='gainers', market_code='america', count=50)
+tradingview_get_screener_filter_options(asset_type='stock', lang='en', ids=['sector'])
+tradingview_screen_assets(...)  # sector / factor screens — see Scenario E
+tradingview_get_market_data(symbol, category='all')
+tradingview_get_quote(symbol, session='regular', fields='all')
+tradingview_get_ta(symbol, include_indicators=true)
+tradingview_get_ideas_hot(lang='en')
+tradingview_get_ideas_by_symbol(symbol, lang='en')
+tradingview_get_calendar(type='ipo', from=from, to=to, market='america')
+```
+
+Leaderboard is for ranked slices (gainers, losers, high-dividend). It is **not** a sector filter. For "tech stocks", "cheap banks", or similar, discover sector/industry enums then call `tradingview_screen_assets`. Never pass empty calendar `from`/`to`.
 
 Web Search is still required for insider buying, short interest, lockup terms, activist filings, and other event-driven / ownership data not present in the API.
 
 ## Execution Notes
 
-- When screening by company name, resolve each candidate to `EXCHANGE:TICKER` with `/api/search/market/{query}?filter=stock` before validation.
-- Use the resolved symbol as canonical. Do not depend on `data.company.ticker` or `data.company.exchange` from `/api/market-data/{symbol}` to recover the primary listing.
-- For trade context, prefer `GET /api/quote/{symbol}?session=regular&fields=all`; quote metrics are nested under `data.data`.
+- When screening by company name, resolve each candidate to `EXCHANGE:TICKER` with `tradingview_search_market(query, filter='stock')` before validation.
+- Use the resolved symbol as canonical. Do not depend on `data.company.ticker` or `data.company.exchange` from `tradingview_get_market_data` to recover the primary listing.
+- For trade context, prefer `tradingview_get_quote(symbol, session='regular', fields='all')`; quote metrics are nested under `data.data`.
 
 ## Workflow
 
@@ -35,7 +46,7 @@ Ask the user for parameters:
 
 ### Step 2: Quantitative Screens
 
-Start with `leaderboard` / `metadata` to pull a candidate list, then validate each shortlisted symbol with `/api/market-data/{symbol}`, `/api/quote/{symbol}?session=regular&fields=all`, and `/api/ta/{symbol}`.
+Start with leaderboard (ranked slices) or `tradingview_screen_assets` (sector / factor filters) to pull a candidate list, then validate each shortlisted symbol with `tradingview_get_market_data`, `tradingview_get_quote`, and `tradingview_get_ta(..., include_indicators=true)`. Keep the shortlist to 10–20 names.
 
 Run screens based on the style:
 
@@ -79,7 +90,7 @@ Run screens based on the style:
 - Activist involvement
 - Management changes at underperforming companies
 
-Use `tradingviewapi` to source recent IPO names and public-market context, then supplement with external event / filing work.
+Use `tradingview_get_calendar(type='ipo', from, to)` to source recent IPO names and public-market context, then supplement with external event / filing work.
 
 ### Step 3: Thematic Sweep
 

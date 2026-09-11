@@ -35,10 +35,12 @@ No need to call metadata every time, here are common values:
 | valuation | PE, PB, PS, EV/EBITDA | Valuation screening |
 | dividends | Dividend yield, payout ratio, ex-dividend date | High dividend strategy |
 | profitability | ROE, ROA, gross margin, net margin | Profitability screening |
-| income_statement | Revenue, net profit, EPS | Financial analysis |
-| balance_sheet | Total assets, debt ratio, current ratio | Financial health |
-| cash_flow | Operating/investing/financing cash flow | Cash flow analysis |
-| technical | RSI, Beta, SMA, ATR | Technical overview |
+| incomeStatement | Revenue, net profit, EPS | Financial analysis |
+| balanceSheet | Total assets, debt ratio, current ratio | Financial health |
+| cashFlow | Operating/investing/financing cash flow | Cash flow analysis |
+| technicals | RSI, Beta, SMA | Technical overview |
+
+Screener `preset_fields` use snake_case (`income_statement`, `technicals`). Leaderboard `columnset` uses camelCase above.
 
 ---
 

@@ -4,21 +4,29 @@ description: Draft concise morning meeting notes summarizing overnight developme
 
 ## Structured Data Source
 
-Use `tradingviewapi` for the overnight numeric and event scan:
+Use hosted TradingView MCP for the overnight numeric and event scan:
 
-- `GET /api/news/stock?lang=en&market_country=US` — US single-name headlines
-- `GET /api/news/economic?lang=en` — macro headlines
-- `GET /api/news?symbol={symbol}` — company-specific follow-up headlines
-- `GET /api/quote/{symbol}?session=regular&fields=all` or `POST /api/quote/batch` — pre/post-market move, volume, session status
-- `GET /api/calendar/economic?from=&to=&market=america` — today's macro calendar
-- `GET /api/calendar/earnings?from=&to=&market=america` — today's earnings slate
+```
+from = Math.floor(Date.now() / 1000)
+to = from + 2 * 86400
+
+tradingview_get_news(market='stock', lang='en', market_country='US')
+tradingview_get_news(market='economic', lang='en')
+tradingview_get_news(symbol=symbol, lang='en', market='stock', market_country='US')
+tradingview_get_quote(symbol, session='premarket', fields='all')
+# or tradingview_get_quote_batch for a coverage list
+tradingview_get_calendar(type='economic', from=from, to=to, market='america')
+tradingview_get_calendar(type='earnings', from=from, to=to, market='america')
+```
+
+Never pass empty calendar `from`/`to`. Compute Unix-seconds integers; max span 40 days.
 
 Web Search remains necessary for rumors, full article context, and event types not covered by the structured feed.
 
 ## Execution Notes
 
-- If you start from company names, resolve symbols first via `/api/search/market/{query}?filter=stock` and keep the resolved `EXCHANGE:TICKER` as canonical.
-- Prefer `GET /api/quote/{symbol}?session=regular&fields=all` or the batch equivalent for overnight / pre-market context. The payload shape is nested, with key quote fields under `data.data`.
+- If you start from company names, resolve symbols first via `tradingview_search_market(query, filter='stock')` and keep the resolved `EXCHANGE:TICKER` as canonical.
+- Prefer `tradingview_get_quote` or `tradingview_get_quote_batch` for overnight / pre-market context. The payload shape is nested, with key quote fields under `data.data`.
 - Treat venue-like exchange fields from quote-style payloads as market-data context, not definitive primary-listing metadata.
 
 ## Workflow
@@ -28,8 +36,8 @@ Web Search remains necessary for rumors, full article context, and event types n
 Scan for relevant events across coverage universe:
 
 **Earnings & Guidance**
-- Any coverage companies reporting overnight or pre-market? Start with `/api/calendar/earnings`
-- Earnings surprises (beat/miss on revenue, EPS, key metrics) from `tradingviewapi` + latest release
+- Any coverage companies reporting overnight or pre-market? Start with `tradingview_get_calendar(type='earnings', from, to, market='america')`
+- Earnings surprises (beat/miss on revenue, EPS, key metrics) from MCP + latest release
 - Guidance changes (raised, lowered, maintained) from latest release / transcript
 
 **News & Events**
@@ -37,10 +45,10 @@ Scan for relevant events across coverage universe:
 - Management changes
 - Product launches or regulatory decisions
 - Analyst upgrades/downgrades from competitors
-- Macro data or policy changes affecting the sector from `/api/news/economic` and `/api/calendar/economic`
+- Macro data or policy changes affecting the sector from `tradingview_get_news(market='economic')` and `tradingview_get_calendar(type='economic', from, to, market='america')`
 
 **Market Context**
-- Overnight futures / pre-market moves from `/api/quote/{symbol}?session=regular&fields=all` or `POST /api/quote/batch`
+- Overnight futures / pre-market moves from `tradingview_get_quote` or `tradingview_get_quote_batch`
 - Sector ETF performance
 - Relevant commodity or currency moves
 - Key economic data releases today
@@ -89,7 +97,7 @@ If a coverage company reported, provide a quick reaction:
 
 **Action**: Maintain / Upgrade / Downgrade rating? Adjust price target?
 
-Use `tradingviewapi` for the actuals, quote reaction, and calendar timestamps; use the release / transcript for exact guidance wording.
+Use MCP for the actuals, quote reaction, and calendar timestamps; use the release / transcript for exact guidance wording.
 
 ### Step 4: Output
 

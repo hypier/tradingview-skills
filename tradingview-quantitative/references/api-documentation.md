@@ -373,10 +373,12 @@ The following tables show all available asset types, their tabs, and column sets
 | valuation | Valuation | 10 |
 | dividends | Dividends | 9 |
 | profitability | Profitability | 12 |
-| income_statement | Income Statement | 10 |
-| balance_sheet | Balance Sheet | 10 |
-| cash_flow | Cash Flow | 9 |
-| technical | Technical | 14 |
+| incomeStatement | Income Statement | 10 |
+| balanceSheet | Balance Sheet | 10 |
+| cashFlow | Cash Flow | 9 |
+| technicals | Technicals | 14 |
+
+Use these exact IDs. `income_statement`, `balance_sheet`, `cash_flow`, and `technical` are invalid for leaderboard. Screener preset ids are separate and stay snake_case (`income_statement`, `technicals`).
 
 ### Indices (11 tabs, 3 column sets)
 
@@ -400,7 +402,7 @@ The following tables show all available asset types, their tabs, and column sets
 |---------------|-------|
 | overview | Overview |
 | performance | Performance |
-| technical | Technical |
+| technicals | Technicals |
 
 ### Cryptocurrencies (20 tabs, 3 column sets)
 
@@ -433,7 +435,7 @@ The following tables show all available asset types, their tabs, and column sets
 |---------------|-------|
 | overview | Overview |
 | performance | Performance |
-| technical | Technical |
+| technicals | Technicals |
 
 ### Futures (7 tabs, 2 column sets)
 
@@ -475,7 +477,7 @@ The following tables show all available asset types, their tabs, and column sets
 |---------------|-------|
 | overview | Overview |
 | performance | Performance |
-| technical | Technical |
+| technicals | Technicals |
 
 ### Government Bonds (17 tabs, 2 column sets)
 
@@ -574,7 +576,7 @@ The following tables show all available asset types, their tabs, and column sets
 |---------------|-------|
 | overview | Overview |
 | performance | Performance |
-| technical | Technical |
+| technicals | Technicals |
 
 ## Market Codes
 

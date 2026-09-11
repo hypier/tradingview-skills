@@ -30,11 +30,13 @@ Extract: Current price, 52-week high/low, volume, bid/ask.
 tradingview_get_ta(symbol, include_indicators=true)
 ```
 
-Key indicators for stop loss calculation:
+TA `include_indicators=true` returns RSI, MACD, SMA/EMA, pivots, ADX, Stochastic. It does **not** return ATR. Compute ATR from the daily OHLCV series in Step 1.
+
+Key levels for stop loss:
 - **Pivot Points**: Support/resistance levels (S1/S2/S3, R1/R2/R3)
 - **SMA/EMA**: Moving average support (SMA20/50/200)
-- **ATR**: Average True Range (for dynamic stop loss)
-- **Beta**: Relative market volatility (for position adjustment)
+- **ATR (from OHLCV)**: Average True Range of high/low/close, typically 14 periods
+- **Beta**: Use quote `beta_1_year` when present; otherwise skip
 
 ### Step 4: Calculate Volatility
 

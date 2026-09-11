@@ -4,15 +4,20 @@ description: Build and maintain a calendar of upcoming catalysts across a covera
 
 ## ⭐ Structured Data Source
 
-Use `tradingviewapi` for structured catalyst data (see `../tradingviewapi.md` Scenario C):
+Use hosted TradingView MCP for structured catalyst data (see `../tradingviewapi.md` Scenario C):
 
-- `GET /api/calendar/earnings?from=&to=&market=america` — upcoming earnings calendar (includes consensus EPS and revenue estimates)
-- `GET /api/calendar/revenue?from=&to=` — dividend calendar
-- `GET /api/calendar/ipo?from=&to=` — IPO calendar
-- `GET /api/calendar/economic?from=&to=&market=america,china` — macro events (FOMC / CPI / NFP)
-- `GET /api/market-data/{symbol}` — next earnings date for a single stock (`indicators.earnings_release_next_date`)
+```
+from = Math.floor(Date.now() / 1000)
+to = from + 30 * 86400   # required Unix-seconds integers; span ≤ 40 days
 
-Note: `from` / `to` are Unix seconds; a single query window must be ≤ 40 days. Web Search is still needed for unstructured catalysts such as product launches, FDA decisions, M&A milestones, management transitions, and lockup expirations.
+tradingview_get_calendar(type='earnings', from=from, to=to, market='america')
+tradingview_get_calendar(type='revenue', from=from, to=to, market='america')
+tradingview_get_calendar(type='ipo', from=from, to=to, market='america')
+tradingview_get_calendar(type='economic', from=from, to=to, market='america')
+tradingview_get_market_data(symbol, category='indicators')  # earnings_release_next_date
+```
+
+Never pass empty `from`/`to`, `"now"`, or date labels. Use `market='america,china'` for economic events only when the user asked for China macro. Web Search is still needed for unstructured catalysts such as product launches, FDA decisions, M&A milestones, management transitions, and lockup expirations.
 
 ## Workflow
 

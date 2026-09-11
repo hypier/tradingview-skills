@@ -22,44 +22,44 @@ Call in parallel to get multi-dimensional data:
 # Gainers
 tradingview_get_leaderboard(
   asset_type='stocks', tab='gainers',
-  market_code='china', columnset='overview', count=50
+  market_code='america', columnset='overview', count=50
 )
 
 # Losers
 tradingview_get_leaderboard(
   asset_type='stocks', tab='losers',
-  market_code='china', columnset='overview', count=50
+  market_code='america', columnset='overview', count=50
 )
 
 # Most active (highest volume)
 tradingview_get_leaderboard(
   asset_type='stocks', tab='active',
-  market_code='china', columnset='overview', count=30
+  market_code='america', columnset='overview', count=30
 )
 
 # Unusual volume
 tradingview_get_leaderboard(
   asset_type='stocks', tab='unusual-volume',
-  market_code='china', columnset='overview', count=30
+  market_code='america', columnset='overview', count=30
 )
 ```
 
 ### Step 3: Get Market News
 
 ```
-tradingview_get_news(market='stock', market_country='CN', lang='zh-Hans', limit=10)
+tradingview_get_news(market='stock', market_country='US', lang='en', limit=10)
 ```
 
 Get details for important news:
 ```
-tradingview_get_news_detail(news_id, lang='zh-Hans')
+tradingview_get_news_detail(news_id, lang='en')
 ```
 
 ### Step 4: Get Index Quotes (Optional)
 
 ```
 tradingview_get_quote_batch(
-  symbols=["SSE:000001", "SZSE:399001", "SZSE:399006"]  # Shanghai/Shenzhen/ChiNext
+  symbols=["AMEX:SPY", "NASDAQ:QQQ", "AMEX:DIA"]  # S&P 500 / Nasdaq-100 / Dow
 )
 ```
 
@@ -122,12 +122,14 @@ Correlate companies/industries in news with gainers/losers:
 
 ## Example
 
-**User**: "How was the A-share market today?"
+**User**: "Generate today's market review for US stocks"
 
 **Execution**:
-1. `tradingview_get_metadata(type='markets')` → china
-2. `tradingview_get_leaderboard` × 4 (gainers/losers/active/unusual-volume)
-3. `tradingview_get_news(market_country='CN', lang='zh-Hans')` + details
-4. `tradingview_get_quote_batch` → Index quotes
+1. `tradingview_get_metadata(type='markets')` → america
+2. `tradingview_get_leaderboard` × 4 (gainers/losers/active/unusual-volume) with `market_code='america'`
+3. `tradingview_get_news(market_country='US', lang='en')` + details
+4. `tradingview_get_quote_batch` → SPY / QQQ / DIA
 5. Sector categorization → Hot sector identification → News correlation
 6. Generate review report
+
+For A-shares, use `market_code='china'`, `market_country='CN'`, and CSI index symbols instead.
