@@ -55,7 +55,7 @@ If sources disagree, trust this file for how to call data. Use `examples/` only 
 
 No API key is required when hosted MCP is connected.
 
-- Console: add `https://mcp.tradingviewapi.com/mcp` with `"type": "http"` and sign in.
+- Console: add `https://mcp.tradingviewapi.com/mcp` with `"type": "http"` and sign in. Install: https://www.tradingviewapi.com/mcp/
 - Older clients: `"type": "streamable-http"`.
 - RapidAPI without Console: `POST https://api.tradingviewapi.com/api/mcp/generate` and paste `exampleConfig` (JWT).
 - Local OpenAPI MCP (`npx -y @ivotoby/openapi-mcp-server`) is the wrong tool set. Use `tradingview-api-integration` instead of this skill.
@@ -69,7 +69,7 @@ If `tradingview_*` tools are missing, stop and tell the user to connect MCP. Do 
 | Need | Tool | Key arguments |
 |---|---|---|
 | Resolve a name to a ticker | `tradingview_search_market` | query, filter=`stock` |
-| Company / financials / consensus | `tradingview_get_market_data` | symbol, category (`all`, `company`, `ipo`, `ttm`, `current`, `indicators`, `financials_quarterly`, `financials_annual`, `history_quarterly`, `history_annual`, `dividend`, `analyst_recommendations`, `enterprise_value`, `credit_ratings`, `cash_flow`) |
+| Company / financials / consensus | `tradingview_get_market_data` | symbol, category (`all`, `company`, `ipo`, `ttm`, `current`, `overview`, `indicators`, `financials_quarterly`, `financials_annual`, `history_quarterly`, `history_annual`, `dividend`, `analyst_recommendations`, `forecast`, `enterprise_value`, `credit_ratings`, `cash_flow`, `related_bonds`, `related_etfs`) |
 | Live quote | `tradingview_get_quote` / `tradingview_get_quote_batch` | symbol, session=`regular`, fields=`all` |
 | Real OHLCV for charts | `tradingview_get_ohlcv` | symbol, timeframe=`D`, range=252 |
 | Technicals | `tradingview_get_ta` | symbol, include_indicators=`true` for RSI/MACD/MAs |
@@ -79,7 +79,7 @@ If `tradingview_*` tools are missing, stop and tell the user to connect MCP. Do 
 | Sector / factor screens | `tradingview_get_screener_filter_options` then `tradingview_screen_assets` | asset_type=`stock`, market, filters, preset_fields |
 | Community ideas | `tradingview_get_ideas_hot` / `tradingview_get_ideas_by_symbol` / `tradingview_get_minds` | lang=`en` |
 | Macro series | `tradingview_get_world_economy_indicators` | indicator slug, region |
-| Parameter dictionaries | `tradingview_get_metadata` | type=`markets` / `tabs` / `columnsets` / `languages` / `exchanges` |
+| Parameter dictionaries | `tradingview_get_metadata` | type=`markets` / `tabs` / `columnsets` / `languages` / `exchanges` / `screener_filters` |
 
 Call `tradingview_get_metadata` before a leaderboard when you are unsure of `market_code`, `tab`, or `columnset`. Common US defaults: `market_code='america'`, `market_country='US'`, `lang='en'`.
 

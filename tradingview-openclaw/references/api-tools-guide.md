@@ -51,7 +51,7 @@ Screener `preset_fields` use snake_case (`income_statement`, `technicals`). Lead
 ```
 1. search_market(query="company name") → Get accurate symbol
 2. get_quote(symbol) → Real-time price, change, volume
-3. get_price(symbol, timeframe='D', range=120) → Daily K-line data
+3. get_ohlcv(symbol, timeframe='D', range=120) → Real daily Japanese candles (do not use get_price; that defaults to Heikin-Ashi)
 4. get_ta(symbol, include_indicators=true) → Detailed technical indicators
 5. get_news(symbol=symbol, lang='zh-Hans') → Related news
 6. get_calendar(type='earnings', from/to) → Recent earnings dates
@@ -66,16 +66,16 @@ Screener `preset_fields` use snake_case (`income_statement`, `technicals`). Lead
 4. get_leaderboard(same, columnset='valuation') → Valuation data
 5. get_leaderboard(same, columnset='profitability') → Profitability data
 6. For Top candidates: get_ta(symbol, include_indicators=true) → Technical verification
-7. For Top candidates: get_price(symbol, timeframe='D', range=60) → K-line verification
+7. For Top candidates: get_ohlcv(symbol, timeframe='D', range=60) → K-line verification
 ```
 
 ### Pattern 3: Multi-Timeframe Trend Confirmation
 
 ```
-1. get_price(symbol, timeframe='M', range=24) → Monthly trend
-2. get_price(symbol, timeframe='W', range=52) → Weekly trend
-3. get_price(symbol, timeframe='D', range=120) → Daily trend
-4. get_price(symbol, timeframe='60', range=100) → 60-minute details
+1. get_ohlcv(symbol, timeframe='M', range=24) → Monthly trend
+2. get_ohlcv(symbol, timeframe='W', range=52) → Weekly trend
+3. get_ohlcv(symbol, timeframe='D', range=120) → Daily trend
+4. get_ohlcv(symbol, timeframe='60', range=100) → 60-minute details
 5. get_ta(symbol, include_indicators=true) → Multi-period TA signals
 ```
 
@@ -114,7 +114,16 @@ Signal consistency: Monthly/weekly/daily trend direction consistent → High con
 
 ## Key Parameter Description
 
-### get_price Timeframe Selection
+### get_ohlcv vs get_price
+
+| Need | Series |
+|------|--------|
+| Real OHLC for returns, stops, targets, backtests | `get_ohlcv` (Japanese candles) |
+| Heikin-Ashi or Range visualization | `get_price` with `type='HeikinAshi'` or `Range` |
+
+`get_price` **defaults to HeikinAshi**. Do not treat it as Japanese OHLCV.
+
+### Timeframe Selection
 
 | timeframe | Meaning | Typical range | Use Cases |
 |-----------|---------|--------------|-----------|
@@ -126,11 +135,6 @@ Signal consistency: Monthly/weekly/daily trend direction consistent → High con
 | D | Daily | 60-250 | Medium-term analysis |
 | W | Weekly | 52-104 | Medium-long term analysis |
 | M | Monthly | 24-60 | Long-term trend |
-
-### get_price Chart Types
-
-- Default: Standard K-line
-- `type='HeikinAshi'`: Heikin-Ashi, filters noise, clearer trend direction
 
 ### get_ta include_indicators Return Fields
 
@@ -171,18 +175,18 @@ const twoWeeksLater = now + 14 * 24 * 60 * 60;
 
 ## Multi-Asset Type Support
 
-The API supports 8 asset types, each with different tabs and columnsets:
+The API supports 8 asset types. Fetch exact tabs/columnsets from metadata rather than hardcoding counts.
 
-| Asset Type | asset_type | Tabs Count | Columnsets | Requires market_code |
-|------------|-----------|------------|------------|-------------------|
-| Stocks | stocks | 25 | 9 types (including fundamentals) | Yes |
-| Indices | indices | 11 | 3 types | No |
-| Cryptocurrency | crypto | 20 | 3 types | No |
-| Futures | futures | 7 | 2 types | No |
-| Forex | forex | 10 | 3 types | No |
-| Government Bonds | bonds | 17 | 2 types | No |
-| Corporate Bonds | corporate_bonds | 6 | 1 type | No |
-| ETF/Funds | etfs | 40 | 3 types | No |
+| Asset Type | asset_type | Columnsets | Requires market_code |
+|------------|-----------|------------|-------------------|
+| Stocks | stocks | overview, performance, valuation, dividends, profitability, incomeStatement, balanceSheet, cashFlow, technicals | Yes |
+| Indices | indices | overview, performance, technicals | No |
+| Cryptocurrency | crypto | overview, performance, valuation, addresses, transactions, sentiment, technicals | No |
+| Futures | futures | overview, performance, technicals | No |
+| Forex | forex | overview, performance, technicals | No |
+| Government Bonds | bonds | none | No |
+| Corporate Bonds | corporate_bonds | none | No |
+| ETF/Funds | etfs | overview, performance, extendedHours, fundFlows, dividends, navPerformance, holdings, risk, technicals | No |
 
 ### Crypto-Specific Tabs
 

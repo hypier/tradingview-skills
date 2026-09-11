@@ -5,9 +5,12 @@ Access real-time market data from TradingView with our comprehensive REST API an
 ## Available Endpoints
 
 ### 📊 Price Data
-Historical and real-time OHLCV (Open, High, Low, Close, Volume) candlestick data for charting and analysis.
-- **GET /api/price/{symbol}** - Get OHLCV candlestick data with customizable timeframes (1, 5, 15, 30, 60, 240, D, W, M)
-- **POST /api/price/batch** - Fetch candlestick data for multiple symbols in one request (max 10)
+Historical and real-time OHLCV candlestick data.
+- **GET /api/price/ohlcv/{symbol}** — Japanese candles for real prices / returns / backtests
+- **POST /api/price/ohlcv/batch** — Japanese candles, max 10
+- **GET /api/price/{symbol}** — chart styles; **default type is HeikinAshi**, not Japanese. Pass `type=Japanese` or use `/ohlcv`
+- **POST /api/price/batch** — same defaults as GET, max 10
+- **GET /api/price/{symbol}/events** — earnings/dividend/split markers
 
 ### 💹 Real-time Quotes
 Live market quotes with current prices, bid/ask spreads, volume, and price changes for real-time trading decisions.

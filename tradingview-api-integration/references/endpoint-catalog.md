@@ -14,17 +14,20 @@ Complete reference of every endpoint: parameters, defaults, enums, and where par
 3. [Real-time Quote `/api/quote`](#2-real-time-quote)
 4. [Market Data (fundamentals) `/api/market-data`](#3-market-data)
 5. [Market Search `/api/search`](#4-market-search)
-6. [Technical Analysis `/api/ta`](#5-technical-analysis)
-7. [News `/api/news`](#6-news)
-8. [Community Ideas `/api/ideas`](#7-community-ideas)
-9. [Leaderboards `/api/leaderboard`](#8-leaderboards)
-10. [Screener `/api/screener`](#9-screener)
-11. [Metadata `/api/metadata`](#10-metadata)
-12. [World Economy `/api/world-economy`](#11-world-economy)
-13. [Economic Calendar `/api/calendar`](#12-economic-calendar)
-14. [Logo Proxy `/logo`](#13-logo-proxy)
-15. [Token & MCP](#14-token--mcp)
-16. [Realtime: SSE & WebSocket](#15-realtime-sse--websocket)
+6. [Symbol Catalog `/api/symbols`](#5-symbol-catalog)
+7. [Technical Analysis `/api/ta`](#6-technical-analysis)
+8. [News `/api/news`](#7-news)
+9. [Community Ideas `/api/ideas`](#8-community-ideas)
+10. [Leaderboards `/api/leaderboard`](#9-leaderboards)
+11. [Screener `/api/screener`](#10-screener)
+12. [Metadata `/api/metadata`](#11-metadata)
+13. [World Economy `/api/world-economy`](#12-world-economy)
+14. [Economic Calendar `/api/calendar`](#13-economic-calendar)
+15. [Logo Proxy `/logo`](#14-logo-proxy)
+16. [Token & MCP](#15-token--mcp)
+17. [Realtime: SSE & WebSocket](#16-realtime-sse--websocket)
+
+Hosted MCP (25 `tradingview_*` tools): [mcp-tools.md](mcp-tools.md). Install / OAuth / JWT: [examples/10-mcp.md](examples/10-mcp.md) and https://www.tradingviewapi.com/mcp/.
 
 ---
 
@@ -40,13 +43,17 @@ Complete reference of every endpoint: parameters, defaults, enums, and where par
 
 | Name | Values |
 |------|--------|
-| `timeframe` / `interval` | `1`, `5`, `15`, `30`, `60`, `240`, `D`, `W`, `M` (minutes / Day / Week / Month) |
-| chart `type` | `HeikinAshi`, `Range` (optional) |
+| `timeframe` | `1`, `5`, `15`, `30`, `60`, `240`, `D`, `W`, `M` (minutes / Day / Week / Month) |
+| TA `interval` | `1`, `5`, `15`, `60`, `120`, `240`, `1D`, `1W`, `1M` (aliases `1h`/`2h`/`4h`) |
+| chart `type` | `HeikinAshi` (**default on `/api/price`**), `Japanese`, `Range` |
+| price `adjustment` | `splits` (default), `dividends` (alias query key `adj`) |
 | quote `session` | `regular` (default), `extended`, `premarket`, `postmarket` |
+| quote `fields` | `all` (default), `price`, `enhanced`, or a comma-separated field list |
 | search `filter` | `stock`, `crypto`, `forex`, `futures`, `index`, `funds`, `bond`, `options` (empty = all) |
+| symbols catalog `type` | `stock`, `fund`, `dr`, `bond`, `futures`, `forex`, `spot`, `swap`, `structured` |
 | world-economy `region` | `g20` (default), `world`, `north-america`, `europe`, `middle-east-africa`, `latin-america`, `asia-pacific` |
 | screener `asset_type` | `stock`, `crypto`, `etf`, `bond`, `cex`, `dex` |
-| `lang` | 19 codes: `en`, `zh_CN`, `zh_TW`, `de`, `fr`, `es`, `it`, `pl`, `tr`, `ru`, `pt`, `id`, `ms`, `th`, `vi`, `ja`, `ko`, `ar`, `he` |
+| `lang` | REST metadata: `en`, `zh_CN`, `zh_TW`, `de`, `fr`, `es`, `it`, `pl`, `tr`, `ru`, `pt`, `id`, `ms`, `th`, `vi`, `ja`, `ko`, `ar`, `he`. News/MCP also accept `zh-Hans`. |
 
 ### Metadata cross-reference (where parameter values come from)
 
@@ -70,28 +77,70 @@ Complete reference of every endpoint: parameters, defaults, enums, and where par
 
 Examples: `examples/01-price-data.md`
 
-### `GET /api/price/{symbol}`
+**Chart-type trap:** `GET /api/price/{symbol}` defaults to **HeikinAshi**, not Japanese candles. For real OHLC (returns, stops, backtests, pattern levels) use `/api/price/ohlcv/{symbol}` or pass `type=Japanese`. MCP: `tradingview_get_ohlcv` vs `tradingview_get_price`.
 
-Historical candlesticks (OHLCV) for one symbol.
+### `GET /api/price/ohlcv/{symbol}` — Japanese candles (preferred)
+
+Always Japanese OHLCV. No `type` parameter.
 
 | Param | In | Required | Default | Notes |
 |-------|----|----------|---------|-------|
 | `symbol` | path | yes | — | `EXCHANGE:TICKER` |
 | `timeframe` | query | no | `5` | see timeframe enum |
-| `range` | query | no | `10` | number of candles; positive = into the past |
-| `to` | query | no | — | Unix seconds; anchor for historical query |
-| `type` | query | no | — | `HeikinAshi` or `Range` |
+| `range` | query | no | `10` | max 500; with `to` looks backward; with `from` looks forward |
+| `from` | query | no | — | Unix seconds; start time (forward page). **Wins over `to` if both set** |
+| `to` | query | no | — | Unix seconds; end time (backward page) |
+| `adjustment` | query | no | `splits` | `splits` or `dividends` (alias `adj`) |
+| `strictTo` | query | no | `false` | REST only; not on MCP |
+
+MCP: `tradingview_get_ohlcv`.
+
+### `POST /api/price/ohlcv/batch`
+
+1–10 requests. Same fields per item as the GET (`symbol` required).
+
+```json
+{ "requests": [ { "symbol": "BINANCE:BTCUSDT", "timeframe": "60", "range": 20, "adjustment": "splits" } ] }
+```
+
+MCP: `tradingview_get_ohlcv_batch`.
+
+### `GET /api/price/{symbol}` — chart styles (HeikinAshi default)
+
+| Param | In | Required | Default | Notes |
+|-------|----|----------|---------|-------|
+| `symbol` | path | yes | — | `EXCHANGE:TICKER` |
+| `timeframe` | query | no | `5` | see timeframe enum |
+| `range` | query | no | `10` | max 500 |
+| `from` | query | no | — | Unix seconds; wins over `to` |
+| `to` | query | no | — | Unix seconds |
+| `type` | query | no | `HeikinAshi` | `HeikinAshi`, `Japanese`, or `Range` |
+| `adjustment` | query | no | `splits` | `splits` or `dividends` (alias `adj`) |
 | `inputs` | query | no | — | JSON string of chart inputs |
+
+MCP: `tradingview_get_price`.
 
 ### `POST /api/price/batch`
 
-Up to 10 symbols per request.
+Up to 10 symbols per request. Same fields as GET `/api/price/{symbol}` (`symbol` required). Default `type` is still HeikinAshi.
 
 ```json
-{ "requests": [ { "symbol": "BINANCE:BTCUSDT", "timeframe": "60", "range": 20 } ] }
+{ "requests": [ { "symbol": "BINANCE:BTCUSDT", "timeframe": "60", "range": 20, "type": "Japanese" } ] }
 ```
 
-Each item supports the same fields as the GET version (`symbol` required).
+MCP: `tradingview_get_price_batch`.
+
+### `GET /api/price/{symbol}/events`
+
+Earnings, dividend, and split markers aligned to candles.
+
+| Param | In | Required | Default | Notes |
+|-------|----|----------|---------|-------|
+| `symbol` | path | yes | — | |
+| `timeframe` | query | no | `D` | |
+| `range` | query | no | `100` | max 500 |
+
+MCP: `tradingview_get_price_events`.
 
 ---
 
@@ -107,7 +156,7 @@ Real-time quote with 100+ fields (price, change, volume, fundamentals snapshot).
 |-------|----------|---------|-------|
 | `symbol` (path) | yes | — | |
 | `session` | no | `regular` | `regular`/`extended`/`premarket`/`postmarket` |
-| `fields` | no | `all` | `all` or comma-separated field names |
+| `fields` | no | `all` | `all`, `price`, `enhanced`, or comma-separated field names |
 
 ### `POST /api/quote/batch`
 
@@ -117,31 +166,37 @@ Real-time quote with 100+ fields (price, change, volume, fundamentals snapshot).
 
 `symbols` required, max 10.
 
+MCP: `tradingview_get_quote` / `tradingview_get_quote_batch`.
+
 ---
 
 ## 3. Market Data
 
-Fundamentals split by category. Examples: `examples/12-market-data.md`
+Fundamentals split by category. Examples: `examples/12-market-data.md`. MCP: `tradingview_get_market_data` with `category` (underscores, e.g. `financials_quarterly`, `related_bonds`).
 
-All endpoints take only the path `symbol` (no query params):
+Most endpoints take only path `symbol`. Related-asset routes also take `lang`, `start`, `count` (REST only; MCP has no pagination for related).
 
-| Endpoint | Returns |
-|----------|---------|
-| `GET /api/market-data/{symbol}` | everything, categorized |
-| `.../company` | company profile (sector, industry, employees, website) |
-| `.../ipo` | IPO info |
-| `.../indicators` | valuation/fundamental indicators (PE, PB, EPS...) |
-| `.../ttm` | trailing-twelve-month metrics (`*_ttm`) |
-| `.../current` | live price/volume (lp, ch, bid, ask...) |
-| `.../financials-quarterly` | quarterly financials (`*_fq`) |
-| `.../financials-annual` | annual financials (`*_fy`) |
-| `.../history-quarterly` | quarterly history arrays (`*_fq_h`) |
-| `.../history-annual` | annual history arrays (`*_fy_h`) |
-| `.../dividend` | dividend data |
-| `.../analyst-recommendations` | analyst ratings & price targets |
-| `.../enterprise-value` | EV metrics |
-| `.../credit-ratings` | credit ratings |
-| `.../cash-flow` | cash flow analysis |
+| Endpoint | Returns | MCP `category` |
+|----------|---------|----------------|
+| `GET /api/market-data/{symbol}` | everything, categorized | `all` (default) |
+| `.../company` | company profile (sector, industry, employees, website) | `company` |
+| `.../ipo` | IPO info | `ipo` |
+| `.../indicators` | valuation/fundamental indicators (PE, PB, EPS...) | `indicators` |
+| `.../ttm` | trailing-twelve-month metrics (`*_ttm`) | `ttm` |
+| `.../current` | live price/volume (lp, ch, bid, ask...) | `current` |
+| `.../overview` | overview snapshot | `overview` |
+| `.../financials-quarterly` | quarterly financials (`*_fq`) | `financials_quarterly` |
+| `.../financials-annual` | annual financials (`*_fy`) | `financials_annual` |
+| `.../history-quarterly` | quarterly history arrays (`*_fq_h`) | `history_quarterly` |
+| `.../history-annual` | annual history arrays (`*_fy_h`) | `history_annual` |
+| `.../dividend` | dividend data | `dividend` |
+| `.../analyst-recommendations` | analyst ratings & price targets | `analyst_recommendations` |
+| `.../forecast` | analyst / fundamental forecasts | `forecast` |
+| `.../related/bonds` | related bonds; `count` default 24, max 150 | `related_bonds` |
+| `.../related/etfs` | related ETFs; `count` default 100, max 150 | `related_etfs` |
+| `.../enterprise-value` | EV metrics | `enterprise_value` |
+| `.../credit-ratings` | credit ratings | `credit_ratings` |
+| `.../cash-flow` | cash flow analysis | `cash_flow` |
 
 ---
 
@@ -153,14 +208,42 @@ Examples: `examples/03-market-search.md`
 
 | Param | Required | Default | Notes |
 |-------|----------|---------|-------|
-| `query` (path) | yes | — | keyword or `EXCHANGE:TICKER` |
+| `query` (path) | yes | — | keyword, ISIN, CUSIP, or `EXCHANGE:TICKER` (auto-split into symbol + exchange) |
 | `filter` | no | all types | `stock`, `crypto`, `forex`, `futures`, `index`, `funds`, `bond`, `options` |
+| `lang` | no | empty | |
+| `hl` | no | `0` | `0` or `1`; highlight matches. REST only |
+| `exchange` | no | — | ignored if query is already `EXCHANGE:SYMBOL`. REST only |
+| `sort_by_country` | no | — | REST only |
+| `enable_grouping` | no | `false` | REST only |
 
 Returns matching symbols with exchange, type, description, logo ids (usable with `/logo`).
 
+MCP: `tradingview_search_market` (`query`, `filter`, `lang`, pagination). No `hl` / `exchange` / grouping.
+
 ---
 
-## 5. Technical Analysis
+## 5. Symbol Catalog
+
+REST only. No MCP tool. Proxied to the Postgres catalog; returns 503 if the catalog is down.
+
+### `GET /api/symbols`
+
+| Param | Required | Default | Notes |
+|-------|----------|---------|-------|
+| `q` | no | — | id, ticker, or company name (case-insensitive) |
+| `exchange` | no | — | e.g. `NASDAQ` |
+| `type` | no | — | `stock`, `fund`, `dr`, `bond`, `futures`, `forex`, `spot`, `swap`, `structured` |
+| `market` | no | — | e.g. `america` |
+| `sector` | no | — | e.g. `Transportation` |
+| `is_primary` | no | all | `1`/`true` primary only; `0`/`false` secondary only |
+| `limit` | no | `50` | max 1000 |
+| `offset` | no | `0` | |
+
+Prefer `/api/search/market/{query}` for interactive "what's the ticker" lookups. Use `/api/symbols` for catalog filters (sector, primary listing, type).
+
+---
+
+## 6. Technical Analysis
 
 Examples: `examples/04-technical-analysis.md`
 
@@ -172,9 +255,15 @@ Multi-timeframe Buy/Sell/Neutral summary. Response keyed by timeframe: `1`, `5`,
 
 Detailed indicator values (RSI, MACD, SMA/EMA, Stochastic, pivot points, etc.).
 
+| Param | Required | Default | Notes |
+|-------|----------|---------|-------|
+| `interval` | no | `1D` | `1`, `5`, `15`, `60`, `120`, `240`, `1D`, `1W`, `1M` (aliases `1h`, `2h`, `4h`) |
+
+MCP: `tradingview_get_ta` with `include_indicators=true` and optional `interval`.
+
 ---
 
-## 6. News
+## 7. News
 
 Examples: `examples/06-news.md`
 
@@ -185,6 +274,7 @@ Common query params for all list endpoints:
 | `symbol` | no | — | filter by `EXCHANGE:TICKER` |
 | `lang` | no | `en` | from `/api/metadata/languages` |
 | `market_country` | no | — | country code e.g. `US`, `CN` |
+| `sector` | no | — | REST only; extra query keys are forwarded as filters. MCP news has no `sector`. |
 
 | Endpoint | Category |
 |----------|----------|
@@ -202,9 +292,11 @@ Common query params for all list endpoints:
 
 Full article detail. `newsId` comes from the `id` field of list results. Query: `lang` (default `en`).
 
+MCP: `tradingview_get_news` / `tradingview_get_news_detail`. News `lang` also accepts `zh-Hans`.
+
 ---
 
-## 7. Community Ideas
+## 8. Community Ideas
 
 Examples: `examples/13-ideas.md`
 
@@ -216,9 +308,11 @@ Examples: `examples/13-ideas.md`
 | `GET /api/ideas/list/{symbol}` | `page`, `per_page` (default 20), `lang` |
 | `GET /api/ideas/{imageUrl}` | idea detail; `imageUrl` is the `image_url` id from list results (e.g. `LfKFTY2N`) |
 
+`per_page` max 100. MCP: `tradingview_get_ideas_hot`, `tradingview_get_ideas_editors_picks`, `tradingview_get_minds`, `tradingview_get_ideas_by_symbol`, `tradingview_get_idea_detail` (`image_url`).
+
 ---
 
-## 8. Leaderboards
+## 9. Leaderboards
 
 Examples: `examples/05-leaderboards.md`
 
@@ -235,7 +329,7 @@ Examples: `examples/05-leaderboards.md`
 
 ### Per-asset routes and tab enums
 
-- `GET /api/leaderboard/stocks` — tabs: `all_stocks`, `gainers`, `losers`, `large_cap`, `small_cap`, `largest_employers`, `high_dividend`, `highest_net_income`, `highest_cash`, `highest_profit_per_employee`, `highest_revenue_per_employee`, `active`, `unusual_volume`, `most_volatile`, `high_beta`, `best_performing`, `highest_revenue`, `most_expensive`, `penny_stocks`, `overbought`, `oversold`, `ath`, `atl`, `52wk_high`, `52wk_low`. Columnsets: `overview`, `performance`, `valuation`, `dividends`, `profitability`, `incomeStatement`, `balanceSheet`, `cashFlow`, `technicals`.
+- `GET /api/leaderboard/stocks` — tabs: `all_stocks`, `gainers`, `losers`, `large_cap`, `small_cap`, `largest_employers`, `high_dividend`, `highest_net_income`, `highest_cash`, `highest_profit_per_employee`, `highest_revenue_per_employee`, `active` (alias `most-active`), `unusual_volume`, `most_volatile`, `high_beta`, `best_performing`, `highest_revenue`, `most_expensive`, `penny_stocks`, `overbought`, `oversold`, `ath`, `atl`, `52wk_high`, `52wk_low`. Columnsets: `overview`, `performance`, `valuation`, `dividends`, `profitability`, `incomeStatement`, `balanceSheet`, `cashFlow`, `technicals`.
 - `GET /api/leaderboard/indices` — tabs: `all`, `major`, `us`, `snp`, `currency`, `americas`, `europe`, `asia`, `pacific`, `middle_east`, `africa`. Columnsets: `overview`, `performance`, `technicals`.
 - `GET /api/leaderboard/crypto` — tabs: `all`, `highest_total_value_locked`, `defi`, `gainers`, `losers`, `large_cap`, `small_cap`, `most_traded`, `most_addresses_with_balance`, `most_addresses_active`, `most_transactions`, `highest_transaction_volume`, `lowest_supply`, `highest_supply`, `most_expensive`, `most_volatile`, `all_time_high`, `all_time_low`, `52_week_high`, `52_week_low`. Columnsets: `overview`, `performance`, `valuation`, `addresses`, `transactions`, `sentiment`, `technicals`.
 - `GET /api/leaderboard/futures` — tabs: `all`, `agricultural`, `energy`, `currencies`, `metals`, `world_indices`, `interest_rates`. Columnsets: `overview`, `performance`, `technicals`.
@@ -248,9 +342,11 @@ Examples: `examples/05-leaderboards.md`
 
 Use a full config `id` from `GET /api/metadata/tabs` (e.g. `stocks_market_movers.gainers`). Params: `id` (required), `market_code` (for stocks), `columnset`, `start`, `count`, `lang`.
 
+MCP: `tradingview_get_leaderboard` (`mode` `by_asset` or `by_config`).
+
 ---
 
-## 9. Screener
+## 10. Screener
 
 Examples: `examples/16-screener.md`
 
@@ -307,11 +403,13 @@ Filter value forms:
 
 Field ids, valid operations, and enum values all come from `GET /api/screener/filter-options`.
 
-Recommended flow: presets → filter-options → scan.
+Recommended flow: presets → filter-options → scan. Always set stock `market` and `lang` explicitly (REST defaults are `china` / `zh`).
+
+MCP: `tradingview_get_screener_presets`, `tradingview_get_screener_filter_options`, `tradingview_screen_assets`.
 
 ---
 
-## 10. Metadata
+## 11. Metadata
 
 All public. Examples: `examples/07-metadata.md`
 
@@ -324,9 +422,11 @@ All public. Examples: `examples/07-metadata.md`
 | `GET /api/metadata/exchanges` | 350+ exchanges `{ name, value, group, country }` |
 | `GET /api/metadata/world-economy/indicators[?category=gdp,...]` | indicator slugs + categories |
 
+MCP: `tradingview_get_metadata` (`type` includes `screener_filters` and `world_economy_indicators`).
+
 ---
 
-## 11. World Economy
+## 12. World Economy
 
 Examples: `examples/14-world-economy.md`
 
@@ -339,9 +439,11 @@ Country rankings for a macro indicator.
 | `indicator` (path) | yes | — | slug from `/api/metadata/world-economy/indicators` (e.g. `gdp`, `inflation-rate`, `unemployment-rate`, `interest-rate`, `balance-of-trade`, `full-year-gdp-growth`) |
 | `region` | no | `g20` | `g20`, `world`, `north-america`, `europe`, `middle-east-africa`, `latin-america`, `asia-pacific` |
 
+MCP: `tradingview_get_world_economy_indicators` / `tradingview_get_world_economy_indicator_metadata`.
+
 ---
 
-## 12. Economic Calendar
+## 13. Economic Calendar
 
 Examples: `examples/08-calendar.md`
 
@@ -356,9 +458,11 @@ Time constraints for all: `from` / `to` are Unix **seconds**, `to > from`, and t
 
 `market` values from `GET /api/metadata/markets`.
 
+MCP: `tradingview_get_calendar` (`type` `economic`/`earnings`/`revenue`/`ipo`). `revenue` is dividends.
+
 ---
 
-## 13. Logo Proxy
+## 14. Logo Proxy
 
 Public (no key required). Examples: `examples/09-logo.md`
 
@@ -369,7 +473,7 @@ Logo ids come from search results / quote fields (e.g. `logoid`, `currency-logoi
 
 ---
 
-## 14. Token & MCP
+## 15. Token & MCP
 
 Examples: `examples/15-token.md`, `examples/10-mcp.md`
 
@@ -379,11 +483,11 @@ JWT for WebSocket/SSE. Console body can be `{}`; lifetime follows the plan (`tok
 
 ### `POST /api/mcp/generate`
 
-JWT for MCP clients that cannot complete Console OAuth. Console body can be `{}`. Returns `token`, `mcpUrl` (`https://mcp.tradingviewapi.com/mcp`), `exampleConfig` (`type: http`), and `exampleConfigStreamableHttp`. Recommended setup is still the hosted URL plus Console OAuth (no JWT).
+JWT for MCP clients that cannot complete Console OAuth. Console body can be `{}`. Returns `token`, `mcpUrl` (`https://mcp.tradingviewapi.com/mcp`), `exampleConfig` (`type: http`), and `exampleConfigStreamableHttp`. Recommended setup is still the hosted URL plus Console OAuth (no JWT). Public guide: https://www.tradingviewapi.com/mcp/. **Pro does not include MCP.** Do not send an API key to the MCP URL.
 
 ---
 
-## 15. Realtime: SSE & WebSocket
+## 16. Realtime: SSE & WebSocket
 
 Examples: `examples/11-websocket.md`
 

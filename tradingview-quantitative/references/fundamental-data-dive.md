@@ -56,8 +56,12 @@ Check for:
 ```
 tradingview_get_market_data(symbol, category='dividend')
 tradingview_get_market_data(symbol, category='analyst_recommendations')
+tradingview_get_market_data(symbol, category='forecast')
+tradingview_get_market_data(symbol, category='overview')
 tradingview_get_market_data(symbol, category='enterprise_value')
 tradingview_get_market_data(symbol, category='credit_ratings')
+tradingview_get_market_data(symbol, category='related_etfs')
+tradingview_get_market_data(symbol, category='related_bonds')
 ```
 
 Look at:

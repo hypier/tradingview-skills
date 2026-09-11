@@ -7,9 +7,14 @@ Access real-time market data from TradingView with our comprehensive REST API, W
 ## Available Endpoints
 
 ### 📊 Price Data
-Historical and real-time OHLCV (Open, High, Low, Close, Volume) candlestick data for charting and analysis.
-- **GET /api/price/{symbol}** - Get OHLCV candlestick data with customizable timeframes (1, 5, 15, 30, 60, 240, D, W, M)
-- **POST /api/price/batch** - Fetch candlestick data for multiple symbols in one request (max 10)
+Historical and real-time OHLCV candlestick data.
+- **GET /api/price/ohlcv/{symbol}** — Japanese candles (use for real prices, returns, backtests). MCP: `tradingview_get_ohlcv`
+- **POST /api/price/ohlcv/batch** — Japanese candles, max 10. MCP: `tradingview_get_ohlcv_batch`
+- **GET /api/price/{symbol}** — chart styles; **default type is HeikinAshi**. Pass `type=Japanese` or use `/ohlcv`. MCP: `tradingview_get_price`
+- **POST /api/price/batch** — same defaults as GET, max 10
+- **GET /api/price/{symbol}/events** — earnings/dividend/split markers. MCP: `tradingview_get_price_events`
+
+Query extras on price/OHLCV: `timeframe` (1/5/15/30/60/240/D/W/M), `range` (max 500), `from`/`to` (Unix seconds; `from` wins), `adjustment` (`splits` default, `dividends`).
 
 ### 💹 Real-time Quotes
 Live market quotes with current prices, bid/ask spreads, volume, and price changes for real-time trading decisions.
@@ -130,12 +135,16 @@ Retrieve fundamentals and company-specific datasets from one endpoint family.
 - **GET /api/market-data/{symbol}/indicators** - Valuation and fundamental indicators such as PE, PB, EPS, beta
 - **GET /api/market-data/{symbol}/ttm** - Trailing-twelve-month metrics
 - **GET /api/market-data/{symbol}/current** - Live price and quote-adjacent metrics
+- **GET /api/market-data/{symbol}/overview** - Overview snapshot. MCP category `overview`
 - **GET /api/market-data/{symbol}/financials-quarterly** - Quarterly financial statement data
 - **GET /api/market-data/{symbol}/financials-annual** - Annual financial statement data
 - **GET /api/market-data/{symbol}/history-quarterly** - Quarterly historical arrays
 - **GET /api/market-data/{symbol}/history-annual** - Annual historical arrays
 - **GET /api/market-data/{symbol}/dividend** - Dividend history and yield-related fields
 - **GET /api/market-data/{symbol}/analyst-recommendations** - Analyst ratings and target prices
+- **GET /api/market-data/{symbol}/forecast** - Analyst / fundamental forecasts. MCP category `forecast`
+- **GET /api/market-data/{symbol}/related/bonds** - Related bonds (`lang`, `start`, `count` max 150, default 24). MCP `related_bonds`
+- **GET /api/market-data/{symbol}/related/etfs** - Related ETFs (`count` default 100). MCP `related_etfs`
 - **GET /api/market-data/{symbol}/enterprise-value** - EV-related metrics
 - **GET /api/market-data/{symbol}/credit-ratings** - Credit rating dataset
 - **GET /api/market-data/{symbol}/cash-flow** - Cash flow analysis fields
@@ -151,6 +160,8 @@ Use the screener endpoint family for custom scans beyond fixed leaderboard tabs.
 - **GET /api/screener/presets?asset_type=...** - Get preset field groups for an asset type
 - **GET /api/screener/filter-options?asset_type=...&lang=...** - Get filter ids, supported operations, and enum values
 - **POST /api/screener/scan** - Run a custom scan query
+- **POST /api/screener/{crypto\|etf\|bond\|cex\|dex}/scan** - Non-stock scans
+- **GET /api/symbols** - Catalog search (`q`, `exchange`, `type`, `market`, `sector`, `is_primary`, `limit` max 1000). REST only; no MCP tool
 
 **Supported `asset_type` values:**
 - `stock`

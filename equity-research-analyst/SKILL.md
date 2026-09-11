@@ -9,7 +9,7 @@ Produce institutional-grade equity research deliverables through the selected wo
 
 **This skill only runs when hosted `tradingview_*` MCP tools are available.** Do not ask for an API key and do not construct REST curls. If those tools are missing, stop and tell the user to connect MCP before researching.
 
-- Console (required for this skill): add `https://mcp.tradingviewapi.com/mcp` with `"type": "http"` and sign in with Console. Older clients may use `"type": "streamable-http"`.
+- Console (required for this skill): add `https://mcp.tradingviewapi.com/mcp` with `"type": "http"` and sign in with Console. Install steps: https://www.tradingviewapi.com/mcp/. Older clients may use `"type": "streamable-http"`.
 - RapidAPI / no Console login: mint a JWT with `POST https://api.tradingviewapi.com/api/mcp/generate` and paste `exampleConfig`. Local `npx -y @ivotoby/openapi-mcp-server` exposes REST-shaped tools, not `tradingview_*` — switch to `tradingview-api-integration` instead of this skill.
 
 ## Loading Strategy

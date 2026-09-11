@@ -9,7 +9,7 @@ Use available TradingView MCP tools to retrieve current data, then apply the rel
 
 **This skill only runs when hosted `tradingview_*` MCP tools are available.** If those tools are missing, stop and tell the user to connect MCP before analyzing.
 
-- Console (required for this skill): add `https://mcp.tradingviewapi.com/mcp` with `"type": "http"` and sign in with Console. Older clients may use `"type": "streamable-http"`.
+- Console (required for this skill): add `https://mcp.tradingviewapi.com/mcp` with `"type": "http"` and sign in with Console. Install steps: https://www.tradingviewapi.com/mcp/. Older clients may use `"type": "streamable-http"`.
 - RapidAPI / no Console login: `POST https://api.tradingviewapi.com/api/mcp/generate` with the API key, then paste `exampleConfig` (JWT). Local `npx -y @ivotoby/openapi-mcp-server` exposes REST-shaped tools, not `tradingview_*` — switch to `tradingview-api-integration` instead of this skill.
 
 ## Core Rules
@@ -50,14 +50,14 @@ Do not scan hundreds of symbols. Use leaderboard or screener first, then call qu
 | Chart-style candles | `tradingview_get_price` / `tradingview_get_price_batch` | same timeframes; `type='HeikinAshi'` or `Japanese` |
 | Chart events | `tradingview_get_price_events` | symbol, timeframe(D), range — earnings/dividends/splits markers |
 | Technical analysis | `tradingview_get_ta` | symbol, **include_indicators=true for detailed indicators** |
-| Company fundamentals | `tradingview_get_market_data` | symbol, category(company/indicators/financials_quarterly/dividend/analyst_recommendations...) |
+| Company fundamentals | `tradingview_get_market_data` | symbol, category(company/indicators/financials_quarterly/dividend/analyst_recommendations/forecast/overview/related_bonds/related_etfs...) |
 | Leaderboard | `tradingview_get_leaderboard` | asset_type, tab, market_code, **columnset**(overview/performance/valuation/dividends/profitability/incomeStatement/balanceSheet/cashFlow/technicals) |
 | Advanced screener | `tradingview_get_screener_presets` + `tradingview_get_screener_filter_options` + `tradingview_screen_assets` | asset type, preset fields (`income_statement` snake_case), filter operators, market |
 | News | `tradingview_get_news` / `tradingview_get_news_detail` | market_country, lang(zh-Hans/en/ja), symbol |
 | Community ideas | `tradingview_get_ideas_hot` / `tradingview_get_ideas_editors_picks` / `tradingview_get_ideas_by_symbol` / `tradingview_get_minds` / `tradingview_get_idea_detail` | symbol, lang, image_url |
 | Economic calendar | `tradingview_get_calendar` | type(economic/earnings/revenue/ipo), from/to(**Unix seconds integers**, max 40 days), market |
 | World economy | `tradingview_get_world_economy_indicators` | indicator slug, region |
-| Metadata | `tradingview_get_metadata` / `tradingview_get_world_economy_indicator_metadata` | type(markets/tabs/columnsets/languages/exchanges/world_economy_indicators) |
+| Metadata | `tradingview_get_metadata` / `tradingview_get_world_economy_indicator_metadata` | type(markets/tabs/columnsets/languages/exchanges/screener_filters/world_economy_indicators) |
 
 ## Workflows
 

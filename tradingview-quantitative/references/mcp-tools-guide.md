@@ -18,6 +18,7 @@ Before calling tools that require parameter values, first get available values t
 | Unsure about exchanges | `tradingview_get_metadata(type='exchanges')` | 353+ exchange list |
 | Need valid languages | `tradingview_get_metadata(type='languages')` | lang values for news and ideas |
 | Need macro indicator slugs | `tradingview_get_world_economy_indicator_metadata` or `tradingview_get_metadata(type='world_economy_indicators')` | world economy indicator ids |
+| Screener filter ids / enums | `tradingview_get_metadata(type='screener_filters')` or `tradingview_get_screener_filter_options` | filter field ids and operations |
 
 ### Common market_code Quick Reference
 
@@ -228,6 +229,7 @@ Key fields returned when setting `include_indicators=true`:
 Use `tradingview_get_market_data` with `category`:
 - `company`
 - `current`
+- `overview`
 - `indicators`
 - `ttm`
 - `financials_quarterly`
@@ -236,9 +238,12 @@ Use `tradingview_get_market_data` with `category`:
 - `history_annual`
 - `dividend`
 - `analyst_recommendations`
+- `forecast`
 - `enterprise_value`
 - `credit_ratings`
 - `cash_flow`
+- `related_bonds`
+- `related_etfs`
 
 ### Screener Workflow Reminder
 
@@ -263,18 +268,18 @@ tradingview_get_calendar({ type: 'earnings', from: now, to: twoWeeksLater, marke
 
 ## Multi-Asset Type Support
 
-MCP supports 8 asset types, each with different tabs and columnsets:
+MCP supports 8 asset types. Fetch exact `tab` / `columnset` lists from `tradingview_get_metadata` — do not hardcode counts.
 
-| Asset Type | asset_type | Tabs Count | Columnsets | Requires market_code |
-|------------|-----------|------------|------------|-------------------|
-| Stocks | stocks | 25 | 9 types (including fundamentals) | Yes |
-| Indices | indices | 11 | 3 types | No |
-| Cryptocurrency | crypto | 20 | 3 types | No |
-| Futures | futures | 7 | 2 types | No |
-| Forex | forex | 10 | 3 types | No |
-| Government Bonds | bonds | 17 | 2 types | No |
-| Corporate Bonds | corporate_bonds | 6 | 1 type | No |
-| ETF/Funds | etfs | 40 | 3 types | No |
+| Asset Type | asset_type | Columnsets | Requires market_code |
+|------------|-----------|------------|-------------------|
+| Stocks | stocks | overview, performance, valuation, dividends, profitability, incomeStatement, balanceSheet, cashFlow, technicals | Yes |
+| Indices | indices | overview, performance, technicals | No |
+| Cryptocurrency | crypto | overview, performance, valuation, addresses, transactions, sentiment, technicals | No |
+| Futures | futures | overview, performance, technicals | No |
+| Forex | forex | overview, performance, technicals | No |
+| Government Bonds | bonds | none | No |
+| Corporate Bonds | corporate_bonds | none | No |
+| ETF/Funds | etfs | overview, performance, extendedHours, fundFlows, dividends, navPerformance, holdings, risk, technicals | No |
 
 ### Crypto-Specific Tabs
 

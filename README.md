@@ -7,7 +7,7 @@ A collection of Agent Skills for TradingView data retrieval, quantitative market
 | Skill | Use it for | Data access |
 | --- | --- | --- |
 | `equity-research-analyst` | Initiation reports, earnings notes and previews, catalyst calendars, morning notes, sector reports, model updates, and investment idea generation | Hosted TradingView MCP (`tradingview_*`); public primary sources for narrative and filings |
-| `tradingview-api-integration` | Integrating with, troubleshooting, or directly querying the TradingView Data API, including quotes, financials, screeners, calendars, metadata, and streaming | Console (`api.tradingviewapi.com`) with `TRADINGVIEW_API_KEY`; RapidAPI remains an alternate |
+| `tradingview-api-integration` | Integrating with, troubleshooting, or querying the TradingView Data API (REST or hosted MCP), including quotes, OHLCV, financials, screeners, calendars, metadata, and streaming | Hosted MCP (`tradingview_*`) when connected; otherwise Console REST (`api.tradingviewapi.com`) or RapidAPI |
 | `tradingview-quantitative` | Retrieving current data through configured TradingView MCP tools, then performing screening, technical, risk, event, or multi-symbol analysis | TradingView MCP tools |
 | `tradingview-openclaw` | Applying reusable TradingView-based analysis workflows and data-interpretation methods in OpenClaw | Uses user-provided or existing data; does not make live API calls |
 
@@ -30,7 +30,7 @@ npx skills add hypier/tradingview-skills/tradingview-openclaw
 
 Restart the agent session after installation. Invoke a skill explicitly, for example `$tradingview-api-integration`, or describe a matching task in natural language.
 
-`tradingview-quantitative` and `equity-research-analyst` require hosted MCP tools named `tradingview_*`. Add `https://mcp.tradingviewapi.com/mcp` and sign in with Console. RapidAPI OpenAPI MCP uses different tool names — use `tradingview-api-integration` or mint a JWT via `POST /api/mcp/generate`. `tradingview-openclaw` does not fetch live data.
+`tradingview-quantitative` and `equity-research-analyst` require hosted MCP tools named `tradingview_*`. Install from https://www.tradingviewapi.com/mcp/ (`https://mcp.tradingviewapi.com/mcp`, `"type": "http"`) and sign in with Console. RapidAPI OpenAPI MCP uses different tool names — use `tradingview-api-integration` or mint a JWT via `POST /api/mcp/generate`. `tradingview-openclaw` does not fetch live data. `tradingview-api-integration` prefers those same hosted tools when they are connected, otherwise REST.
 
 Leaderboard `columnset` values are camelCase (`incomeStatement`, `balanceSheet`, `cashFlow`, `technicals`). Screener presets stay snake_case. Calendar `from`/`to` are Unix seconds integers, max 40 days. Sector screens use `tradingview_screen_assets` after discovering sector enums — leaderboard is not a sector filter.
 
@@ -57,8 +57,8 @@ Replace `tradingview-api-integration` with the desired directory name in either 
 
 ## Prerequisites
 
-- **API integration:** Set `TRADINGVIEW_API_KEY` and call `https://api.tradingviewapi.com` with `Authorization: Bearer`. RapidAPI (`RAPIDAPI_KEY`) remains supported as an alternate. `tradingview-api-integration` can save a key to `.api-key` only after explicit consent.
-- **Quantitative analysis and equity research:** Configure hosted TradingView MCP in the agent runtime: `"type": "http"` and `https://mcp.tradingviewapi.com/mcp`, then sign in with Console. JWT (`POST /api/mcp/generate`) is a fallback. Without MCP tools, use `tradingview-api-integration` for direct API access. Do not ask for an API key inside those two skills.
+- **API integration:** Prefer hosted MCP when `tradingview_*` tools are connected (install: https://www.tradingviewapi.com/mcp/). Otherwise set `TRADINGVIEW_API_KEY` and call `https://api.tradingviewapi.com` with `Authorization: Bearer`. RapidAPI (`RAPIDAPI_KEY`) remains supported as an alternate. `tradingview-api-integration` can save a key to `.api-key` only after explicit consent.
+- **Quantitative analysis and equity research:** Configure hosted TradingView MCP from https://www.tradingviewapi.com/mcp/: `"type": "http"` and `https://mcp.tradingviewapi.com/mcp`, then sign in with Console. JWT (`POST /api/mcp/generate`) is a fallback. **Pro does not include MCP.** Without MCP tools, use `tradingview-api-integration` for direct API access. Do not ask for an API key inside those two skills.
 - **OpenClaw frameworks:** Supply market, financial, or news data when current information is required. The skill does not treat templates or historical examples as live market data.
 - **Equity research:** Prefer exchange-qualified tickers such as `NASDAQ:AAPL` or `HKEX:9988`. Cite the retrieval date and MCP tool for live data used in a report.
 
