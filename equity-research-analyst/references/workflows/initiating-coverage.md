@@ -4,7 +4,7 @@ Produces institutional-grade first-time coverage reports (JPMorgan / Goldman Sac
 
 **Execution rule**: one task per user request. Verify prerequisites, deliver the specified output, then wait for the user to request the next task. Do not auto-chain. Do not create extra deliverables beyond those listed under each task.
 
-**Structured data**: pull numerics (financials, ratios, valuation, analyst consensus, dividends, credit ratings, IPO info, prices, technicals) from hosted TradingView MCP before Web Search. See `../tradingviewapi.md` (Scenarios A & B) for the tool catalog and JSON-to-field mapping. Web Search + SEC EDGAR are still required for: business description deep-dive (10-K Item 1), risk factors (10-K Item 1A), management bios (DEF 14A + LinkedIn), segment/geographic breakdown (10-K/10-Q footnotes), industry research, transcripts, and original guidance wording.
+**Structured data**: pull numerics (financials, ratios, valuation, analyst consensus, dividends, credit ratings, IPO info, prices, technicals) from hosted TradingView MCP before Web Search. See `../mcp-research-data-guide.md` (Scenarios A & B) for the tool catalog and JSON-to-field mapping. Web Search + SEC EDGAR are still required for: business description deep-dive (10-K Item 1), risk factors (10-K Item 1A), management bios (DEF 14A + LinkedIn), segment/geographic breakdown (10-K/10-Q footnotes), industry research, transcripts, and original guidance wording.
 
 ## Quick Navigation
 

@@ -4,7 +4,7 @@ Answer: what is changing in the company and price, why might it matter, and what
 
 Combine instrument resolution, current quote, multi-timeframe prices, technical indicators, fundamentals, news, and upcoming events as appropriate. Compare price action with earnings, cash flow, valuation, and expectations rather than treating one data type in isolation.
 
-Output a concise thesis, supporting and counter-evidence, catalysts, risks, key levels or conditions, and confidence. Include a separate risk plan when the user supplies capital, position, or loss limits.
+Output a concise thesis, supporting and counter-evidence, catalysts, risks, key levels or conditions, and confidence. Include a separate risk plan when the user supplies capital, position, or loss limits. Formal reports also write an `equity` HTML board; see `visual-report.md`.
 
 ## MCP composition
 

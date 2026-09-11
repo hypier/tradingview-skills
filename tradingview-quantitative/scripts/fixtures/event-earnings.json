@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "kind": "event",
+  "language": "en",
+  "title": "Event study layout fixture",
+  "pills": ["NASDAQ:EXAMPLE", "USD", "layout fixture"],
+  "question": "Did the scheduled print create a lasting gap versus the sector, or only a one-day shock?",
+  "disclaimer": "Layout fixture for the renderer. Not live market research.",
+  "thesis": {
+    "title": "Conditional result",
+    "tone": "info",
+    "body": "The name gapped 6.1% against a 0.4% sector move on T+1, then gave back half of the outperformance by T+10. The event looks like a surprise to earnings quality, not a regime change, until the next print confirms margins."
+  },
+  "kpis": [
+    {"value": "-6.1%", "label": "T+1 vs close before event", "tone": "danger"},
+    {"value": "-3.0%", "label": "T+10 vs close before event", "tone": "warning"},
+    {"value": "-5.7pp", "label": "T+1 vs sector ETF", "tone": "danger"},
+    {"value": "8", "label": "Historical prints in sample"}
+  ],
+  "blocks": [
+    {"type": "h2", "text": "Event window"},
+    {
+      "type": "chart",
+      "chart": {
+        "type": "line",
+        "title": "Close indexed to 100 at T-5",
+        "caption": "Fixture path for renderer coverage. Replace with split-adjusted OHLCV around a real event.",
+        "categories": ["T-5","T-4","T-3","T-2","T-1","T0","T+1","T+2","T+5","T+10"],
+        "series": [
+          {"name": "Name", "data": [99.2,99.8,100.4,100.1,100.0,99.4,93.9,94.6,95.8,97.0], "tone": "info"},
+          {"name": "Sector ETF", "data": [99.6,99.9,100.2,100.0,100.0,100.1,99.6,99.8,100.4,101.1], "tone": "neutral"}
+        ],
+        "beginAtZero": false,
+        "referenceLines": [{"value": 100, "label": "Event-day index 100", "tone": "neutral"}]
+      }
+    },
+    {
+      "type": "table",
+      "headers": ["Window", "Name", "Sector", "Spread"],
+      "columnAlign": ["left", "right", "right", "right"],
+      "rows": [
+        ["T+1", "-6.1%", "-0.4%", "-5.7pp"],
+        ["T+5", "-4.2%", "+0.4%", "-4.6pp"],
+        ["T+10", "-3.0%", "+1.1%", "-4.1pp"]
+      ],
+      "caption": "Derived from fixture closes. Abnormal return is name minus sector."
+    }
+  ],
+  "invalidation": {
+    "title": "Invalidation",
+    "items": [
+      "If T+20 closes back above the pre-event close, treat the gap as noise.",
+      "If the next print repeats a quality miss, treat T+1 as the start of a new downtrend rather than a one-off shock."
+    ]
+  },
+  "confidence": {
+    "title": "Confidence: low on this file",
+    "tone": "warning",
+    "body": "This JSON only exercises the event board. Do not use the numbers."
+  },
+  "meta": {
+    "timestamp": "fixture",
+    "session": "fixture",
+    "symbols": "NASDAQ:EXAMPLE vs sector ETF",
+    "window": "T-5 to T+10",
+    "limitations": "Synthetic series for renderer regression.",
+    "assumptions": "Sector ETF is an adequate control."
+  }
+}

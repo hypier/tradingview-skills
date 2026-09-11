@@ -19,18 +19,9 @@ Workflow-facing index for the `equity-research-analyst` skill. **Live numeric da
 13. [Citation Convention](#citation-convention)
 14. [Fallback Strategy](#fallback-strategy)
 
-## Lookup Tips
+## Use
 
-`references/tradingviewapi.md` is the workflow-facing index and field-mapping guide.
-`references/tradingviewapi-docs/` is a payload-shape lookup only. Bundled curls and OpenAPI paths are **not** live request recipes.
-
-### Reference priority
-
-1. This file — which MCP tool to call, which arguments to pass, and which JSON paths to cite.
-2. `tradingviewapi-docs/examples/` — response payload shape after a successful tool call.
-3. `tradingviewapi-docs/openapi.json` — field names and enums only.
-
-If sources disagree, trust this file for how to call data. Use `examples/` only to parse returned JSON.
+This file maps research questions to hosted MCP tools and helps interpret returned fields. The MCP tool schema and returned payload are authoritative; this skill does not bundle REST or OpenAPI snapshots.
 
 ### Parameter discipline
 

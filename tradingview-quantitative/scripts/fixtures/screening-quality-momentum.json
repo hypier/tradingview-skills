@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "kind": "screening",
+  "language": "en",
+  "title": "Quality-momentum screen layout fixture",
+  "pills": ["US large cap", "layout fixture"],
+  "question": "Which liquid names combine reasonable valuation, improving profitability, and strengthening momentum?",
+  "disclaimer": "Layout fixture for the renderer. Not a live screen or trade list.",
+  "thesis": {
+    "title": "Hypothesis",
+    "tone": "info",
+    "body": "Large-cap names with P/E below the sector median, TTM operating margin up year over year, and 20-day return ahead of the 60-day return are candidates for a second-pass quote and earnings check. The screen is a starting point."
+  },
+  "kpis": [
+    {"value": "312", "label": "Universe after liquidity floor"},
+    {"value": "18", "label": "Passed all three factors"},
+    {"value": "14.2x", "label": "Median P/E of shortlist"},
+    {"value": "6", "label": "Excluded for missing fields"}
+  ],
+  "blocks": [
+    {"type": "h2", "text": "Ranked shortlist"},
+    {
+      "type": "table",
+      "headers": ["Rank", "Symbol", "P/E", "Op. margin YoY", "20d vs 60d", "Why it passed"],
+      "columnAlign": ["right", "left", "right", "right", "right", "left"],
+      "rows": [
+        ["1", "NYSE:AAA", "12.1x", "+1.8pp", "+4.2pp", "Cheapest quality print in the sample"],
+        ["2", "NASDAQ:BBB", "13.4x", "+0.9pp", "+3.1pp", "Margin repair plus relative momentum"],
+        ["3", "NYSE:CCC", "15.0x", "+2.4pp", "+2.0pp", "Strongest profitability delta, valuation still below sector"]
+      ],
+      "caption": "Fixture ranks. Verify with quote batch, OHLCV batch, and one TA check per name."
+    },
+    {
+      "type": "chart",
+      "chart": {
+        "type": "bar",
+        "title": "Composite factor score (fixture)",
+        "categories": ["AAA", "BBB", "CCC"],
+        "series": [
+          {"name": "Valuation", "data": [82, 74, 61], "tone": "info"},
+          {"name": "Quality", "data": [70, 66, 88], "tone": "success"},
+          {"name": "Momentum", "data": [75, 71, 58], "tone": "warning"}
+        ]
+      }
+    },
+    {
+      "type": "callout",
+      "tone": "warning",
+      "title": "False-positive risks",
+      "body": "One-off gains can fake margin improvement. Momentum can be a short squeeze. Remove a name if the next earnings date is inside five sessions and the last print missed on margins."
+    }
+  ],
+  "invalidation": {
+    "title": "Remove from the list",
+    "items": [
+      "P/E moves above the sector median on the next quote batch.",
+      "The independent OHLCV check shows the 20-day outperformance was a single gap day."
+    ]
+  },
+  "confidence": {
+    "title": "Confidence: low on this file",
+    "tone": "warning",
+    "body": "Synthetic shortlist for renderer coverage."
+  },
+  "meta": {
+    "timestamp": "fixture",
+    "session": "fixture",
+    "symbols": "US large-cap fixture universe",
+    "window": "TTM factors plus 60 daily bars",
+    "limitations": "Synthetic rows for renderer regression.",
+    "assumptions": "Liquidity floor already applied before ranking."
+  }
+}

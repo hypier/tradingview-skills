@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "kind": "market",
+  "language": "en",
+  "title": "Market regime layout fixture",
+  "pills": ["US", "cross-asset", "layout fixture"],
+  "question": "Is this still a risk-on regime, or has leadership already rotated?",
+  "disclaimer": "Layout fixture for the renderer. Not a live macro call.",
+  "thesis": {
+    "title": "Regime read",
+    "tone": "warning",
+    "body": "Equities are still up on a four-week window, but breadth is narrowing and long-duration yields have risen. Treat the tape as late-cycle risk-on until breadth recovers or the dollar trend reverses."
+  },
+  "kpis": [
+    {"value": "+2.4%", "label": "SPX 4-week", "tone": "success"},
+    {"value": "58%", "label": "Members above 50-day", "tone": "warning"},
+    {"value": "Tech", "label": "Leading group"},
+    {"value": "CPI week", "label": "Next scheduled catalyst"}
+  ],
+  "blocks": [
+    {"type": "h2", "text": "Relative performance"},
+    {
+      "type": "chart",
+      "chart": {
+        "type": "line",
+        "title": "Four-week total return index (fixture)",
+        "caption": "Replace with aligned quote-batch and OHLCV-batch windows.",
+        "categories": ["W1", "W2", "W3", "W4"],
+        "series": [
+          {"name": "Equities", "data": [100, 101.2, 102.8, 102.4], "tone": "info"},
+          {"name": "USD", "data": [100, 100.4, 101.1, 101.6], "tone": "neutral"},
+          {"name": "Long Treasuries", "data": [100, 99.2, 98.1, 97.4], "tone": "danger"}
+        ],
+        "beginAtZero": false
+      }
+    },
+    {
+      "type": "table",
+      "headers": ["Area", "4w return", "Read"],
+      "columnAlign": ["left", "right", "left"],
+      "rowTone": ["success", "warning", "danger"],
+      "rows": [
+        ["Growth / tech", "+4.1%", "Still leading"],
+        ["Breadth", "58% > 50d", "Narrower than last month"],
+        ["Long duration", "-2.6%", "Yields are the offset"]
+      ]
+    },
+    {"type": "h2", "text": "Scenarios"},
+    {
+      "type": "cards",
+      "items": [
+        {"title": "Bull", "badge": "breadth heals", "body": "Members above the 50-day move back through 70% while yields stop rising. Stay with leadership."},
+        {"title": "Base", "badge": "late risk-on", "active": true, "body": "Index grinds while fewer names participate. Keep the regime tag until CPI week."},
+        {"title": "Bear", "badge": "yield shock", "body": "A further rise in long yields with a down-week in equities ends the risk-on label."}
+      ]
+    }
+  ],
+  "invalidation": {
+    "title": "What would change the assessment",
+    "items": [
+      "Breadth back above 70% on a weekly close.",
+      "Equities and long Treasuries both down more than 2% in the same week."
+    ]
+  },
+  "confidence": {
+    "title": "Confidence: low on this file",
+    "tone": "warning",
+    "body": "Synthetic cross-asset series for renderer coverage."
+  },
+  "meta": {
+    "timestamp": "fixture",
+    "session": "fixture",
+    "symbols": "SPX, USD, long Treasuries (fixture labels)",
+    "window": "four weeks",
+    "limitations": "No live world-economy series in this file.",
+    "assumptions": "Four-week windows are aligned across assets."
+  }
+}

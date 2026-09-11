@@ -36,7 +36,7 @@ Each analysis follows these principles:
 - Report confidence, counter-evidence, and conditions that would invalidate the conclusion.
 - Control request size and use batch MCP tools when comparing candidate instruments.
 
-See [analysis-framework.md](references/analysis-framework.md) for evidence and confidence rules, and [output-templates.md](references/output-templates.md) for report structures.
+See [analysis-framework.md](references/analysis-framework.md) for evidence and confidence rules, [output-templates.md](references/output-templates.md) for the chat summary, and [visual-report.md](references/visual-report.md) for the portable HTML board. Formal reports write JSON and render `reports/<slug>-research-board.html`. Do not depend on a Cursor canvas.
 
 ## MCP data composition
 
@@ -56,25 +56,26 @@ The skill does not claim data that MCP did not return, such as a complete order 
 tradingview-quantitative/
 ├── SKILL.md
 ├── README.md
-└── references/
-    ├── analysis-framework.md
-    ├── equity-research.md
-    ├── opportunity-screening.md
-    ├── market-macro-research.md
-    ├── event-study.md
-    ├── portfolio-risk.md
-    ├── signal-validation.md
-    ├── strategy-research.md
-    ├── execution-analysis.md
-    ├── monitoring-and-alerts.md
-    ├── output-templates.md
-    ├── mcp-install.md
-    ├── technical-analysis.md
-    ├── pattern-library.md
-    └── risk-management.md
+├── scripts/
+│   ├── render_research_board.py
+│   └── fixtures/
+├── references/
+│   ├── analysis-framework.md
+│   ├── visual-report.md
+│   ├── output-templates.md
+│   ├── equity-research.md
+│   ├── opportunity-screening.md
+│   ├── market-macro-research.md
+│   ├── event-study.md
+│   ├── portfolio-risk.md
+│   ├── signal-validation.md
+│   ├── strategy-research.md
+│   ├── execution-analysis.md
+│   ├── monitoring-and-alerts.md
+│   └── mcp-install.md
 ```
 
-`SKILL.md` handles thematic routing and shared rules. Files in `references/` are loaded only when the relevant research mode needs them. The technical analysis, pattern library, and risk management files provide methodology; they are not separate interface skills.
+`SKILL.md` handles thematic routing and shared rules. Files in `references/` are loaded only when the relevant research mode needs them. `scripts/render_research_board.py` turns research JSON into a single-file HTML board.
 
 ## Example requests
 

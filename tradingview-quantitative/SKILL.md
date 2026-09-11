@@ -19,7 +19,7 @@ Use available TradingView MCP tools as a data layer. This skill defines how to f
 - **Trade execution**: assess liquidity, spread, slippage, and whether a signal is executable. Read `references/execution-analysis.md`.
 - **Monitoring and triggers**: turn strategy, portfolio, and event conditions into state-change alerts. Read `references/monitoring-and-alerts.md`.
 
-Use `references/analysis-framework.md` for shared evidence, uncertainty, and scoring rules, and `references/output-templates.md` for formal reports.
+Use `references/analysis-framework.md` for shared evidence, uncertainty, and scoring rules, and `references/output-templates.md` for the chat summary. For a formal report, also read `references/visual-report.md` and write a portable HTML research board. Do not treat a Cursor canvas as the deliverable.
 
 If the required TradingView MCP tools are not available, read `references/mcp-install.md` first to configure and verify the hosted MCP connection.
 
@@ -33,6 +33,7 @@ If the required TradingView MCP tools are not available, read `references/mcp-in
 6. Prefer conditional conclusions with invalidation conditions over unconditional buy/sell labels.
 7. Respect rate limits and use the smallest dataset that answers the question.
 8. If required MCP tools are unavailable, explain that the analysis cannot run; do not guess or fabricate data.
+9. Formal reports write JSON, then `scripts/render_research_board.py`, then a short chat summary with the HTML path. Skip the board for quote lookups or when files cannot be written.
 
 ## Scope
 

@@ -4,7 +4,7 @@ Turn a market view or investment hypothesis into a candidate universe, then veri
 
 Define the universe, liquidity floor, factor definitions, exclusions, ranking rule, and output before screening. Combine technical, fundamental, valuation, performance, dividend, sentiment, or sector data only when each factor has a role in the hypothesis. Spot-check leading candidates with independent market data and record false-positive risks.
 
-Return a ranked shortlist with why each candidate passed, what still needs verification, and conditions that remove it from the list. A screen is a research starting point, not a trade recommendation.
+Return a ranked shortlist with why each candidate passed, what still needs verification, and conditions that remove it from the list. A screen is a research starting point, not a trade recommendation. Formal reports also write a `screening` HTML board; see `visual-report.md`.
 
 ## MCP composition
 

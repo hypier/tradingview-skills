@@ -4,7 +4,7 @@ description: Build and maintain a calendar of upcoming catalysts across a covera
 
 ## ⭐ Structured Data Source
 
-Use hosted TradingView MCP for structured catalyst data (see `../tradingviewapi.md` Scenario C):
+Use hosted TradingView MCP for structured catalyst data (see `../mcp-research-data-guide.md` Scenario C):
 
 ```
 from = Math.floor(Date.now() / 1000)

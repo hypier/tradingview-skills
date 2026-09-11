@@ -20,20 +20,21 @@ Keep context tight and load only the files needed for the active task.
 1. Match the request to exactly one workflow in `references/workflows/`.
 2. Read only that workflow file first.
 3. Open deep-dive references only when the active workflow points to them.
-4. Read `references/tradingviewapi.md` before opening anything in `references/tradingviewapi-docs/`.
-5. Treat `references/tradingviewapi-docs/` as a lookup bundle for JSON field names and payload shape. Search by field name, then open the smallest relevant file. Do not copy REST curls or OpenAPI paths as live requests.
+4. Read `references/mcp-research-data-guide.md` when the workflow needs detailed MCP data mapping. Do not load API snapshots or REST documentation.
 
 ### `tradingviewapi` lookup guide
 
-- Start with `references/tradingviewapi.md` for task-to-MCP-tool mapping and JSON-path-to-report-field tables.
-- Use `references/tradingviewapi-docs/README.md` for file selection inside the bundled payload examples.
-- Live calls use `tradingview_*` tools. Treat `openapi.json` as field/enum documentation only, never as a REST recipe.
-- Use `references/tradingviewapi-docs/examples/` for response shapes after a tool call, not for deciding which MCP argument to pass.
-- If an example curl and this skill disagree, trust the MCP tool names and arguments in `tradingviewapi.md`.
+- Use `references/mcp-research-data-guide.md` for task-to-MCP-tool mapping and research field guidance.
+- Live data comes from the available `tradingview_*` tools; use their schemas and returned payloads as the source of truth.
+- Do not construct REST requests or rely on bundled API snapshots.
 - Search patterns that usually find the right payload example quickly:
   - `GET /api/market-data/{symbol}` (payload shape only)
   - `earnings_release_next_date`
   - `analyst-recommendations`
+
+## Equity analyst deep dives
+
+For an initiation or full company report, combine these references as needed: `references/financial-statement-analysis.md`, `references/valuation-analysis.md`, `references/peer-comparison.md`, and `references/investment-thesis.md`. They define the research questions; MCP supplies the structured data.
 
 ## When to invoke which workflow
 
@@ -59,8 +60,7 @@ The initiation-report workflow has five sequential tasks (Company Research → F
 
 Before Web Search, pull structured numeric data (financials, TTM ratios, analyst consensus, calendars, prices, technicals, news) through `tradingview_*` tools. **One call to `tradingview_get_market_data(symbol, category='all')` covers ~70% of the numeric content of a typical research report.**
 
-- Tool map, call examples, and JSON-path-to-report-field mapping: `references/tradingviewapi.md`
-- Payload shape examples: `references/tradingviewapi-docs/`
+- Tool map and research field guidance: `references/mcp-research-data-guide.md`
 
 **Use Web Search ONLY for narrative content**: MD&A text, forward guidance wording, earnings call transcripts, segment breakdowns, risk factors, management bios, industry research, FDA/regulatory decisions. Pull raw SEC 10-K/10-Q only when direct quotation or audit is required.
 

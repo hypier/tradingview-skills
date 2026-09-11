@@ -4,7 +4,7 @@ Measure an event’s market impact instead of only summarizing it.
 
 Define the event, affected universe, event date or window, comparison asset, and pre/post periods. Combine calendar or news records with historical prices, volume, volatility, and sector or market benchmarks. For recurring events, compare a meaningful historical sample and report its size.
 
-Output event facts, abnormal or relative performance, volatility and volume response, affected beneficiaries or losers, scenario risks, and invalidation conditions. Distinguish scheduled information from surprise information.
+Output event facts, abnormal or relative performance, volatility and volume response, affected beneficiaries or losers, scenario risks, and invalidation conditions. Distinguish scheduled information from surprise information. Formal reports also write an `event` HTML board; see `visual-report.md`.
 
 ## MCP composition
 

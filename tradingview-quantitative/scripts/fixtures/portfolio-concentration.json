@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "kind": "portfolio",
+  "language": "en",
+  "title": "Portfolio concentration layout fixture",
+  "pills": ["4 names", "USD", "layout fixture"],
+  "question": "Is risk coming from one name or from correlated names moving together?",
+  "disclaimer": "Layout fixture for the renderer. Not a live portfolio review.",
+  "thesis": {
+    "title": "Conditional result",
+    "tone": "warning",
+    "body": "The book looks diversified by name count, but two holdings are 61% of weight and their 60-day correlation is 0.82. A 10% drawdown in the larger name is the binding risk, not the cash sleeve."
+  },
+  "kpis": [
+    {"value": "18.4%", "label": "60-day ann. volatility", "tone": "warning"},
+    {"value": "-11.2%", "label": "Max drawdown in window", "tone": "danger"},
+    {"value": "0.38", "label": "HHI (1 = single name)"},
+    {"value": "34%", "label": "Largest weight"}
+  ],
+  "blocks": [
+    {"type": "h2", "text": "Weights"},
+    {
+      "type": "chart",
+      "chart": {
+        "type": "hbar",
+        "title": "Position weight",
+        "categories": ["AAA", "BBB", "CCC", "Cash"],
+        "series": [{"name": "Weight %", "data": [34, 27, 22, 17], "tone": "info"}],
+        "valueSuffix": "%"
+      }
+    },
+    {
+      "type": "table",
+      "headers": ["Holding", "Weight", "60d return", "Beta vs AAA", "Note"],
+      "columnAlign": ["left", "right", "right", "right", "left"],
+      "rowTone": ["danger", "warning", "neutral", "success"],
+      "rows": [
+        ["NASDAQ:AAA", "34%", "-6.2%", "1.00", "Largest risk contributor"],
+        ["NASDAQ:BBB", "27%", "-4.8%", "0.91", "Moves with AAA"],
+        ["NYSE:CCC", "22%", "+1.4%", "0.22", "Partial diversifier"],
+        ["Cash", "17%", "0.0%", "0.00", "Dry powder"]
+      ]
+    },
+    {"type": "h3", "text": "60-day return correlation"},
+    {
+      "type": "matrix",
+      "headers": ["", "AAA", "BBB", "CCC"],
+      "min": -1,
+      "max": 1,
+      "rows": [
+        [{"text": "AAA"}, {"text": "1.00", "value": 1}, {"text": "0.82", "value": 0.82}, {"text": "0.18", "value": 0.18}],
+        [{"text": "BBB"}, {"text": "0.82", "value": 0.82}, {"text": "1.00", "value": 1}, {"text": "0.11", "value": 0.11}],
+        [{"text": "CCC"}, {"text": "0.18", "value": 0.18}, {"text": "0.11", "value": 0.11}, {"text": "1.00", "value": 1}]
+      ],
+      "caption": "Derived from fixture daily returns. Cash omitted."
+    }
+  ],
+  "invalidation": {
+    "title": "What would change the risk call",
+    "items": [
+      "AAA weight below 25% after a rebalance, with AAA–BBB correlation under 0.5.",
+      "A stress where AAA -15% still keeps book drawdown inside the user's stated limit."
+    ]
+  },
+  "confidence": {
+    "title": "Confidence: low on this file",
+    "tone": "warning",
+    "body": "Synthetic holdings for renderer coverage."
+  },
+  "meta": {
+    "timestamp": "fixture",
+    "session": "fixture",
+    "symbols": "AAA, BBB, CCC, cash",
+    "window": "60 daily bars",
+    "limitations": "No cost basis or user loss limit was supplied in this fixture.",
+    "assumptions": "Weights are current market weights, not target weights."
+  }
+}

@@ -110,7 +110,7 @@ The earnings update process follows 5 phases:
 
 Before unstructured Web Search, call hosted `tradingview_*` tools. One call to `tradingview_get_market_data(symbol, category='all')` returns company info, TTM financials with 8-quarter history arrays, current-period ratios, and next-quarter consensus EPS — covering ~70% of an earnings update's numerical content.
 
-See `../tradingviewapi.md` (Scenario A) for the tool calls and the JSON-field-to-report-field mapping table:
+See `../mcp-research-data-guide.md` (Scenario A) for the tool calls and the JSON-field-to-report-field mapping table:
 
 - `tradingview_get_market_data(symbol, category='all')` — TTM financials, 8-quarter history arrays, current-period ratios, next-quarter consensus EPS
 - `tradingview_get_market_data(symbol, category='analyst_recommendations')` — analyst ratings and target-price consensus

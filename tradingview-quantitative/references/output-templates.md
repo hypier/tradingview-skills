@@ -2,6 +2,8 @@
 
 Adapt depth to the question and include the metadata from `analysis-framework.md`.
 
+The chat reply is a short conclusion. Formal reports also write a portable HTML board from `references/visual-report.md`. Do not replace that board with a Cursor canvas.
+
 ## Equity or event
 
 - Question and scope
