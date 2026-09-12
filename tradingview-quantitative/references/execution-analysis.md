@@ -8,4 +8,4 @@ Output an executable price range, size constraint, cost assumptions, preferred s
 
 ## MCP composition
 
-Use `tradingview_get_quote` or `tradingview_get_quote_batch` for bid/ask and session context, `tradingview_get_ohlcv` for volume and volatility history, `tradingview_get_calendar` and `tradingview_get_price_events` for event risk, and `tradingview_get_news` for material breaking information. Do not claim a fill or order-book depth that the returned MCP data does not provide.
+Use `tradingview_get_quote` or `tradingview_get_quote_batch` for bid/ask and session context, `tradingview_get_ohlcv` for volume and volatility history, `tradingview_get_calendar` and `tradingview_get_price_events` for event risk, and `tradingview_get_news` for material breaking information. For option contracts, list codes with `tradingview_get_options` then quote the OPRA id (`fields=enhanced`); OPRA prints are often delayed. Do not claim a fill, order-book depth, implied volatility, or Greeks that the returned MCP data does not provide.

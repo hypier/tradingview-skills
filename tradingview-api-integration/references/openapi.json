@@ -17768,7 +17768,7 @@
           "Real-time Quote"
         ],
         "summary": "Get real-time quote",
-        "description": "Get real-time quote data for a specified trading pair",
+        "description": "Get real-time quote data for a specified trading pair. `fields=all` (default) or `enhanced` for extra scalars. Option chains and ETF holdings are separate endpoints. Symbols like BINANCE:BTCUSDT.P_PREMIUM, _IPRICE, and _MPRICE work here and on /api/price.",
         "parameters": [
           {
             "name": "symbol",
@@ -17793,7 +17793,7 @@
           {
             "name": "fields",
             "in": "query",
-            "description": "Return fields (`all`, `price`, `enhanced`, or a comma-separated custom field list). Commonly used extended fields include bid_size, ask_size, listed_exchange, regular_close, regular_close_time, market_cap_calc, enterprise_value_current, last_splits, isin, cusip, and figi.",
+            "description": "Return fields (`all`, `price`, `enhanced`, or a comma-separated custom field list). `all` includes first_bar_time_1d and US night-session ntc/nch/nchp. `enhanced` adds option-contract (strike, expiration), bond (yield_to_maturity), DEX identity (blockchain_addresses), and ETF scalars (aum, nav, expense_ratio) \u2014 not the option chain or ETF holdings list. Those live at GET /api/options/{symbol} and GET /api/etf/{symbol}. Derivative metric symbols such as BINANCE:BTCUSDT.P_PREMIUM, _IPRICE, and _MPRICE are quoteable like any other symbol.",
             "schema": {
               "type": "string",
               "default": "all",
@@ -17926,6 +17926,163 @@
           }
         ],
         "operationId": "getQuote"
+      }
+    },
+    "/api/options/{symbol}":     {
+      "get": {
+        "tags": [
+          "Options"
+        ],
+        "operationId": "getOptions",
+        "summary": "Get option chain",
+        "description": "Return the option chain for an underlying symbol (expirations, strikes, and OPRA-style contract codes). Not a live quote for a single contract — use GET /api/quote/{contract} for that. Pass expiration=YYYY-MM-DD to return one expiry.",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "description": "Underlying symbol (e.g. NASDAQ:AAPL)",
+            "schema": {
+              "type": "string",
+              "example": "NASDAQ:AAPL"
+            }
+          },
+          {
+            "name": "expiration",
+            "in": "query",
+            "required": false,
+            "description": "Filter to a single expiration (YYYY-MM-DD or YYYYMMDD)",
+            "schema": {
+              "type": "string",
+              "example": "2026-12-18"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "symbol": {
+                          "type": "string",
+                          "example": "NASDAQ:AAPL"
+                        },
+                        "has_options": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "families": {
+                          "type": "array",
+                          "items": {
+                            "type": "object"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "504": {
+            "description": "Upstream timeout"
+          }
+        }
+      }
+    },
+    "/api/etf/{symbol}":     {
+      "get": {
+        "tags": [
+          "ETF"
+        ],
+        "operationId": "getEtf",
+        "summary": "Get ETF profile and holdings",
+        "description": "Return AUM, NAV, expense ratio, and top holdings for an ETF. Use limit to truncate holdings (default 20, max 100). This is not GET /api/market-data/{symbol}/related/etfs, which lists related ETFs.",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "description": "ETF symbol (e.g. AMEX:SPY)",
+            "schema": {
+              "type": "string",
+              "example": "AMEX:SPY"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of holdings to return (default 20, max 100)",
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "example": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "symbol": {
+                          "type": "string",
+                          "example": "AMEX:SPY"
+                        },
+                        "is_etf": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "aum": {
+                          "type": "number"
+                        },
+                        "nav": {
+                          "type": "number"
+                        },
+                        "holdings_count": {
+                          "type": "integer"
+                        },
+                        "holdings": {
+                          "type": "array",
+                          "items": {
+                            "type": "object"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Upstream timeout"
+          }
+        }
       }
     },
     "/api/screener/scan": {
@@ -19608,6 +19765,10 @@
       "description": "Economic calendar event data"
     },
     {
+      "name": "ETF",
+      "description": "ETF holdings, AUM, NAV, and exposure from TradingView quote data"
+    },
+    {
       "name": "Health Check",
       "description": "Server health status check"
     },
@@ -19638,6 +19799,10 @@
     {
       "name": "News",
       "description": "Financial news retrieval"
+    },
+    {
+      "name": "Options",
+      "description": "Option chain listings from TradingView quote data"
     },
     {
       "name": "Price Data",

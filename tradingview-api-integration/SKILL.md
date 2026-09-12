@@ -1,6 +1,6 @@
 ---
 name: tradingview-api-integration
-description: Use when integrating with, troubleshooting, or querying the TradingView Data API on api.tradingviewapi.com (Console, recommended) or RapidAPI, including live market data, screeners, calendar data, metadata, streaming, hosted MCP tools, endpoint selection, and API parameter validation. Also use when installing hosted TradingView MCP (https://mcp.tradingviewapi.com/mcp) in Cursor, VS Code, Claude Code, Claude Desktop, Codex, Gemini CLI, or Windsurf.
+description: Use when integrating with, troubleshooting, or querying the TradingView Data API on api.tradingviewapi.com (Console, recommended) or RapidAPI, including live quotes, option chains, ETF holdings and AUM, screeners, calendar data, metadata, streaming, hosted MCP tools, endpoint selection, and API parameter validation. Also use when installing hosted TradingView MCP (https://mcp.tradingviewapi.com/mcp) in Cursor, VS Code, Claude Code, Claude Desktop, Codex, Gemini CLI, or Windsurf.
 ---
 
 # TradingView API Integration
@@ -30,7 +30,7 @@ Prefer Console for new integrations and generated examples. Use RapidAPI only wh
 
 If hosted tools named `tradingview_*` are available in this session, call those tools directly. Do not mint a JWT and do not use `scripts/tv_api.py` unless MCP cannot express the request.
 
-MCP cannot cover: `GET /api/symbols`, logo, `POST /api/token/generate`, SSE, WebSocket, health, news `sector` extra filters, search `hl` / `exchange` / `enable_grouping`, related-asset `start`/`count`. Use REST for those.
+MCP cannot cover: `GET /api/symbols`, logo, `POST /api/token/generate`, SSE, WebSocket, health, news `sector` extra filters, search `hl` / `exchange` / `enable_grouping`, related-asset `start`/`count`. Use REST for those. Option chains (`tradingview_get_options`) and ETF holdings (`tradingview_get_etf`) are on MCP.
 
 When the user asks how to **install or configure MCP**, or `tradingview_*` tools are missing, read **[references/mcp-install.md](references/mcp-install.md)** and give **only the section for their IDE** (Cursor, VS Code, Claude Code, Claude Desktop, Codex, Gemini, Windsurf). If the client is unknown, ask. Do not dump every block. JWT / RapidAPI local details: **[references/examples/10-mcp.md](references/examples/10-mcp.md)**. Tool names: **[references/mcp-tools.md](references/mcp-tools.md)**.
 
@@ -66,6 +66,8 @@ Use `scripts/tv_api.py` (stdlib only, handles key resolution and JSON pretty-pri
 
 ```bash
 python3 scripts/tv_api.py GET '/api/quote/NASDAQ:AAPL'
+python3 scripts/tv_api.py GET '/api/options/NASDAQ:AAPL?expiration=2026-12-18'
+python3 scripts/tv_api.py GET '/api/etf/AMEX:SPY?limit=20'
 python3 scripts/tv_api.py GET '/api/price/ohlcv/BINANCE:BTCUSDT?timeframe=60&range=20'
 python3 scripts/tv_api.py POST '/api/screener/scan' --body '{"market":"america","range":[0,20],"filters":{"market_cap_basic":{"operation":"greater_or_equal","value":1e10}}}'
 python3 scripts/tv_api.py --rapid GET '/api/quote/NASDAQ:AAPL'
@@ -87,6 +89,8 @@ Map the user's need to an endpoint family. MCP names in parentheses.
 | Find a symbol / "what's the ticker for X" | `GET /api/search/market/{query}` (`tradingview_search_market`) | `03-market-search.md` |
 | Browse the symbol catalog | `GET /api/symbols?q=&exchange=&type=` (REST only) | catalog |
 | Current price, change, volume | `GET /api/quote/{symbol}` or `POST /api/quote/batch` (≤10) (`tradingview_get_quote` / `_batch`) | `02-quote-data.md` |
+| Option chain (expiries, strikes, OPRA codes) | `GET /api/options/{symbol}?expiration=` (`tradingview_get_options`) — then quote the contract | `18-options.md` |
+| ETF AUM, NAV, holdings | `GET /api/etf/{symbol}?limit=` (`tradingview_get_etf`) — not `market-data/.../related/etfs` | `19-etf.md` |
 | Real Japanese OHLCV | `GET /api/price/ohlcv/{symbol}` or `POST /api/price/ohlcv/batch` (`tradingview_get_ohlcv` / `_batch`) | `01-price-data.md` |
 | Heikin-Ashi / Range chart candles | `GET /api/price/{symbol}?type=HeikinAshi\|Range` (`tradingview_get_price`) — **omitting `type` also defaults to HeikinAshi** | `01-price-data.md` |
 | Earnings / dividend / split markers | `GET /api/price/{symbol}/events` (`tradingview_get_price_events`) | catalog |
@@ -164,7 +168,9 @@ When generating client code for streaming, read **[references/examples/11-websoc
 
 ## Symbol format
 
-Always `EXCHANGE:TICKER` (e.g. `NASDAQ:AAPL`, `BINANCE:BTCUSDT`, `HKEX:9988`). If the user gives a bare name ("Apple", "比亚迪"), resolve it via `/api/search/market/` or `tradingview_search_market` first.
+Always `EXCHANGE:TICKER` (e.g. `NASDAQ:AAPL`, `BINANCE:BTCUSDT`, `HKEX:9988`). Option contracts use `OPRA:AAPL261218C330.0`, not `NASDAQ:AAPL261218C330.0`. If the user gives a bare name ("Apple", "比亚迪"), resolve it via `/api/search/market/` or `tradingview_search_market` first.
+
+Quote on the **underlying** never includes the chain (`has_options` / `families`) or ETF holdings. `fields=enhanced` adds contract scalars (`strike`, `expiration`, `option-type`) on an OPRA id and ETF scalars (`aum`, `nav`) on a fund. No implied volatility, Greeks, or open interest.
 
 ## Answering data questions
 

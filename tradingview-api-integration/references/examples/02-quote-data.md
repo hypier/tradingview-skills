@@ -214,3 +214,7 @@ OpenAPI example / fallback
   "msg": "Success"
 }
 ```
+
+`fields=all` includes `first_bar_time_1d` and US night-session `ntc`/`nch`/`nchp`. `fields=enhanced` adds option-contract scalars (`strike`, `expiration`, `option-type`) on an OPRA id, plus bond / DEX / ETF scalars — not the option chain or ETF holdings list (`GET /api/options/{symbol}`, `GET /api/etf/{symbol}`). Those fields are absent or empty on a stock quote such as `NASDAQ:AAPL`.
+
+Derivative metric symbols such as `BINANCE:BTCUSDT.P_PREMIUM`, `_IPRICE`, and `_MPRICE` are ordinary quote/price symbols.

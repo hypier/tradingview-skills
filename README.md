@@ -7,7 +7,7 @@ A collection of Agent Skills for TradingView data retrieval, quantitative market
 | Skill | Use it for | Data access |
 | --- | --- | --- |
 | `equity-research-analyst` | Initiation reports, earnings notes and previews, catalyst calendars, morning notes, sector reports, model updates, and investment idea generation | Hosted TradingView MCP (`tradingview_*`); public primary sources for narrative and filings |
-| `tradingview-api-integration` | Integrating with, troubleshooting, or querying the TradingView Data API (REST or hosted MCP), including quotes, OHLCV, financials, screeners, calendars, metadata, and streaming | Hosted MCP (`tradingview_*`) when connected; otherwise Console REST (`api.tradingviewapi.com`) or RapidAPI |
+| `tradingview-api-integration` | Integrating with, troubleshooting, or querying the TradingView Data API (REST or hosted MCP), including quotes, option chains, ETF holdings, OHLCV, financials, screeners, calendars, metadata, and streaming | Hosted MCP (`tradingview_*`) when connected; otherwise Console REST (`api.tradingviewapi.com`) or RapidAPI |
 | `tradingview-quantitative` | Retrieving current data through configured TradingView MCP tools, then performing screening, technical, risk, event, or multi-symbol analysis | TradingView MCP tools |
 | `tradingview-openclaw` | Applying reusable TradingView-based analysis workflows and data-interpretation methods in OpenClaw | Uses user-provided or existing data; does not make live API calls |
 

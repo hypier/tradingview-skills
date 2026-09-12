@@ -8,4 +8,4 @@ Return a ranked shortlist with why each candidate passed, what still needs verif
 
 ## MCP composition
 
-Use `tradingview_get_metadata` when discovering leaderboard or screener values, then compose `tradingview_get_leaderboard` or `tradingview_screen_assets` with `tradingview_get_quote_batch`, `tradingview_get_ohlcv_batch`, and individual `tradingview_get_ta` checks for the shortlist.
+Use `tradingview_get_metadata` when discovering leaderboard or screener values, then compose `tradingview_get_leaderboard` or `tradingview_screen_assets` with `tradingview_get_quote_batch`, `tradingview_get_ohlcv_batch`, and individual `tradingview_get_ta` checks for the shortlist. ETF screens: verify leading funds with `tradingview_get_etf` (holdings/AUM), not `related_etfs`. Option-income or overlay screens: `options-and-etf.md`.

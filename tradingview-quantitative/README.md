@@ -6,17 +6,18 @@ It does not duplicate MCP API documentation. Instead, it combines quotes, histor
 
 ## Core capabilities
 
-The skill currently provides nine thematic capabilities:
+The skill currently provides ten thematic capabilities:
 
 1. **Equity research**: Combine fundamental, technical, event, and valuation evidence to assess a company and its invalidation conditions.
-2. **Opportunity discovery**: Turn an investment hypothesis into a multi-factor screen, then verify a focused candidate list.
-3. **Market and macro research**: Analyze market regime, breadth, sector rotation, macro drivers, and cross-asset effects.
-4. **Event studies**: Compare price, volume, and volatility before and after earnings, macro releases, policy events, or news shocks.
-5. **Portfolio and risk**: Evaluate exposures, concentration, correlation, volatility, drawdown, and risk contribution.
-6. **Signal validation**: Test whether technical, fundamental, or event signals have historical evidence.
-7. **Strategy research and backtesting**: Convert trading rules into measurable strategies and assess returns, drawdown, turnover, and robustness.
-8. **Trade execution analysis**: Assess spread, liquidity, slippage, market impact, and trading-session risks.
-9. **Monitoring and signal triggers**: Monitor price, volume, technical state, events, and portfolio risk for meaningful state changes.
+2. **Options and ETF structure**: Separate listed option directories from live contract quotes, and fund holdings from related-ETF ticker lists.
+3. **Opportunity discovery**: Turn an investment hypothesis into a multi-factor screen, then verify a focused candidate list.
+4. **Market and macro research**: Analyze market regime, breadth, sector rotation, macro drivers, and cross-asset effects.
+5. **Event studies**: Compare price, volume, and volatility before and after earnings, macro releases, policy events, or news shocks.
+6. **Portfolio and risk**: Evaluate exposures, concentration, correlation, volatility, drawdown, and risk contribution.
+7. **Signal validation**: Test whether technical, fundamental, or event signals have historical evidence.
+8. **Strategy research and backtesting**: Convert trading rules into measurable strategies and assess returns, drawdown, turnover, and robustness.
+9. **Trade execution analysis**: Assess spread, liquidity, slippage, market impact, and trading-session risks.
+10. **Monitoring and signal triggers**: Monitor price, volume, technical state, events, and portfolio risk for meaningful state changes.
 
 ## Requirements
 
@@ -43,6 +44,7 @@ See [analysis-framework.md](references/analysis-framework.md) for evidence and c
 Each thematic workflow combines MCP tools according to the research question. Examples include:
 
 - Equity research: instrument search, real-time quotes, OHLCV, technical analysis, fundamentals, news, and events.
+- Options / ETF structure: `tradingview_get_options` then quote OPRA contracts; `tradingview_get_etf` for AUM and holdings (not `related_etfs`).
 - Opportunity discovery: metadata, leaderboards or screeners, batch quotes, batch history, and candidate verification.
 - Strategy research: historical OHLCV, technical indicators, fundamental fields, and current market context.
 - Portfolio analysis: batch quotes, batch historical data, and material fundamental or event information for major holdings.

@@ -8,4 +8,4 @@ Output a concise thesis, supporting and counter-evidence, catalysts, risks, key 
 
 ## MCP composition
 
-Use `tradingview_search_market` for resolution, then combine `tradingview_get_quote`, `tradingview_get_ohlcv`, `tradingview_get_ta`, `tradingview_get_market_data`, `tradingview_get_news`, `tradingview_get_calendar`, and `tradingview_get_price_events` according to the hypothesis. Do not call every source by default.
+Use `tradingview_search_market` for resolution, then combine `tradingview_get_quote`, `tradingview_get_ohlcv`, `tradingview_get_ta`, `tradingview_get_market_data`, `tradingview_get_news`, `tradingview_get_calendar`, and `tradingview_get_price_events` according to the hypothesis. Do not call every source by default. If the instrument is a fund, add `tradingview_get_etf` for AUM and holdings. If the question is listed options or an overlay, read `options-and-etf.md` and use `tradingview_get_options` then quote the OPRA contract — not the stock quote.

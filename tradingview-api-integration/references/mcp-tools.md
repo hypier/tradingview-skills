@@ -1,6 +1,6 @@
 # Hosted TradingView MCP tools
 
-25 `tradingview_*` tools on `https://mcp.tradingviewapi.com/mcp`. Same data as REST. Arguments use snake_case; REST paths use kebab-case.
+27 `tradingview_*` tools on `https://mcp.tradingviewapi.com/mcp`. Same data as REST. Arguments use snake_case; REST paths use kebab-case.
 
 Public install guide: https://www.tradingviewapi.com/mcp/. Client configs, OAuth, JWT, and RapidAPI local setup: `examples/10-mcp.md`.
 
@@ -27,6 +27,8 @@ Local `npx -y @ivotoby/openapi-mcp-server` is OpenAPI REST tools, not this table
 | Chart event markers | `tradingview_get_price_events` | `GET /api/price/{symbol}/events` |
 | Japanese OHLCV | `tradingview_get_ohlcv` / `_batch` | `GET /api/price/ohlcv/{symbol}` / `POST /api/price/ohlcv/batch` |
 | Quote | `tradingview_get_quote` / `_batch` | `GET /api/quote/{symbol}` / `POST /api/quote/batch` |
+| Option chain | `tradingview_get_options` | `GET /api/options/{symbol}` |
+| ETF AUM / holdings | `tradingview_get_etf` | `GET /api/etf/{symbol}` |
 | Fundamentals | `tradingview_get_market_data` | `GET /api/market-data/{symbol}/...` |
 | Hot ideas | `tradingview_get_ideas_hot` | `GET /api/ideas/hot` |
 | Editors' picks | `tradingview_get_ideas_editors_picks` | `GET /api/ideas/editors-picks` |
@@ -57,7 +59,15 @@ Local `npx -y @ivotoby/openapi-mcp-server` is OpenAPI REST tools, not this table
 
 ### Quote
 
-`session`: `regular` (default) / `extended` / `premarket` / `postmarket`. `fields` default `all`. Batch `symbols` 1–10.
+`session`: `regular` (default) / `extended` / `premarket` / `postmarket`. `fields` default `all`. `enhanced` adds contract scalars on an OPRA id and ETF scalars on a fund — not the chain or holdings list. Batch `symbols` 1–10.
+
+### Options — `tradingview_get_options`
+
+`symbol` is the **underlying** (`NASDAQ:AAPL`), not an OPRA contract. Optional `expiration` (`YYYY-MM-DD` or `YYYYMMDD`). Returns `has_options` and `families` (strikes, `calls`, `puts`). No bid/ask; quote the contract next (`OPRA:AAPL261218C330.0`). No IV, Greeks, or open interest.
+
+### ETF — `tradingview_get_etf`
+
+`symbol` e.g. `AMEX:SPY` (`NASDAQ:QQQ` for QQQ). Optional `limit` default 20, max 100. Returns `is_etf`, AUM/NAV/expense, `holdings_count`, and a truncated holdings list. Not `tradingview_get_market_data` `category=related_etfs`.
 
 ### Market data — `tradingview_get_market_data`
 

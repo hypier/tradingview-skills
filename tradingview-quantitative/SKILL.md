@@ -1,6 +1,6 @@
 ---
 name: tradingview-quantitative
-description: Use TradingView MCP data to conduct structured quantitative research across individual equities, opportunity discovery, market and macro context, event studies, portfolios, and signal validation. Use this skill when the task requires combining multiple data types into an evidence-based analysis.
+description: Use TradingView MCP data to conduct structured quantitative research across individual equities, option overlays, ETF holdings look-through, opportunity discovery, market and macro context, event studies, portfolios, and signal validation. Use this skill when the task requires combining multiple data types into an evidence-based analysis.
 ---
 
 # TradingView Quantitative Research
@@ -10,6 +10,7 @@ Use available TradingView MCP tools as a data layer. This skill defines how to f
 ## Choose a research mode
 
 - **Equity research**: one company’s trend, catalysts, valuation, and invalidation risks. Read `references/equity-research.md`.
+- **Options and ETF structure**: listed chain vs live contract quote; fund AUM and holdings vs related ETF tickers. Read `references/options-and-etf.md`.
 - **Opportunity discovery**: turn an investment hypothesis into a multi-factor candidate search. Read `references/opportunity-screening.md`.
 - **Market and macro research**: explain regime, breadth, rotation, macro drivers, and cross-asset implications. Read `references/market-macro-research.md`.
 - **Event study**: measure an event’s effect before and after it occurs. Read `references/event-study.md`.

@@ -12,22 +12,24 @@ Complete reference of every endpoint: parameters, defaults, enums, and where par
 1. [Conventions (symbol format, enums, metadata cross-reference)](#conventions)
 2. [Price Data `/api/price`](#1-price-data)
 3. [Real-time Quote `/api/quote`](#2-real-time-quote)
-4. [Market Data (fundamentals) `/api/market-data`](#3-market-data)
-5. [Market Search `/api/search`](#4-market-search)
-6. [Symbol Catalog `/api/symbols`](#5-symbol-catalog)
-7. [Technical Analysis `/api/ta`](#6-technical-analysis)
-8. [News `/api/news`](#7-news)
-9. [Community Ideas `/api/ideas`](#8-community-ideas)
-10. [Leaderboards `/api/leaderboard`](#9-leaderboards)
-11. [Screener `/api/screener`](#10-screener)
-12. [Metadata `/api/metadata`](#11-metadata)
-13. [World Economy `/api/world-economy`](#12-world-economy)
-14. [Economic Calendar `/api/calendar`](#13-economic-calendar)
-15. [Logo Proxy `/logo`](#14-logo-proxy)
-16. [Token & MCP](#15-token--mcp)
-17. [Realtime: SSE & WebSocket](#16-realtime-sse--websocket)
+4. [Options `/api/options`](#options)
+5. [ETF `/api/etf`](#etf)
+6. [Market Data (fundamentals) `/api/market-data`](#3-market-data)
+7. [Market Search `/api/search`](#4-market-search)
+8. [Symbol Catalog `/api/symbols`](#5-symbol-catalog)
+9. [Technical Analysis `/api/ta`](#6-technical-analysis)
+10. [News `/api/news`](#7-news)
+11. [Community Ideas `/api/ideas`](#8-community-ideas)
+12. [Leaderboards `/api/leaderboard`](#9-leaderboards)
+13. [Screener `/api/screener`](#10-screener)
+14. [Metadata `/api/metadata`](#11-metadata)
+15. [World Economy `/api/world-economy`](#12-world-economy)
+16. [Economic Calendar `/api/calendar`](#13-economic-calendar)
+17. [Logo Proxy `/logo`](#14-logo-proxy)
+18. [Token & MCP](#15-token--mcp)
+19. [Realtime: SSE & WebSocket](#16-realtime-sse--websocket)
 
-Hosted MCP (25 `tradingview_*` tools): [mcp-tools.md](mcp-tools.md). Install / OAuth / JWT: [examples/10-mcp.md](examples/10-mcp.md) and https://www.tradingviewapi.com/mcp/.
+Hosted MCP (27 `tradingview_*` tools): [mcp-tools.md](mcp-tools.md). Install / OAuth / JWT: [examples/10-mcp.md](examples/10-mcp.md) and https://www.tradingviewapi.com/mcp/.
 
 ---
 
@@ -156,7 +158,9 @@ Real-time quote with 100+ fields (price, change, volume, fundamentals snapshot).
 |-------|----------|---------|-------|
 | `symbol` (path) | yes | — | |
 | `session` | no | `regular` | `regular`/`extended`/`premarket`/`postmarket` |
-| `fields` | no | `all` | `all`, `price`, `enhanced`, or comma-separated field names |
+| `fields` | no | `all` | `all` (includes `first_bar_time_1d`, `ntc`/`nch`/`nchp`), `price`, `enhanced` (adds option-contract, bond, DEX identity, ETF scalars), or comma-separated field names. Option chains and ETF holdings are **not** on this endpoint. |
+
+`fields=enhanced` on an OPRA contract fills `strike`, `expiration`, `option-type`, `option-style`, `lotsize`, `underlying-symbol`. On an ETF it fills `aum`, `nav`, `expense_ratio` — still not the holdings list. Quote never returns implied volatility, Greeks, or open interest.
 
 ### `POST /api/quote/batch`
 
@@ -164,9 +168,45 @@ Real-time quote with 100+ fields (price, change, volume, fundamentals snapshot).
 { "symbols": ["NASDAQ:AAPL", "NASDAQ:MSFT"], "session": "regular", "fields": "all" }
 ```
 
-`symbols` required, max 10.
+`symbols` required, max 10. Mix underlyings with OPRA contract ids.
 
 MCP: `tradingview_get_quote` / `tradingview_get_quote_batch`.
+
+---
+
+## Options
+
+Examples: `examples/18-options.md`. MCP: `tradingview_get_options`.
+
+### `GET /api/options/{symbol}`
+
+Listed option chain for an underlying (expirations, strikes, OPRA-style contract codes). Directory only — not live bid/ask. Quote a contract with `GET /api/quote/OPRA:AAPL261218C330.0`.
+
+| Param | Required | Default | Notes |
+|-------|----------|---------|-------|
+| `symbol` (path) | yes | — | Underlying, e.g. `NASDAQ:AAPL` — not an OPRA id |
+| `expiration` | no | all expiries | `YYYY-MM-DD` or `YYYYMMDD` |
+
+Contract code: `{prefix}:{root}{YYMMDD}{C\|P}{strike}` — `OPRA:AAPL261218C330.0` is the Apple 18 Dec 2026 330 call. Integer strikes keep `.0`.
+
+No-chain underlyings return HTTP 200 with `has_options: false` and `families: []`. Filter to an expiry that is not listed → `has_options: true` and `families: []`. Bad `expiration` → HTTP 400.
+
+---
+
+## ETF
+
+Examples: `examples/19-etf.md`. MCP: `tradingview_get_etf`.
+
+### `GET /api/etf/{symbol}`
+
+ETF AUM, NAV, expense ratio, and top holdings. **Not** `GET /api/market-data/{symbol}/related/etfs` (that lists related ETF tickers).
+
+| Param | Required | Default | Notes |
+|-------|----------|---------|-------|
+| `symbol` (path) | yes | — | e.g. `AMEX:SPY`; QQQ is `NASDAQ:QQQ` |
+| `limit` | no | `20` | max 100 holdings returned; `holdings_count` is the full count |
+
+Non-ETFs return HTTP 200 with `is_etf: false` and an empty holdings list.
 
 ---
 
@@ -193,7 +233,7 @@ Most endpoints take only path `symbol`. Related-asset routes also take `lang`, `
 | `.../analyst-recommendations` | analyst ratings & price targets | `analyst_recommendations` |
 | `.../forecast` | analyst / fundamental forecasts | `forecast` |
 | `.../related/bonds` | related bonds; `count` default 24, max 150 | `related_bonds` |
-| `.../related/etfs` | related ETFs; `count` default 100, max 150 | `related_etfs` |
+| `.../related/etfs` | related ETF **tickers**; `count` default 100, max 150. For that fund’s AUM/holdings use `GET /api/etf/{symbol}` | `related_etfs` |
 | `.../enterprise-value` | EV metrics | `enterprise_value` |
 | `.../credit-ratings` | credit ratings | `credit_ratings` |
 | `.../cash-flow` | cash flow analysis | `cash_flow` |
