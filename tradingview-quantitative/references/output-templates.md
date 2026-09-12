@@ -37,3 +37,10 @@ The chat reply is a short conclusion. Formal reports also write a portable HTML 
 - Return, volatility, drawdown, and correlation
 - Stress scenarios
 - Position-level and portfolio-level actions
+
+## Options or ETF structure
+
+- Underlying or fund identity
+- Chain (`has_options`, expiries, dollar strikes, OPRA codes) or holdings (`is_etf`, AUM, NAV, truncated list)
+- Live contract quote if priced (last, bid/ask, volume — no IV/Greeks)
+- What the data cannot show

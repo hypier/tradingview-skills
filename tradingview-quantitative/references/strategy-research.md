@@ -8,4 +8,4 @@ Stress the strategy across timeframes, markets, parameters, and fees. Record loo
 
 ## MCP composition
 
-Use `tradingview_search_market` or `tradingview_get_metadata` to define the universe, `tradingview_get_ohlcv` or `tradingview_get_ohlcv_batch` for price history, `tradingview_get_ta` for indicator inputs, and `tradingview_get_quote` for current execution context. Use `tradingview_get_market_data` only when the strategy includes fundamentals. MCP supplies observations; return and risk statistics must be calculated from the retrieved history.
+Use `tradingview_search_market` or `tradingview_get_metadata` to define the universe, `tradingview_get_ohlcv` or `tradingview_get_ohlcv_batch` for price history, `tradingview_get_ta` for indicator inputs, and `tradingview_get_quote` for current execution context. Use `tradingview_get_market_data` only when the strategy includes fundamentals. Option overlays need `tradingview_get_options` then contract quotes; do not backtest Greeks this API does not return. MCP supplies observations; return and risk statistics must be calculated from the retrieved history.

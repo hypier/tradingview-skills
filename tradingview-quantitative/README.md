@@ -50,7 +50,7 @@ Each thematic workflow combines MCP tools according to the research question. Ex
 - Portfolio analysis: batch quotes, batch historical data, and material fundamental or event information for major holdings.
 - Monitoring: batch quotes, batch history, technical state, calendars, news, and event markers.
 
-The skill does not claim data that MCP did not return, such as a complete order book, actual fills, or native backtest performance.
+The skill does not claim data that MCP did not return, such as a complete order book, actual fills, implied volatility, option Greeks, open interest, or native backtest performance.
 
 ## Directory structure
 
@@ -66,6 +66,7 @@ tradingview-quantitative/
 │   ├── visual-report.md
 │   ├── output-templates.md
 │   ├── equity-research.md
+│   ├── options-and-etf.md
 │   ├── opportunity-screening.md
 │   ├── market-macro-research.md
 │   ├── event-study.md
@@ -83,6 +84,10 @@ tradingview-quantitative/
 
 ```text
 Analyze NASDAQ:AAPL, focusing on post-earnings trend, valuation, and risk.
+
+List AAPL's December option strikes near spot, then quote the ATM call.
+
+Check SPY AUM and the top 20 holdings by weight.
 
 Screen large-cap US stocks for reasonable valuation, improving profitability, and strengthening momentum.
 
